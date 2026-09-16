@@ -1,0 +1,1076 @@
+CATATAN PRESENTASI PROYEK BEKUKU POS
+====================================
+
+Dokumen ini menjelaskan aplikasi BEKUKU POS secara lengkap dan dapat
+digunakan sebagai bahan presentasi, demonstrasi, laporan proyek, atau
+panduan memahami source code.
+
+
+1. GAMBARAN UMUM APLIKASI
+--------------------------
+
+BEKUKU POS adalah aplikasi Point of Sale (POS) berbasis web yang dibuat
+untuk membantu pengelolaan bisnis penjualan produk, terutama produk frozen
+food. Aplikasi ini menangani proses dari pengelolaan master data sampai
+transaksi penjualan dan laporan.
+
+Fungsi utama aplikasi:
+
+- Menampilkan landing page sebagai halaman pengenalan aplikasi.
+- Menyediakan login berdasarkan peran pengguna.
+- Mengelola kategori produk.
+- Mengelola supplier.
+- Mengelola customer.
+- Mengelola produk dan stok.
+- Mencatat pembelian barang.
+- Mengelola batch dan tanggal kedaluwarsa.
+- Membuat transaksi penjualan.
+- Mengurangi stok secara otomatis setelah transaksi.
+- Mencatat pergerakan stok.
+- Menampilkan riwayat transaksi.
+- Menampilkan laporan penjualan.
+- Menampilkan laporan stok.
+
+Tujuan utama BEKUKU POS adalah menggantikan pencatatan manual dengan sistem
+yang lebih terstruktur, cepat, dan mudah dipantau.
+
+
+2. TEKNOLOGI YANG DIGUNAKAN
+---------------------------
+
+Backend:
+
+- PHP Native.
+- PDO untuk koneksi dan query database.
+- Session PHP untuk login.
+- MySQL sebagai database.
+
+Frontend:
+
+- HTML untuk struktur halaman.
+- CSS untuk tema, layout, responsive design, dan komponen visual.
+- JavaScript untuk interaksi halaman.
+- Bootstrap dan Bootstrap Icons untuk komponen dasar serta icon.
+- AdminLTE untuk struktur dashboard dan sidebar.
+- Chart.js untuk grafik dashboard.
+
+Server lokal:
+
+- Laragon.
+- Apache.
+- MySQL.
+- Browser seperti Chrome atau Edge.
+
+Aplikasi tidak menggunakan framework backend besar. Pendekatan ini membuat
+alur program lebih mudah dipelajari karena proses request, query, validasi,
+dan output halaman terlihat langsung pada file PHP.
+
+
+3. STRUKTUR FOLDER APLIKASI
+---------------------------
+
+Struktur penting proyek:
+
+    Bekuku/
+    |-- index.php
+    |-- login.php
+    |-- logout.php
+    |-- INSTALL.md
+    |-- catatan
+    |
+    |-- landing/
+    |   `-- index.php
+    |
+    |-- dashboard/
+    |   `-- index.php
+    |
+    |-- config/
+    |   |-- app.php
+    |   `-- database.php
+    |
+    |-- includes/
+    |   |-- header.php
+    |   |-- navbar.php
+    |   |-- sidebar.php
+    |   `-- footer.php
+    |
+    |-- assets/
+    |   |-- css/
+    |   |-- js/
+    |   |-- landing/
+    |   `-- dashboard/
+    |
+    |-- categories/
+    |-- customers/
+    |-- products/
+    |-- purchases/
+    |-- suppliers/
+    |-- transactions/
+    |-- reports/
+    |-- popup/
+    |
+    `-- database/
+        `-- bekuku.sql
+
+Pembagian folder dibuat agar kode lebih terorganisasi. Halaman landing
+dipisahkan dari dashboard, sedangkan CSS dan JavaScript ditempatkan di
+folder assets.
+
+
+4. ALUR PENGUNJUNG DARI AWAL
+-----------------------------
+
+Alur penggunaan aplikasi:
+
+1. Pengunjung membuka:
+
+       http://localhost/Bekuku/
+
+2. File index.php memeriksa status login.
+
+3. Jika belum login, pengunjung diarahkan ke:
+
+       landing/index.php
+
+4. Landing page menampilkan informasi produk, fitur, manfaat, dan tombol
+   menuju halaman login.
+
+5. Pengguna membuka:
+
+       login.php
+
+6. Pengguna memilih peran dan mengisi password.
+
+7. Jika data benar, session pengguna dibuat.
+
+8. Pengguna diarahkan ke dashboard.
+
+9. Jika pengguna membuka halaman internal tanpa login, config/app.php
+   otomatis mengarahkan pengguna kembali ke login.
+
+10. Setelah logout, session dihapus dan pengguna kembali ke halaman login.
+
+
+5. PENJELASAN FILE INDEX.PHP
+----------------------------
+
+File index.php di root berfungsi sebagai router sederhana.
+
+Perannya:
+
+- Menjadi pintu masuk utama aplikasi.
+- Mengecek apakah pengguna sudah login.
+- Mengarahkan pengguna yang belum login ke landing page.
+- Mengarahkan pengguna yang sudah login ke dashboard.
+- Menjaga URL utama tetap sederhana.
+
+Pemisahan ini membuat landing page dan dashboard memiliki entry point
+masing-masing:
+
+- landing/index.php untuk tampilan publik.
+- dashboard/index.php untuk pengguna yang sudah login.
+
+Keuntungannya adalah kode landing tidak bercampur dengan query dashboard.
+
+
+6. PENJELASAN LANDING PAGE
+--------------------------
+
+Landing page berada di:
+
+    landing/index.php
+
+Style khusus landing berada di:
+
+    assets/landing/css/landing.css
+
+JavaScript khusus landing berada di:
+
+    assets/landing/js/landing.js
+
+Bagian landing page:
+
+- Navbar brand BEKUKU.
+- Hero section yang menjelaskan nilai utama aplikasi.
+- Tombol menuju fitur dan login.
+- Mockup dashboard.
+- Daftar fitur aplikasi.
+- Penjelasan manfaat.
+- Langkah penggunaan.
+- Call to action.
+- Footer.
+
+Landing page menggunakan tema:
+
+- Navy sebagai background utama.
+- Biru sebagai tombol utama.
+- Biru muda sebagai aksen.
+- Putih dan biru muda untuk teks.
+- Panel solid tanpa gradient.
+
+JavaScript landing digunakan untuk:
+
+- Membuka dan menutup menu mobile.
+- Menjalankan efek tampil ketika section masuk ke viewport.
+- Menangani interaksi ringan tanpa mengganggu performa.
+
+
+7. PENJELASAN LOGIN DAN SESSION
+-------------------------------
+
+File login:
+
+    login.php
+
+Proses login:
+
+1. Form mengirim username/peran dan password menggunakan POST.
+2. Sistem mencari akun aktif pada tabel `users`.
+3. Password diverifikasi menggunakan password_verify().
+4. Jika benar, data pengguna disimpan ke session.
+5. Jika salah, pesan kesalahan ditampilkan.
+
+Akun awal yang tersedia:
+
+- admin: Administrator.
+- kasir: menangani transaksi dan customer.
+- gudang: menangani produk, pembelian, stok, kategori, dan supplier.
+
+Password tidak disimpan sebagai teks biasa. Tabel `users` menggunakan password
+hash dan pengguna admin dapat mengelola akun melalui menu Pengguna.
+
+File logout:
+
+    logout.php
+
+Logout dilakukan dengan:
+
+- Menghapus data session pengguna.
+- Menghancurkan session.
+- Mengarahkan pengguna ke halaman login.
+
+
+8. PENJELASAN CONFIG/APP.PHP
+-----------------------------
+
+File config/app.php adalah pusat aturan aplikasi.
+
+Tugasnya:
+
+- Memulai session.
+- Menyediakan fungsi pengecekan login.
+- Mengambil data pengguna yang sedang login.
+- Mengubah kode role menjadi label yang mudah dibaca.
+- Membuat URL aplikasi secara dinamis.
+- Menentukan path request saat ini.
+- Memeriksa hak akses berdasarkan role.
+- Mengarahkan pengguna yang tidak memiliki akses.
+
+Fungsi penting:
+
+bekuku_is_authenticated()
+    Mengembalikan true jika terdapat pengguna pada session.
+
+bekuku_user()
+    Mengambil data pengguna yang sedang aktif.
+
+bekuku_role_label()
+    Mengubah kode seperti admin, kasir, dan gudang menjadi label tampilan.
+
+bekuku_url()
+    Membuat URL berdasarkan folder aplikasi. Fungsi ini membantu aplikasi
+    tetap berjalan pada URL seperti /Bekuku/ tanpa menulis path secara manual
+    di setiap halaman.
+
+bekuku_role_can_access()
+    Menentukan halaman yang boleh dibuka oleh setiap role.
+
+Aturan akses:
+
+- Admin dapat mengakses seluruh menu.
+- Kasir dapat mengakses transaksi, customer, dan laporan penjualan.
+- Gudang dapat mengakses produk, pembelian, kategori, supplier, dan laporan
+  stok.
+
+
+9. PENJELASAN CONFIG/DATABASE.PHP
+----------------------------------
+
+File config/database.php membuat koneksi ke MySQL menggunakan PDO.
+
+Konfigurasi standar:
+
+    Host     : localhost
+    Database : bekuku
+    Username : root
+    Password : kosong pada Laragon standar
+
+PDO dipilih karena:
+
+- Mendukung prepared statement.
+- Lebih aman untuk query dengan input pengguna.
+- Memudahkan penggunaan transaksi database.
+- Dapat memberikan exception jika query gagal.
+
+Jika koneksi gagal, aplikasi menampilkan pesan error koneksi. Pada server
+produksi, pesan detail error sebaiknya tidak ditampilkan kepada pengguna
+karena dapat membocorkan informasi konfigurasi.
+
+
+10. NAVBAR, SIDEBAR, DAN FOOTER
+-------------------------------
+
+File shell dashboard:
+
+- includes/header.php
+- includes/navbar.php
+- includes/sidebar.php
+- includes/footer.php
+
+header.php:
+
+- Memuat konfigurasi tampilan umum.
+- Memuat navbar.
+- Memuat sidebar.
+- Memuat stylesheet global dan theme menu.
+
+navbar.php:
+
+- Menampilkan tombol buka/tutup sidebar.
+- Menampilkan nama pengguna.
+- Menampilkan role pengguna.
+- Menyediakan tombol logout.
+- Menampilkan dialog konfirmasi logout.
+
+sidebar.php:
+
+- Menampilkan logo BEKUKU.
+- Menampilkan menu dashboard.
+- Menampilkan menu transaksi.
+- Menampilkan menu master data.
+- Menampilkan menu produk.
+- Menampilkan menu persediaan.
+- Menampilkan menu laporan.
+- Menandai menu aktif berdasarkan URL.
+- Menyesuaikan menu berdasarkan role.
+
+footer.php:
+
+- Menutup struktur layout dashboard.
+- Menampilkan informasi footer aplikasi.
+
+Komponen shell dipakai ulang agar seluruh halaman internal memiliki navigasi
+yang konsisten dan mudah dirawat.
+
+
+11. SISTEM ROLE DAN HAK AKSES
+-----------------------------
+
+BEKUKU menggunakan tiga role utama.
+
+Administrator:
+
+- Memiliki akses penuh.
+- Dapat mengelola semua data.
+- Dapat melihat semua laporan.
+
+Kasir:
+
+- Membuat transaksi penjualan.
+- Melihat riwayat transaksi.
+- Mengelola atau memilih customer.
+- Melihat laporan penjualan.
+
+Gudang:
+
+- Mengelola kategori.
+- Mengelola supplier.
+- Mengelola produk.
+- Mencatat pembelian.
+- Mengelola batch dan tanggal kedaluwarsa.
+- Melihat laporan stok.
+
+Pemeriksaan akses dilakukan di sisi server melalui config/app.php. CSS hanya
+menyembunyikan atau menampilkan tampilan, sedangkan keputusan akses tetap
+dilakukan oleh PHP.
+
+
+12. MODUL MASTER DATA
+---------------------
+
+Kategori:
+
+- Menyimpan kelompok produk.
+- Digunakan pada form produk.
+- Memiliki aturan nama unik agar kategori tidak terduplikasi.
+
+Supplier:
+
+- Menyimpan data pemasok.
+- Digunakan pada proses pembelian.
+- Menyimpan nama, telepon, dan alamat.
+
+Customer:
+
+- Menyimpan data pelanggan.
+- Dapat dipilih pada transaksi penjualan.
+- Customer umum tersedia jika transaksi tidak memakai data pelanggan khusus.
+
+Produk:
+
+- Menyimpan nama produk.
+- Menyimpan kategori.
+- Menyimpan supplier.
+- Menyimpan SKU atau barcode.
+- Menyimpan harga beli dan harga jual.
+- Menyimpan satuan, stok minimum, dan status aktif.
+
+Alur master data yang disarankan:
+
+1. Buat kategori.
+2. Buat supplier.
+3. Buat produk.
+4. Isi harga dan stok.
+5. Gunakan produk pada transaksi atau pembelian.
+
+
+13. MODUL PEMBELIAN DAN PERSEDIAAN
+-----------------------------------
+
+Modul pembelian mencatat barang yang masuk dari supplier.
+
+Informasi pembelian:
+
+- Tanggal pembelian.
+- Supplier.
+- Nomor invoice.
+- Produk.
+- Jumlah.
+- Harga beli.
+- Status pembayaran.
+- Catatan.
+
+Setelah pembelian disimpan:
+
+- Stok produk bertambah.
+- Detail pembelian tersimpan.
+- Batch dapat dibuat.
+- Tanggal kedaluwarsa dapat dicatat.
+- Pergerakan stok masuk dapat dicatat.
+
+Batch berguna untuk produk yang memiliki masa kedaluwarsa. Saat stok keluar,
+sistem dapat menggunakan pendekatan FEFO, yaitu batch dengan tanggal
+kedaluwarsa paling dekat diprioritaskan terlebih dahulu.
+
+
+14. MODUL TRANSAKSI PENJUALAN
+-----------------------------
+
+Halaman transaksi baru:
+
+    transactions/create.php
+
+Alur transaksi:
+
+1. Kasir memilih customer atau memakai Customer Umum.
+2. Kasir mencari produk.
+3. Kasir dapat memfilter produk berdasarkan kategori.
+4. Kasir memilih produk dan jumlah.
+5. Sistem menghitung subtotal.
+6. Sistem menghitung total transaksi.
+7. Kasir memasukkan jumlah pembayaran.
+8. Kasir memilih metode pembayaran.
+9. Sistem menghitung kembalian.
+10. Sistem memvalidasi stok.
+11. Sistem menyimpan transaksi dan detailnya.
+12. Sistem mengurangi stok.
+13. Sistem mencatat pergerakan stok keluar.
+
+Validasi penting:
+
+- Produk harus dipilih.
+- Jumlah harus lebih besar dari nol.
+- Produk harus tersedia.
+- Jumlah penjualan tidak boleh melebihi stok.
+- Pembayaran tidak boleh kurang dari total.
+- Produk yang sama digabung agar detail transaksi tidak ganda.
+
+Transaksi database digunakan agar penyimpanan transaksi, detail, stok, dan
+pergerakan stok dapat berhasil bersama-sama. Jika salah satu proses gagal,
+perubahan dapat dibatalkan sehingga data tidak setengah tersimpan.
+
+
+15. MODUL RIWAYAT TRANSAKSI
+---------------------------
+
+Riwayat transaksi menampilkan transaksi yang sudah dibuat.
+
+Informasi yang dapat ditampilkan:
+
+- Nomor transaksi.
+- Waktu transaksi.
+- Customer.
+- Total pembayaran.
+- Metode pembayaran.
+- Status transaksi.
+
+Halaman detail menampilkan produk yang dibeli, jumlah, harga, subtotal, total,
+pembayaran, dan kembalian.
+
+
+16. MODUL LAPORAN
+-----------------
+
+Laporan penjualan:
+
+- Menampilkan transaksi berdasarkan periode.
+- Menampilkan total penjualan.
+- Menampilkan jumlah transaksi.
+- Menampilkan data produk atau transaksi.
+- Dapat disiapkan untuk dicetak.
+
+Laporan stok:
+
+- Menampilkan stok produk.
+- Menampilkan stok minimum.
+- Membantu mengetahui produk yang perlu diisi ulang.
+- Membantu memantau produk habis atau stok rendah.
+
+Laporan membantu pemilik usaha mengambil keputusan berdasarkan data, bukan
+hanya berdasarkan perkiraan.
+
+
+17. PENJELASAN DATABASE
+-----------------------
+
+Database utama:
+
+    bekuku
+
+Tabel penting:
+
+categories
+    Menyimpan kategori produk.
+
+suppliers
+    Menyimpan pemasok.
+
+customers
+    Menyimpan pelanggan.
+
+products
+    Menyimpan data produk, harga, status, dan stok.
+
+transactions
+    Menyimpan header transaksi penjualan.
+
+transaction_details
+    Menyimpan produk dan jumlah pada setiap transaksi.
+
+purchases
+    Menyimpan header pembelian.
+
+purchase_details
+    Menyimpan detail produk pembelian.
+
+stock_movements
+    Menyimpan riwayat stok masuk dan stok keluar.
+
+batches
+    Menyimpan batch, tanggal kedaluwarsa, dan jumlah stok batch.
+
+Relasi utama:
+
+- Satu kategori memiliki banyak produk.
+- Satu supplier dapat memiliki banyak pembelian.
+- Satu customer dapat memiliki banyak transaksi.
+- Satu transaksi memiliki banyak detail transaksi.
+- Satu produk dapat muncul pada banyak detail transaksi.
+- Satu pembelian memiliki banyak detail pembelian.
+- Satu produk dapat memiliki banyak batch.
+- Satu produk memiliki banyak catatan pergerakan stok.
+
+Foreign key digunakan agar hubungan data tetap valid dan penghapusan data
+yang masih digunakan dapat dicegah.
+
+
+18. ASSET DAN TEMA VISUAL
+--------------------------
+
+Asset umum:
+
+    assets/css/
+    assets/js/
+
+Asset landing:
+
+    assets/landing/css/landing.css
+    assets/landing/js/landing.js
+
+Asset dashboard:
+
+    assets/dashboard/js/dashboard.js
+
+Style global:
+
+    assets/css/style.css
+
+Style navigasi:
+
+    assets/css/menu-theme.css
+
+Style transaksi:
+
+    assets/css/transactions-create.css
+    assets/css/transactions-detail.css
+    assets/css/transactions-history.css
+
+Style laporan:
+
+    assets/css/reports-sales.css
+
+Tema visual menggunakan warna solid:
+
+- Background utama: navy gelap.
+- Panel: navy.
+- Surface: biru navy.
+- Tombol utama: biru.
+- Aksen: biru muda atau teal.
+- Teks utama: putih dan biru sangat muda.
+- Teks sekunder: biru muted.
+
+Pemisahan asset membuat perubahan warna dan layout dapat dilakukan tanpa
+mengubah banyak file halaman.
+
+
+19. DATABASE SEED DAN INSTALASI
+------------------------------
+
+File database siap impor:
+
+    database/bekuku.sql
+
+File tersebut berisi:
+
+- Pembuatan database bekuku.
+- Pembuatan tabel.
+- Primary key.
+- Foreign key.
+- Index.
+- Aturan unik kategori.
+- Data kategori awal.
+
+Urutan instalasi:
+
+1. Jalankan Laragon.
+2. Aktifkan Apache dan MySQL.
+3. Letakkan proyek di C:\laragon\www\Bekuku.
+4. Buat atau impor database bekuku.
+5. Periksa config/database.php.
+6. Buka http://localhost/Bekuku/.
+7. Buka login.php.
+8. Uji login dan menu sesuai role.
+
+Panduan pengguna umum tersedia pada INSTALL.md.
+
+
+20. KELEBIHAN APLIKASI
+----------------------
+
+1. Struktur modul cukup jelas.
+
+   Fitur dipisahkan berdasarkan folder seperti products, purchases,
+   transactions, reports, dan categories.
+
+2. Memiliki pembagian role.
+
+   Administrator, kasir, dan gudang mendapatkan akses sesuai tugasnya.
+
+3. Mengurangi pencatatan manual.
+
+   Penjualan, pembelian, stok, dan laporan tersimpan dalam database.
+
+4. Stok diperbarui otomatis.
+
+   Setelah transaksi penjualan, stok berkurang dan pergerakan stok tercatat.
+
+5. Memiliki validasi stok.
+
+   Sistem mencegah penjualan melebihi stok yang tersedia.
+
+6. Mendukung batch dan kedaluwarsa.
+
+   Fitur ini penting untuk produk makanan dan frozen food.
+
+7. Menggunakan prepared statement pada proses database.
+
+   Input query lebih aman dibanding menyusun SQL secara langsung.
+
+8. Memiliki transaksi database.
+
+   Penyimpanan data penjualan dapat dibatalkan jika proses penting gagal.
+
+9. Asset sudah dipisahkan.
+
+   CSS dan JavaScript lebih mudah dirawat.
+
+10. Landing page dan dashboard dipisahkan.
+
+    Tampilan publik tidak bercampur dengan tampilan internal.
+
+11. Dapat berjalan di komputer lokal.
+
+    Cocok untuk pembelajaran, prototipe, dan penggunaan usaha kecil.
+
+12. Tidak bergantung pada framework berat.
+
+    Pengembang pemula dapat mempelajari alurnya secara langsung.
+
+
+21. KEKURANGAN DAN BATASAN
+--------------------------
+
+1. Permission masih berbasis role sederhana.
+
+   Permission detail per fitur atau per aksi dapat dikembangkan lebih lanjut.
+
+2. Penanganan error pada halaman lama masih dapat diseragamkan.
+
+   Beberapa halaman masih menggunakan die() untuk kasus validasi atau
+   kegagalan query.
+
+3. Smoke test belum menggantikan pengujian browser end-to-end.
+
+   Perubahan tampilan dan alur transaksi tetap perlu diuji manual.
+
+7. Belum tersedia API resmi.
+
+   Integrasi dengan aplikasi mobile, marketplace, atau perangkat lain belum
+   dapat dilakukan secara terstruktur.
+
+8. Belum mendukung multi-cabang.
+
+   Database belum memisahkan stok dan transaksi berdasarkan cabang toko.
+
+9. Belum ada backup otomatis.
+
+   Backup masih perlu dilakukan oleh administrator atau operator server.
+
+10. Belum ada notifikasi otomatis.
+
+    Sistem belum mengirim peringatan stok minimum atau kedaluwarsa melalui
+    email, WhatsApp, atau notifikasi dashboard.
+
+11. Ketergantungan pada konfigurasi lokal.
+
+    Penggunaan root tanpa password sesuai Laragon lokal, tetapi tidak cocok
+    untuk produksi.
+
+12. Beberapa asset vendor masih dimuat dari CDN.
+
+    Jika internet bermasalah, icon atau library tertentu dapat tidak tampil.
+
+13. Belum ada pagination dan filter lanjutan di semua halaman.
+
+    Data dalam jumlah besar dapat membuat halaman menjadi panjang dan query
+    lebih berat.
+
+
+22. KEAMANAN YANG SUDAH ADA
+---------------------------
+
+- Session digunakan untuk autentikasi.
+- Password diverifikasi menggunakan password_hash/password_verify.
+- PDO dan prepared statement digunakan pada query penting.
+- Role access diperiksa di sisi server.
+- Pengguna, role, dan status akun disimpan di tabel users.
+- Form POST menggunakan token CSRF terpusat.
+- Session memakai cookie HttpOnly, SameSite, strict mode, dan timeout.
+- Audit aktivitas auth, user, transaksi, dan penghapusan data disimpan di audit_logs.
+- Error PHP dicatat ke storage/logs/app.log tanpa menampilkan detail database.
+- Output data pengguna dapat di-escape menggunakan htmlspecialchars.
+- Foreign key menjaga konsistensi hubungan data.
+- Unique index mencegah nama kategori yang sama persis.
+- Transaksi database menjaga proses penjualan tetap konsisten.
+
+
+23. KEAMANAN YANG MASIH PERLU DITINGKATKAN
+-------------------------------------------
+
+- Tambahkan rate limiting pada login.
+- Simpan konfigurasi database di environment variable.
+- Gunakan user database khusus, bukan root.
+- Gunakan HTTPS pada server online.
+- Validasi MIME dan ukuran jika ada upload file.
+- Gunakan backup terenkripsi.
+- Batasi pesan error teknis yang ditampilkan ke pengguna.
+
+
+24. IDE PENGEMBANGAN KE DEPAN
+------------------------------
+
+Roadmap pengembangan disusun bertahap agar setiap fitur dapat diuji sebelum
+digunakan pada proses operasional. Prioritasnya adalah keamanan dan
+ketepatan data terlebih dahulu, kemudian kecepatan kerja kasir, lalu laporan
+dan integrasi.
+
+### Tahap 1: Perbaikan keamanan dan kualitas (sudah diterapkan)
+
+Tahap ini menjadi fondasi aplikasi. Tujuannya adalah memastikan akun,
+session, form, dan perubahan data terlindungi.
+
+Fitur yang sudah diterapkan:
+
+- Tabel `users` untuk menyimpan akun secara terstruktur.
+- Halaman kelola pengguna untuk admin.
+- Role administrator, kasir, dan gudang.
+- Aktivasi dan penonaktifan akun.
+- CSRF protection pada form POST.
+- Session timeout 30 menit.
+- Cookie session dengan HttpOnly dan SameSite.
+- Regenerasi session ID setelah login.
+- Audit log untuk login, logout, perubahan data, dan aktivitas penting.
+- Validasi input terpusat.
+- Logging error aplikasi ke file.
+- Smoke test untuk helper keamanan dan validasi.
+- Perlindungan folder database dan storage agar tidak dapat diakses langsung.
+
+Hasil yang diharapkan:
+
+- Pengguna tidak dapat membuka menu tanpa autentikasi.
+- User hanya dapat mengakses menu sesuai role.
+- Request form palsu dapat ditolak.
+- Aktivitas penting dapat ditelusuri.
+- Error dapat diperiksa developer tanpa menampilkan detail sensitif kepada
+  pengguna.
+
+### Tahap 2: Penguatan operasional toko (prioritas berikutnya)
+
+Tahap ini berfokus pada kecepatan kasir dan ketepatan pengelolaan stok.
+Fitur tahap ini sebaiknya dikembangkan setelah struktur transaksi dan audit
+stabil.
+
+#### 2.1 Barcode dan transaksi cepat
+
+- Menambahkan input barcode pada form transaksi.
+- Mendukung scanner USB yang bekerja seperti keyboard.
+- Memfokuskan cursor otomatis ke input barcode.
+- Menambahkan pencarian berdasarkan barcode atau SKU.
+- Menambahkan shortcut keyboard untuk kasir.
+- Menampilkan pesan jika barcode belum terdaftar.
+
+#### 2.2 Struk penjualan
+
+- Menambahkan format struk thermal ukuran 58 mm atau 80 mm.
+- Menambahkan nama toko, alamat, tanggal, kasir, detail barang, total,
+  pembayaran, dan kembalian.
+- Menambahkan tombol cetak ulang dari riwayat transaksi.
+- Menambahkan format PDF untuk arsip atau pengiriman digital.
+- Menambahkan nomor transaksi yang mudah dibaca.
+
+#### 2.3 Retur dan pembatalan transaksi
+
+- Menambahkan proses retur sebagian atau seluruh barang.
+- Mencatat alasan retur.
+- Mengembalikan stok secara otomatis.
+- Mencatat siapa yang menyetujui retur.
+- Menambahkan pembatalan transaksi dengan alasan wajib.
+- Menyimpan waktu pembatalan dan pengguna yang melakukan pembatalan.
+- Mencegah transaksi yang sudah batal dibatalkan kembali.
+
+#### 2.4 Stok opname dan notifikasi
+
+- Membuat halaman stok opname.
+- Membandingkan stok sistem dengan stok fisik.
+- Menyimpan selisih dan alasan penyesuaian.
+- Membuat pergerakan stok khusus untuk hasil opname.
+- Menampilkan peringatan produk dengan stok minimum.
+- Menampilkan peringatan batch yang mendekati kedaluwarsa.
+- Menambahkan filter notifikasi berdasarkan supplier, kategori, dan tanggal.
+
+Kriteria selesai Tahap 2:
+
+- Kasir dapat menyelesaikan transaksi lebih cepat menggunakan barcode.
+- Struk dapat dicetak dan dicetak ulang.
+- Retur tidak merusak histori transaksi asli.
+- Setiap perubahan stok memiliki sumber dan alasan yang jelas.
+
+### Tahap 3: Laporan dan analitik
+
+Tahap ini mengubah data transaksi dan stok menjadi informasi untuk mengambil
+keputusan bisnis.
+
+#### 3.1 Filter dan ringkasan laporan
+
+- Filter tanggal hari ini, minggu ini, bulan ini, dan rentang khusus.
+- Filter berdasarkan kasir, metode pembayaran, customer, kategori, atau
+  supplier.
+- Ringkasan jumlah transaksi, omzet, diskon, retur, dan laba.
+- Penanda transaksi selesai, batal, atau diretur.
+
+#### 3.2 Laporan keuangan sederhana
+
+- Menghitung omzet penjualan.
+- Menghitung modal berdasarkan harga beli.
+- Menghitung laba kotor.
+- Memisahkan biaya operasional jika data biaya sudah tersedia.
+- Menampilkan perbandingan omzet dan laba antarperiode.
+
+Catatan: laporan laba akan lebih akurat jika setiap produk memiliki harga
+beli yang benar dan histori perubahan harga tersimpan.
+
+#### 3.3 Analitik produk dan supplier
+
+- Laporan produk terlaris berdasarkan jumlah dan nilai penjualan.
+- Laporan produk yang tidak bergerak.
+- Laporan pembelian per supplier.
+- Perbandingan harga beli antarperiode.
+- Laporan produk dengan stok rendah atau mendekati kedaluwarsa.
+
+#### 3.4 Grafik, export, dan KPI
+
+- Grafik tren penjualan harian, mingguan, dan bulanan.
+- Grafik metode pembayaran.
+- Grafik kategori terlaris.
+- Export laporan ke CSV atau Excel.
+- Export laporan ke PDF.
+- Dashboard KPI yang menampilkan omzet, transaksi, laba kotor, stok rendah,
+  produk terlaris, dan nilai pembelian.
+
+Kriteria selesai Tahap 3:
+
+- Pemilik dapat memilih periode dan mendapatkan laporan yang konsisten.
+- Angka pada kartu statistik sama dengan angka pada tabel detail.
+- Laporan dapat disimpan atau dibagikan melalui file export.
+- Grafik membantu melihat tren tanpa harus membaca seluruh tabel.
+
+### Tahap 4: Integrasi dan skalabilitas
+
+Tahap ini dilakukan setelah proses inti stabil dan kebutuhan pengguna sudah
+terukur.
+
+- Membuat REST API dengan autentikasi token.
+- Menyediakan aplikasi mobile atau Progressive Web App.
+- Integrasi pembayaran QRIS.
+- Integrasi marketplace.
+- Integrasi WhatsApp untuk notifikasi stok dan transaksi.
+- Mendukung lebih dari satu cabang toko.
+- Memisahkan stok, pengguna, dan laporan berdasarkan cabang.
+- Menambahkan sinkronisasi data online.
+- Menambahkan backup otomatis dan pemulihan database.
+- Menggunakan Docker atau deployment cloud.
+- Menambahkan monitoring uptime dan error.
+
+### Urutan prioritas yang disarankan
+
+1. Selesaikan dan uji keamanan Tahap 1.
+2. Implementasikan stok opname dan pembatalan transaksi sebelum integrasi
+   eksternal.
+3. Implementasikan barcode dan cetak struk untuk mempercepat pekerjaan kasir.
+4. Implementasikan retur agar stok dan laporan lebih lengkap.
+5. Bangun laporan laba dan KPI setelah data harga beli serta retur sudah
+   konsisten.
+6. Tambahkan export laporan.
+7. Baru lakukan integrasi QRIS, marketplace, mobile, dan multi-cabang.
+
+### Risiko dan perhatian pengembangan
+
+- Setiap perubahan stok harus masuk ke `stock_movements`.
+- Transaksi, retur, pembatalan, dan penyesuaian stok harus menggunakan
+  database transaction.
+- Fitur baru tidak boleh menghapus histori transaksi.
+- Perubahan struktur database harus dibuat sebagai migration versioned.
+- Laporan harus diuji menggunakan data contoh yang hasilnya sudah dihitung
+  secara manual.
+- Fitur integrasi eksternal harus memiliki mekanisme retry dan pencatatan
+  error.
+- Backup database harus dilakukan sebelum migration besar.
+
+
+25. SKENARIO DEMONSTRASI PRESENTASI
+------------------------------------
+
+Urutan demo yang disarankan:
+
+1. Tampilkan landing page.
+
+   Jelaskan bahwa halaman ini adalah pintu masuk publik dan berisi
+   informasi manfaat BEKUKU POS.
+
+2. Buka halaman login.
+
+   Jelaskan bahwa aplikasi menggunakan login berbasis role.
+
+3. Login sebagai admin.
+
+   Tampilkan dashboard dan navigasi utama.
+
+4. Buka Kategori.
+
+   Tambahkan satu kategori dan jelaskan pencegahan duplikat.
+
+5. Buka Supplier.
+
+   Tambahkan supplier sebagai sumber pembelian.
+
+6. Buka Produk.
+
+   Buat produk, pilih kategori, tentukan harga, dan isi stok minimum.
+
+7. Buka Pembelian.
+
+   Catat barang masuk dari supplier dan jelaskan perubahan stok.
+
+8. Buka Batch & Expired.
+
+   Jelaskan pentingnya batch untuk produk makanan.
+
+9. Buka Transaksi Baru.
+
+   Pilih customer, cari produk, masukkan jumlah, dan pilih pembayaran.
+
+10. Simpan transaksi.
+
+    Tunjukkan total, kembalian, berkurangnya stok, dan riwayat transaksi.
+
+11. Buka Laporan Penjualan.
+
+    Jelaskan bagaimana pemilik melihat hasil penjualan.
+
+12. Buka Laporan Stok.
+
+    Jelaskan bagaimana sistem membantu mengontrol persediaan.
+
+13. Logout.
+
+    Tunjukkan bahwa session selesai dan halaman internal tidak dapat dibuka
+    kembali tanpa login.
+
+
+26. KESIMPULAN PRESENTASI
+--------------------------
+
+BEKUKU POS adalah aplikasi POS berbasis web yang menggabungkan pengelolaan
+master data, pembelian, stok, batch, transaksi, dan laporan dalam satu sistem.
+
+Aplikasi ini sudah memiliki dasar yang baik untuk usaha kecil karena:
+
+- Alur utama penjualan sudah tersedia.
+- Stok dapat diperbarui otomatis.
+- Hak akses sudah dibagi berdasarkan role.
+- Database memiliki relasi dan foreign key.
+- Tampilan publik dan dashboard sudah dipisahkan.
+- Asset frontend sudah lebih terorganisasi.
+
+Tahap 1 juga menyediakan manajemen user berbasis database, perlindungan CSRF,
+session timeout, validasi terpusat, audit log, pencatatan error ke file, dan
+smoke test CLI untuk helper inti.
+
+Manajemen pengguna hanya dapat dibuka oleh admin melalui menu Pengguna.
+Perubahan login, logout, akun, dan transaksi dicatat di tabel `audit_logs`.
+Token CSRF otomatis ditambahkan pada formulir POST, sedangkan aksi hapus data
+utama menggunakan POST agar tidak dapat dipicu hanya dengan membuka URL.
+
+Dengan pengembangan bertahap, BEKUKU POS dapat ditingkatkan dari aplikasi
+lokal menjadi sistem operasional toko yang lebih lengkap, aman, dan siap
+digunakan secara online.

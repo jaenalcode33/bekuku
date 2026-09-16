@@ -1,0 +1,343 @@
+body:not(.report-page) {
+    
+}
+
+body:not(.report-page) .app-wrapper,
+body:not(.report-page) .app-main,
+body:not(.report-page) .app-content {
+    background: transparent !important;
+}
+
+body:not(.report-page) .app-main > .app-content-header {
+    margin: 24px 24px 18px;
+    padding: 0 !important;
+}
+
+body:not(.report-page) .app-main > .app-content-header > .container-fluid {
+    padding: 0;
+}
+
+body:not(.report-page) .app-main > .app-content-header .row {
+    position: relative;
+    min-height: 112px;
+    align-items: center;
+    overflow: hidden;
+    padding: 22px 28px;
+    color: #ffffff;
+    border: 1px solid rgba(76, 160, 255, .8);
+    border-radius: 14px;
+    
+    box-shadow: 0 14px 32px rgba(0, 0, 0, .2);
+}
+
+body:not(.report-page) .app-main > .app-content-header .row::after {
+    content: "";
+    position: absolute;
+    width: 340px;
+    height: 190px;
+    top: -95px;
+    right: -55px;
+    border: 1px solid rgba(98, 214, 197, .22);
+    border-radius: 50%;
+    transform: rotate(-18deg);
+}
+
+body:not(.report-page) .app-main > .app-content-header h3,
+body:not(.report-page) .app-main > .app-content-header .breadcrumb {
+    position: relative;
+    z-index: 1;
+}
+
+body:not(.report-page) .app-main > .app-content-header h3 {
+    color: #ffffff !important;
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -.4px;
+}
+
+body:not(.report-page) .app-main > .app-content-header h3 i {
+    color: #62d6c5;
+}
+
+/* Dashboard uses the same visual language as the sales report. */
+body.dashboard-page {
+    color: var(--bekuku-text-body);
+    
+}
+
+body.dashboard-page .dashboard-hero {
+    color: var(--bekuku-text-strong);
+    
+    border: 1px solid rgba(126, 157, 231, .34);
+    box-shadow: 0 14px 36px rgba(49, 92, 255, .35);
+}
+
+body.dashboard-page .dashboard-hero-title,
+body.dashboard-page .dashboard-hero-title i {
+    color: var(--bekuku-text-strong);
+}
+
+body.dashboard-page .dashboard-hero-title i,
+body.dashboard-page .dashboard-actions-heading > i,
+body.dashboard-page .dashboard-action-button i,
+body.dashboard-page .card-title i {
+    color: var(--bekuku-accent) !important;
+}
+
+body.dashboard-page .dashboard-hero-subtitle,
+body.dashboard-page .stat-description,
+body.dashboard-page .dashboard-section-description {
+    color: var(--bekuku-text-muted) !important;
+}
+
+body.dashboard-page .dashboard-stat,
+body.dashboard-page .dashboard-wrapper .card,
+body.dashboard-page .dashboard-actions {
+    color: var(--bekuku-text-body);
+    
+    border: 1px solid var(--bekuku-border) !important;
+    box-shadow: var(--bekuku-shadow) !important;
+}
+
+body.dashboard-page .dashboard-stat::before {
+    
+}
+
+body.dashboard-page .stat-label,
+body.dashboard-page .dashboard-wrapper .card-header,
+body.dashboard-page .dashboard-wrapper .card-title {
+    color: var(--bekuku-text-strong) !important;
+}
+
+body.dashboard-page .stat-value {
+    color: var(--bekuku-text-strong) !important;
+}
+
+body.dashboard-page .stat-orange .stat-icon,
+body.dashboard-page .stat-blue .stat-icon,
+body.dashboard-page .stat-green .stat-icon,
+body.dashboard-page .stat-purple .stat-icon,
+body.dashboard-page .stat-yellow .stat-icon,
+body.dashboard-page .stat-red .stat-icon {
+    color: var(--bekuku-primary);
+    background: rgba(49, 92, 255, .14);
+}
+
+body.dashboard-page .stat-orange .stat-icon,
+body.dashboard-page .stat-green .stat-icon {
+    color: var(--bekuku-accent);
+    background: rgba(98, 214, 197, .12);
+}
+
+body.dashboard-page .stat-yellow .stat-icon,
+body.dashboard-page .stat-red .stat-icon {
+    color: #a88cff;
+    background: rgba(112, 76, 255, .14);
+}
+
+body.dashboard-page .dashboard-action-button {
+    color: var(--bekuku-text-body) !important;
+    background: var(--bekuku-surface-soft) !important;
+    border-color: var(--bekuku-border) !important;
+}
+
+body.dashboard-page .dashboard-action-button:hover,
+body.dashboard-page .dashboard-action-button:focus-visible {
+    color: #071b32 !important;
+    background: var(--bekuku-accent) !important;
+    border-color: var(--bekuku-accent) !important;
+}
+
+body.dashboard-page .dashboard-wrapper .table thead th {
+    color: var(--bekuku-text-muted);
+    background: var(--bekuku-surface-soft);
+    border-color: var(--bekuku-border);
+}
+
+body.dashboard-page .dashboard-wrapper .table tbody td {
+    color: var(--bekuku-text-body);
+    border-color: var(--bekuku-border-soft);
+}
+
+body.dashboard-page .dashboard-wrapper .table tbody tr:hover > * {
+    color: var(--bekuku-text-strong);
+    background: rgba(98, 214, 197, .08);
+}
+
+body:not(.report-page) .app-main > .app-content-header .breadcrumb {
+    margin: 0;
+}
+
+body:not(.report-page) .app-main > .app-content-header .breadcrumb-item,
+body:not(.report-page) .app-main > .app-content-header .breadcrumb-item.active {
+    color: #b8d4ff !important;
+    font-size: 12px;
+}
+
+body:not(.report-page) .app-main > .app-content-header .breadcrumb-item a {
+    color: #ffffff !important;
+}
+
+body:not(.report-page) .app-main > .app-content > .container-fluid {
+    padding-right: 24px;
+    padding-bottom: 30px;
+    padding-left: 24px;
+}
+
+body:not(.report-page) .app-main > .app-content .card,
+body:not(.report-page) .app-main > .app-content .products-list-card,
+body:not(.report-page) .app-main > .app-content .batches-list-card,
+body:not(.report-page) .app-main > .app-content .movement-card,
+body:not(.report-page) .app-main > .app-content .movement-stat-card {
+    border-radius: 14px;
+}
+
+body:not(.report-page) .app-main > .app-content .card-header {
+    padding: 15px 18px;
+}
+
+body:not(.report-page) .app-main > .app-content .card-title {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+body:not(.report-page) .app-main > .app-content .card-title i {
+    color: #62d6c5;
+}
+
+body:not(.report-page) .app-main > .app-content .table thead th {
+    padding: 10px 9px;
+}
+
+body:not(.report-page) .app-main > .app-content .table tbody td {
+    padding: 9px;
+}
+
+@media (max-width: 767.98px) {
+    body:not(.report-page) .app-main > .app-content-header {
+        margin: 12px 12px 14px;
+    }
+
+    body:not(.report-page) .app-main > .app-content-header .row {
+        min-height: 92px;
+        padding: 18px;
+    }
+
+    body:not(.report-page) .app-main > .app-content-header h3 {
+        font-size: 1.35rem;
+    }
+
+    body:not(.report-page) .app-main > .app-content > .container-fluid {
+        padding-right: 12px;
+        padding-bottom: 20px;
+        padding-left: 12px;
+    }
+}
+
+/* Consistent content inside iframe-based create/edit/detail popups. */
+body.bekuku-popup-page {
+    color: var(--bekuku-text) !important;
+    background: #07112f !important;
+}
+
+body.bekuku-popup-page .app-main,
+body.bekuku-popup-page .app-content {
+    width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+body.bekuku-popup-page .app-header,
+body.bekuku-popup-page .app-sidebar,
+body.bekuku-popup-page .app-footer,
+body.bekuku-popup-page .app-content-header {
+    display: none !important;
+}
+
+body.bekuku-popup-page .app-content > .container-fluid,
+body.bekuku-popup-page .app-content > .container-fluid.dashboard-wrapper {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 18px !important;
+}
+
+body.bekuku-popup-page .card,
+body.bekuku-popup-page .products-list-card,
+body.bekuku-popup-page .batches-list-card,
+body.bekuku-popup-page .movement-card {
+    margin: 0 !important;
+    color: var(--bekuku-text) !important;
+    
+    border: 1px solid var(--bekuku-border) !important;
+    border-radius: 14px !important;
+    box-shadow: var(--bekuku-shadow) !important;
+}
+
+body.bekuku-popup-page .card-body {
+    padding: 20px !important;
+}
+
+body.bekuku-popup-page .card-header {
+    padding: 15px 18px !important;
+    color: var(--bekuku-text-strong) !important;
+    background: rgba(18, 36, 92, .72) !important;
+    border-color: var(--bekuku-border) !important;
+}
+
+body.bekuku-popup-page .card-title,
+body.bekuku-popup-page .form-label,
+body.bekuku-popup-page label {
+    color: var(--bekuku-text-body) !important;
+    font-weight: 600;
+}
+
+body.bekuku-popup-page .card-title i {
+    color: var(--bekuku-accent) !important;
+}
+
+body.bekuku-popup-page .form-control,
+body.bekuku-popup-page .form-select,
+body.bekuku-popup-page textarea {
+    min-height: 42px;
+    color: var(--bekuku-text-body) !important;
+    background: var(--bekuku-surface) !important;
+    border: 1px solid var(--bekuku-border) !important;
+    border-radius: 9px !important;
+}
+
+body.bekuku-popup-page .form-control:focus,
+body.bekuku-popup-page .form-select:focus,
+body.bekuku-popup-page textarea:focus {
+    border-color: var(--bekuku-primary) !important;
+    box-shadow: 0 0 0 3px rgba(49, 92, 255, .15) !important;
+}
+
+body.bekuku-popup-page .btn {
+    min-height: 40px;
+    border-radius: 9px !important;
+    font-weight: 600;
+}
+
+body.bekuku-popup-page .btn-primary,
+body.bekuku-popup-page .btn-success {
+    color: #ffffff !important;
+    
+    border: 0 !important;
+}
+
+body.bekuku-popup-page .btn-secondary,
+body.bekuku-popup-page .btn-outline-secondary {
+    color: var(--bekuku-text-body) !important;
+    background: rgba(255, 255, 255, .08) !important;
+    border: 1px solid rgba(255, 255, 255, .22) !important;
+}
+
+body.bekuku-popup-page .alert {
+    color: var(--bekuku-text-body) !important;
+    background: rgba(49, 92, 255, .12) !important;
+    border: 1px solid var(--bekuku-border) !important;
+    border-radius: 10px;
+}

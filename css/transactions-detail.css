@@ -1,0 +1,1783 @@
+﻿/*
+|--------------------------------------------------------------------------
+| BEKUKU POS
+| DETAIL TRANSAKSI
+|--------------------------------------------------------------------------
+*/
+
+
+/*
+|--------------------------------------------------------------------------
+| WRAPPER
+|--------------------------------------------------------------------------
+*/
+
+.transaction-detail-wrapper {
+    padding-bottom: 40px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| ================================================================
+| POPUP DETAIL TRANSAKSI
+| ================================================================
+|--------------------------------------------------------------------------
+*/
+
+/*
+| Container isi iframe popup
+*/
+
+.transaction-popup-page {
+    margin: 0;
+    padding: 0;
+    background: #07112f;
+    color: #f4f7ff;
+    min-height: 100vh;
+}
+
+
+/*
+| Wrapper popup
+*/
+
+.transaction-popup-page .transaction-detail-wrapper {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| POPUP - INFO TRANSAKSI
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .detail-info-card {
+    margin: 0 !important;
+
+    width: 100%;
+
+    background: linear-gradient(145deg, var(--bekuku-panel), #0b1945);
+
+    border: 1px solid var(--bekuku-border);
+
+    border-radius: 0;
+
+    box-shadow: var(--bekuku-shadow);
+
+    overflow: hidden;
+}
+
+
+/*
+| Grid informasi
+*/
+
+.transaction-popup-page .detail-info-card .row {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    margin: 0;
+}
+
+
+/*
+| Item informasi
+*/
+
+.transaction-popup-page .detail-info-item {
+    min-width: 0;
+
+    padding: 16px 18px;
+
+    border-right: 1px solid var(--bekuku-border-soft);
+
+    border-bottom: none;
+
+    background: rgba(255, 255, 255, 0.02);
+}
+
+
+.transaction-popup-page .detail-info-item:last-child {
+    border-right: none;
+}
+
+
+/*
+| Label
+*/
+
+.transaction-popup-page .detail-label {
+    margin-bottom: 5px;
+
+    color: var(--bekuku-text-muted);
+
+    font-size: 0.68rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.6px;
+
+    text-transform: uppercase;
+}
+
+
+/*
+| Value
+*/
+
+.transaction-popup-page .detail-value {
+    color:
+        #f4f7ff;
+
+    font-size: 0.86rem;
+
+    font-weight: 700;
+
+    line-height: 1.35;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/*
+| Hilangkan icon agar popup lebih compact
+*/
+
+.transaction-popup-page .detail-value i {
+    display: none;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| STATUS POPUP
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .detail-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 5px 9px;
+
+    border-radius: 7px;
+
+    font-size: 0.72rem;
+
+    font-weight: 700;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| POPUP - PRODUK
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .detail-section {
+    margin: 14px 0 0;
+
+    background: linear-gradient(145deg, var(--bekuku-panel), #0b1945);
+
+    border: 1px solid var(--bekuku-border);
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: var(--bekuku-shadow);
+}
+
+
+/*
+| Header section
+*/
+
+.transaction-popup-page .detail-section-header {
+    min-height: 52px;
+
+    padding: 13px 16px;
+
+    background: linear-gradient(135deg, rgba(18, 36, 92, 0.92), rgba(16, 31, 82, 0.98));
+
+    border-bottom: 1px solid var(--bekuku-border);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+/*
+| Garis aksen header
+*/
+
+.transaction-popup-page .detail-section-header::before {
+    content: "";
+
+    width: 3px;
+
+    height: 22px;
+
+    margin-right: 10px;
+
+    border-radius: 4px;
+
+    background: var(--bekuku-accent);
+}
+
+
+/*
+| Judul section
+*/
+
+.transaction-popup-page .detail-section-title {
+    flex: 1;
+
+    margin: 0;
+
+    color: var(--bekuku-text-strong);
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+}
+
+
+.transaction-popup-page .detail-section-title i {
+    color: var(--bekuku-accent);
+
+    margin-right: 7px;
+}
+
+
+/*
+| Hilangkan teks tambahan
+*/
+
+.transaction-popup-page .detail-section-header .text-muted {
+    display: none;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PRODUCT TABLE
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .detail-section-body {
+    padding: 0;
+
+    overflow-x: auto;
+}
+
+
+/*
+| Table
+*/
+
+.transaction-popup-page .detail-product-table {
+    width: 100%;
+
+    min-width: 620px;
+
+    margin: 0;
+
+    color:
+        #f4f7ff;
+}
+
+
+/*
+| Header table
+*/
+
+.transaction-popup-page .detail-product-table thead th {
+    padding: 10px 14px;
+
+    background: var(--bekuku-surface);
+
+    color: var(--bekuku-text-muted);
+
+    border-bottom: 1px solid var(--bekuku-border);
+
+    font-size: 0.67rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+}
+
+
+/*
+| Body table
+*/
+
+.transaction-popup-page .detail-product-table tbody td {
+    padding: 11px 14px;
+
+    background: transparent;
+
+    color: var(--bekuku-text-body);
+
+    border-bottom: 1px solid var(--bekuku-border-soft);
+
+    font-size: 0.78rem;
+
+    vertical-align: middle;
+}
+
+
+/*
+| Baris terakhir
+*/
+
+.transaction-popup-page .detail-product-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/*
+| Hover
+*/
+
+.transaction-popup-page .detail-product-table tbody tr {
+    transition:
+        background 0.18s ease;
+}
+
+
+.transaction-popup-page .detail-product-table tbody tr:hover {
+    background:
+        rgba(98, 214, 197, 0.055);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PRODUCT
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .product-icon {
+    display: none;
+}
+
+
+.transaction-popup-page .product-name {
+    margin: 0;
+
+    color:
+        #f4f7ff;
+
+    font-size: 0.8rem;
+
+    font-weight: 600;
+}
+
+
+.transaction-popup-page .product-unit {
+    display: none;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| QUANTITY
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .quantity-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 32px;
+
+    padding: 4px 7px;
+
+    border:
+        1px solid
+        rgba(98, 214, 197, 0.12);
+
+    border-radius: 6px;
+
+    background:
+        #162b68;
+
+    color:
+        #c6d2ef;
+
+    font-size: 0.72rem;
+
+    font-weight: 700;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| ================================================================
+| POPUP - SUMMARY PEMBAYARAN
+| ================================================================
+|--------------------------------------------------------------------------
+*/
+
+
+.transaction-popup-page .payment-card {
+    margin-top: 14px;
+
+    background: linear-gradient(145deg, var(--bekuku-panel), #0b1945);
+
+    border: 1px solid var(--bekuku-border);
+
+    border-radius: 12px;
+
+    box-shadow: var(--bekuku-shadow);
+
+    overflow: hidden;
+}
+
+
+/*
+| Payment header
+*/
+
+.transaction-popup-page .payment-header {
+    padding: 13px 16px;
+
+    background: rgba(255, 255, 255, 0.02);
+
+    border-bottom: 1px solid var(--bekuku-border);
+}
+
+
+.transaction-popup-page .payment-header-title {
+    margin: 0;
+
+    color: var(--bekuku-text-strong);
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+}
+
+
+.transaction-popup-page .payment-header-title i {
+    color: var(--bekuku-accent);
+
+    margin-right: 7px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Payment body
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .payment-body {
+    padding: 15px 16px;
+}
+
+
+/*
+| Payment row
+*/
+
+.transaction-popup-page .payment-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 10px;
+}
+
+
+.transaction-popup-page .payment-row:last-child {
+    margin-bottom: 0;
+}
+
+
+/*
+| Label
+*/
+
+.transaction-popup-page .payment-label {
+    color: var(--bekuku-text-muted);
+
+    font-size: 0.78rem;
+}
+
+
+/*
+| Value
+*/
+
+.transaction-popup-page .payment-value {
+    color: var(--bekuku-text-strong);
+
+    font-size: 0.82rem;
+
+    font-weight: 700;
+
+    text-align: right;
+}
+
+
+.transaction-popup-page .payment-value.green {
+    color: var(--bekuku-success);
+}
+
+
+.transaction-popup-page .payment-value.orange {
+    color: var(--bekuku-accent);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| TOTAL
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .payment-total {
+    margin-top: 14px;
+
+    padding: 13px 15px;
+
+    border: 1px solid var(--bekuku-border);
+
+    border-radius: 10px;
+
+    background: linear-gradient(135deg, rgba(98, 214, 197, 0.08), rgba(49, 92, 255, 0.08));
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+
+.transaction-popup-page .payment-total-label {
+    color: var(--bekuku-text-muted);
+
+    font-size: 0.76rem;
+
+    font-weight: 700;
+}
+
+
+.transaction-popup-page .payment-total-value {
+    color: var(--bekuku-accent);
+
+    font-size: 1.05rem;
+
+    font-weight: 800;
+
+    text-align: right;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PAYMENT BADGE
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .payment-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 9px;
+
+    border-radius: 6px;
+
+    font-size: 0.7rem;
+
+    font-weight: 700;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| HILANGKAN BAGIAN YANG TIDAK PERLU DI POPUP
+|--------------------------------------------------------------------------
+*/
+
+/*
+| Hero halaman utama tidak ditampilkan
+*/
+
+.transaction-popup-page .detail-hero {
+    display: none !important;
+}
+
+
+/*
+| Summary cards tidak perlu di popup
+*/
+
+.transaction-popup-page .detail-summary-card {
+    display: none !important;
+}
+
+
+/*
+| Tombol hero tidak perlu di popup
+*/
+
+.transaction-popup-page .detail-hero-actions {
+    display: none !important;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| EMPTY
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page .detail-empty {
+    padding: 45px 20px;
+
+    text-align: center;
+
+    color:
+        #8296c7;
+}
+
+
+.transaction-popup-page .detail-empty i {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color:
+        #536da9;
+
+    font-size: 2.5rem;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SCROLLBAR POPUP
+|--------------------------------------------------------------------------
+*/
+
+.transaction-popup-page::-webkit-scrollbar {
+    width: 7px;
+}
+
+
+.transaction-popup-page::-webkit-scrollbar-track {
+    background:
+        #07112f;
+}
+
+
+.transaction-popup-page::-webkit-scrollbar-thumb {
+    background:
+        #263d78;
+
+    border-radius: 10px;
+}
+
+
+.transaction-popup-page::-webkit-scrollbar-thumb:hover {
+    background:
+        #315cff;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| RESPONSIVE POPUP
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 767.98px) {
+
+    .transaction-popup-page .detail-info-card .row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .transaction-popup-page .detail-info-item {
+        padding: 12px 13px;
+
+        border-right:
+            1px solid
+            rgba(255, 255, 255, 0.07);
+
+        border-bottom:
+            1px solid
+            rgba(255, 255, 255, 0.07);
+    }
+
+
+    .transaction-popup-page .detail-info-item:nth-child(2n) {
+        border-right: none;
+    }
+
+
+    .transaction-popup-page .detail-info-item:nth-last-child(-n + 2) {
+        border-bottom: none;
+    }
+
+
+    .transaction-popup-page .detail-section {
+        margin-top: 10px;
+
+        border-radius: 9px;
+    }
+
+
+    .transaction-popup-page .payment-card {
+        margin-top: 10px;
+
+        border-radius: 9px;
+    }
+
+
+    .transaction-popup-page .detail-product-table {
+        min-width: 560px;
+    }
+
+
+    .transaction-popup-page .detail-product-table thead th {
+        padding: 9px 11px;
+    }
+
+
+    .transaction-popup-page .detail-product-table tbody td {
+        padding: 10px 11px;
+    }
+
+
+    .transaction-popup-page .payment-body {
+        padding: 13px;
+    }
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| VERY SMALL SCREEN
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 480px) {
+
+    .transaction-popup-page .detail-info-card .row {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .transaction-popup-page .detail-info-item {
+        padding: 11px 10px;
+    }
+
+
+    .transaction-popup-page .detail-label {
+        font-size: 0.61rem;
+    }
+
+
+    .transaction-popup-page .detail-value {
+        font-size: 0.76rem;
+    }
+
+
+    .transaction-popup-page .detail-section-header {
+        min-height: 48px;
+
+        padding: 11px 12px;
+    }
+
+
+    .transaction-popup-page .detail-section-title {
+        font-size: 0.82rem;
+    }
+
+
+    .transaction-popup-page .payment-total {
+        padding: 11px 12px;
+    }
+
+
+    .transaction-popup-page .payment-total-value {
+        font-size: 0.95rem;
+    }
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| ================================================================
+| HALAMAN DETAIL NORMAL
+| ================================================================
+|--------------------------------------------------------------------------
+*/
+
+
+/*
+|--------------------------------------------------------------------------
+| HERO
+|--------------------------------------------------------------------------
+*/
+
+.detail-hero {
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #315cff 0%,
+            #12245c 100%
+        );
+
+    border-radius: 18px;
+
+    padding: 28px 30px;
+
+    margin-bottom: 24px;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 10px 30px
+        rgba(49, 92, 255, 0.20);
+}
+
+
+.detail-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    right: -70px;
+    top: -90px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(98, 214, 197, 0.12);
+}
+
+
+.detail-hero-content {
+    position: relative;
+
+    z-index: 2;
+}
+
+
+.detail-hero-title {
+    font-size: 1.7rem;
+
+    font-weight: 700;
+
+    margin-bottom: 5px;
+}
+
+
+.detail-hero-subtitle {
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.78);
+
+    font-size: 0.95rem;
+}
+
+
+.detail-hero-meta {
+    margin-top: 16px;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+
+.hero-meta-item {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 12px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255, 255, 255, 0.10);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
+    color: #ffffff;
+
+    font-size: 0.85rem;
+}
+
+
+.detail-hero-actions {
+    position: relative;
+
+    z-index: 3;
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+}
+
+
+.detail-hero-actions .btn {
+    border-radius: 9px;
+
+    font-weight: 600;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| INFO CARD
+|--------------------------------------------------------------------------
+*/
+
+.detail-info-card {
+    background:
+        var(--bekuku-panel, #0d1b4d);
+
+    border:
+        1px solid
+        var(--bekuku-border, rgba(255, 255, 255, 0.08));
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 24px
+        rgba(0, 0, 0, 0.18);
+
+    height: 100%;
+}
+
+
+.detail-info-item {
+    padding: 18px 20px;
+
+    border-bottom:
+        1px solid
+        var(--bekuku-border, rgba(255, 255, 255, 0.08));
+}
+
+
+.detail-info-item:last-child {
+    border-bottom: none;
+}
+
+
+.detail-label {
+    color:
+        var(--bekuku-text-muted, #9fb2df);
+
+    font-size: 0.78rem;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+
+    margin-bottom: 5px;
+}
+
+
+.detail-value {
+    color:
+        var(--bekuku-text, #f4f7ff);
+
+    font-size: 0.96rem;
+
+    font-weight: 600;
+}
+
+
+.detail-value i {
+    color:
+        var(--bekuku-accent, #62d6c5);
+
+    margin-right: 5px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| STATUS BADGE
+|--------------------------------------------------------------------------
+*/
+
+.detail-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 7px 12px;
+
+    border-radius: 8px;
+
+    font-size: 0.82rem;
+
+    font-weight: 600;
+}
+
+
+.status-success {
+    background:
+        rgba(34, 197, 94, 0.12);
+
+    color:
+        #4ade80;
+}
+
+
+.status-danger {
+    background:
+        rgba(239, 68, 68, 0.12);
+
+    color:
+        #f87171;
+}
+
+
+.status-warning {
+    background:
+        rgba(245, 158, 11, 0.12);
+
+    color:
+        #fbbf24;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SUMMARY CARDS
+|--------------------------------------------------------------------------
+*/
+
+.detail-summary-card {
+    background:
+        var(--bekuku-panel, #0d1b4d);
+
+    border:
+        1px solid
+        var(--bekuku-border, rgba(255, 255, 255, 0.08));
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    height: 100%;
+
+    box-shadow:
+        0 8px 24px
+        rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.detail-summary-card:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 30px
+        rgba(0, 0, 0, 0.25);
+}
+
+
+.summary-icon {
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 1.25rem;
+
+    flex-shrink: 0;
+}
+
+
+.summary-icon-orange {
+    background:
+        rgba(98, 214, 197, 0.12);
+
+    color:
+        var(--bekuku-accent, #62d6c5);
+}
+
+
+.summary-icon-green {
+    background:
+        rgba(34, 197, 94, 0.12);
+
+    color:
+        #4ade80;
+}
+
+
+.summary-icon-blue {
+    background:
+        rgba(49, 92, 255, 0.14);
+
+    color:
+        #6f8cff;
+}
+
+
+.summary-label {
+    color:
+        var(--bekuku-text-muted, #9fb2df);
+
+    font-size: 0.8rem;
+
+    margin-bottom: 3px;
+}
+
+
+.summary-value {
+    color:
+        var(--bekuku-text, #f4f7ff);
+
+    font-size: 1.25rem;
+
+    font-weight: 700;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SECTION CARD
+|--------------------------------------------------------------------------
+*/
+
+.detail-section {
+    background:
+        var(--bekuku-panel, #0d1b4d);
+
+    border:
+        1px solid
+        var(--bekuku-border, rgba(255, 255, 255, 0.08));
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 8px 24px
+        rgba(0, 0, 0, 0.18);
+
+    margin-bottom: 24px;
+}
+
+
+.detail-section-header {
+    padding: 18px 20px;
+
+    border-bottom:
+        1px solid
+        var(--bekuku-border, rgba(255, 255, 255, 0.08));
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.detail-section-title {
+    margin: 0;
+
+    color:
+        var(--bekuku-text, #f4f7ff);
+
+    font-size: 1rem;
+
+    font-weight: 700;
+}
+
+
+.detail-section-title i {
+    color:
+        var(--bekuku-accent, #62d6c5);
+
+    margin-right: 8px;
+}
+
+
+.detail-section-body {
+    padding: 0;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PRODUCT TABLE
+|--------------------------------------------------------------------------
+*/
+
+.detail-product-table {
+    margin-bottom: 0;
+
+    color:
+        var(--bekuku-text, #f4f7ff);
+}
+
+
+.detail-product-table thead th {
+    background:
+        var(--bekuku-surface, #101f52);
+
+    color:
+        var(--bekuku-text-muted, #9fb2df);
+
+    border-bottom:
+        1px solid
+        var(--bekuku-border, rgba(255, 255, 255, 0.08));
+
+    font-size: 0.78rem;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+
+    padding: 14px 16px;
+
+    white-space: nowrap;
+}
+
+
+.detail-product-table tbody td {
+    padding: 15px 16px;
+
+    color:
+        var(--bekuku-text-soft, #c6d2ef);
+
+    border-color:
+        var(--bekuku-border, rgba(255, 255, 255, 0.08));
+
+    vertical-align: middle;
+}
+
+
+.detail-product-table tbody tr {
+    background:
+        transparent;
+
+    transition:
+        background-color 0.15s ease;
+}
+
+
+.detail-product-table tbody tr:hover {
+    background:
+        rgba(98, 214, 197, 0.05);
+}
+
+
+.product-icon {
+    width: 38px;
+
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background:
+        rgba(98, 214, 197, 0.12);
+
+    color:
+        var(--bekuku-accent, #62d6c5);
+
+    flex-shrink: 0;
+}
+
+
+.product-name {
+    color:
+        var(--bekuku-text, #f4f7ff);
+
+    font-weight: 600;
+
+    margin-bottom: 2px;
+}
+
+
+.product-unit {
+    color:
+        var(--bekuku-text-muted, #9fb2df);
+
+    font-size: 0.78rem;
+}
+
+
+.quantity-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 38px;
+
+    padding: 6px 9px;
+
+    background:
+        var(--bekuku-surface-soft, #162b68);
+
+    color:
+        var(--bekuku-text-soft, #c6d2ef);
+
+    border-radius: 7px;
+
+    font-weight: 600;
+
+    font-size: 0.8rem;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PAYMENT
+|--------------------------------------------------------------------------
+*/
+
+.payment-card {
+    background:
+        var(--bekuku-panel, #0d1b4d);
+
+    border:
+        1px solid
+        var(--bekuku-border, rgba(255, 255, 255, 0.08));
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 24px
+        rgba(0, 0, 0, 0.18);
+
+    overflow: hidden;
+}
+
+
+.payment-header {
+    padding: 18px 20px;
+
+    border-bottom:
+        1px solid
+        var(--bekuku-border, rgba(255, 255, 255, 0.08));
+}
+
+
+.payment-header-title {
+    margin: 0;
+
+    font-size: 1rem;
+
+    font-weight: 700;
+
+    color:
+        var(--bekuku-text, #f4f7ff);
+}
+
+
+.payment-header-title i {
+    color:
+        var(--bekuku-accent, #62d6c5);
+
+    margin-right: 8px;
+}
+
+
+.payment-body {
+    padding: 20px;
+}
+
+
+.payment-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 14px;
+}
+
+
+.payment-row:last-child {
+    margin-bottom: 0;
+}
+
+
+.payment-label {
+    color:
+        var(--bekuku-text-muted, #9fb2df);
+
+    font-size: 0.9rem;
+}
+
+
+.payment-value {
+    color:
+        var(--bekuku-text, #f4f7ff);
+
+    font-weight: 600;
+
+    text-align: right;
+}
+
+
+.payment-value.green {
+    color:
+        #4ade80;
+}
+
+
+.payment-value.orange {
+    color:
+        var(--bekuku-accent, #62d6c5);
+}
+
+
+.payment-total {
+    margin-top: 18px;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(98, 214, 197, 0.10),
+            rgba(49, 92, 255, 0.10)
+        );
+
+    border:
+        1px solid
+        rgba(98, 214, 197, 0.16);
+}
+
+
+.payment-total-label {
+    color:
+        var(--bekuku-text-muted, #9fb2df);
+
+    font-size: 0.82rem;
+
+    font-weight: 600;
+}
+
+
+.payment-total-value {
+    color:
+        var(--bekuku-accent, #62d6c5);
+
+    font-size: 1.45rem;
+
+    font-weight: 800;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PAYMENT BADGE
+|--------------------------------------------------------------------------
+*/
+
+.payment-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 7px 11px;
+
+    border-radius: 8px;
+
+    font-size: 0.8rem;
+
+    font-weight: 600;
+}
+
+
+.payment-cash {
+    background:
+        rgba(34, 197, 94, 0.12);
+
+    color:
+        #4ade80;
+}
+
+
+.payment-transfer {
+    background:
+        rgba(49, 92, 255, 0.14);
+
+    color:
+        #6f8cff;
+}
+
+
+.payment-qris {
+    background:
+        rgba(98, 214, 197, 0.12);
+
+    color:
+        #62d6c5;
+}
+
+
+.payment-other {
+    background:
+        var(--bekuku-surface-soft, #162b68);
+
+    color:
+        var(--bekuku-text-soft, #c6d2ef);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| EMPTY
+|--------------------------------------------------------------------------
+*/
+
+.detail-empty {
+    padding: 60px 20px;
+
+    text-align: center;
+
+    color:
+        var(--bekuku-text-muted, #9fb2df);
+}
+
+
+.detail-empty i {
+    font-size: 3rem;
+
+    display: block;
+
+    margin-bottom: 10px;
+
+    color:
+        #536da9;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| RESPONSIVE HALAMAN NORMAL
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 767.98px) {
+
+    .detail-hero {
+        padding: 22px;
+    }
+
+
+    .detail-hero-title {
+        font-size: 1.35rem;
+    }
+
+
+    .detail-hero-actions {
+        margin-top: 18px;
+
+        width: 100%;
+    }
+
+
+    .detail-hero-actions .btn {
+        flex: 1;
+    }
+
+
+    .payment-total-value {
+        font-size: 1.15rem;
+    }
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PRINT
+|--------------------------------------------------------------------------
+*/
+
+@media print {
+
+    .no-print,
+    .app-header,
+    .app-sidebar {
+        display: none !important;
+    }
+
+    /* Shared dashboard palette for transaction detail surfaces. */
+    .detail-section,
+    .detail-info-card,
+    .detail-summary-card,
+    .payment-card {
+        color: var(--bekuku-text) !important;
+        background: linear-gradient(145deg, var(--bekuku-panel), #0b1945) !important;
+        border-color: var(--bekuku-border) !important;
+        box-shadow: var(--bekuku-shadow) !important;
+    }
+
+    .detail-section-header,
+    .detail-info-item {
+        background: rgba(18, 36, 92, .72) !important;
+        border-color: var(--bekuku-border) !important;
+    }
+
+    .detail-product-table th {
+        color: var(--bekuku-text-muted) !important;
+        background: var(--bekuku-surface-soft) !important;
+        border-color: var(--bekuku-border) !important;
+    }
+
+    .detail-product-table td,
+    .detail-value,
+    .product-name,
+    .payment-value,
+    .summary-value {
+        color: var(--bekuku-text-body) !important;
+        border-color: var(--bekuku-border-soft) !important;
+    }
+
+
+    .app-main {
+        margin-left: 0 !important;
+
+        padding-left: 0 !important;
+    }
+
+
+    body {
+        background: #ffffff !important;
+    }
+
+
+    .detail-hero {
+        background: #ffffff !important;
+
+        color: #000000 !important;
+
+        border: 1px solid #ddd;
+
+        box-shadow: none;
+    }
+
+
+    .detail-hero-subtitle,
+    .hero-meta-item {
+        color: #333333 !important;
+    }
+
+
+    .detail-section,
+    .detail-info-card,
+    .detail-summary-card,
+    .payment-card {
+        box-shadow: none !important;
+
+        border: 1px solid #ddd !important;
+    }
+
+
+    .detail-value,
+    .detail-section-title,
+    .detail-product-table,
+    .product-name,
+    .payment-value,
+    .summary-value {
+        color: #222222 !important;
+    }
+
+}

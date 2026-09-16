@@ -1,0 +1,666 @@
+/* Public BEKUKU landing page. */
+.landing-reference-page .landing-shell,
+.landing-reference-page .bekuku-landing-nav,
+.landing-reference-page .landing-dashboard-card,
+.landing-reference-page .landing-feature-strip,
+.landing-reference-page .landing-product-features article,
+.landing-reference-page .landing-preview-mini,
+.landing-reference-page .landing-large-preview,
+.landing-reference-page .landing-preview-sidebar,
+.landing-reference-page .landing-final-cta {
+    background-image: none !important;
+}
+
+.landing-reference-page .landing-shell {
+    background-color: #06112f !important;
+}
+
+.landing-reference-page .bekuku-landing-nav {
+    background-color: #081a45 !important;
+}
+
+.landing-reference-page .bekuku-landing-login,
+.landing-reference-page .bekuku-landing-cta {
+    background: #315cff !important;
+    box-shadow: 0 8px 22px rgba(49, 92, 255, .28);
+}
+
+.landing-reference-page .landing-dashboard-card,
+.landing-reference-page .landing-product-features article,
+.landing-reference-page .landing-preview-mini,
+.landing-reference-page .landing-large-preview,
+.landing-reference-page .landing-final-cta {
+    background-color: #0d1b4d !important;
+}
+
+.landing-reference-page .landing-feature-strip {
+    background-color: #081a45 !important;
+}
+
+.landing-reference-page .landing-preview-sidebar {
+    background-color: #07183d !important;
+}
+
+.landing-reference-page .landing-dashboard-stats > div,
+.landing-reference-page .landing-chart,
+.landing-reference-page .landing-preview-content > div:not(.landing-preview-graph) {
+    background-color: #12245c !important;
+}
+
+.landing-reference-page .landing-dashboard-stats > div,
+.landing-reference-page .landing-chart,
+.landing-reference-page .landing-preview-content > div:not(.landing-preview-graph),
+.landing-reference-page .landing-product-features article,
+.landing-reference-page .landing-large-preview {
+    background-image: none !important;
+}
+
+.landing-reference-page .landing-bars i,
+.landing-reference-page .landing-mini-chart i,
+.landing-reference-page .landing-preview-graph i {
+    background: #62d6c5 !important;
+}
+
+.landing-reference-page .landing-bottom-statement {
+    background: #e4f0ff !important;
+}
+
+/* Keep legacy landing selectors from reintroducing image paint. */
+.landing-reference-page * {
+    background-image: none !important;
+}
+
+.landing-reference-page .bekuku-brand-mark,
+.landing-reference-page .bekuku-landing-nav-links > a,
+.landing-reference-page .bekuku-landing-cta,
+.landing-reference-page .bekuku-login-form button {
+    background: #315cff !important;
+}
+
+.landing-reference-page .bekuku-visual-card,
+.landing-reference-page .bekuku-feature-grid article,
+.landing-reference-page .bekuku-about-section,
+.landing-reference-page .bekuku-auth-card {
+    background: #0d1b4d !important;
+}
+
+.landing-reference-page .bekuku-visual-bars span {
+    background: #62d6c5 !important;
+}
+
+.landing-reference-page { font-size: 15px; }
+.landing-reference-page .landing-shell { overflow-x: hidden; }
+.landing-reference-page .bekuku-landing-nav,
+.landing-reference-hero {
+    padding-right: clamp(22px, 2.5vw, 42px);
+    padding-left: clamp(22px, 2.5vw, 42px);
+}
+.landing-reference-page .bekuku-landing-nav { max-width: 1440px; margin-right: auto; margin-left: auto; }
+.landing-reference-hero { max-width: 1500px; margin-right: auto; margin-left: auto; grid-template-columns: 1.08fr .92fr; gap: 48px; min-height: 470px; }
+.landing-reference-copy h1 { max-width: 760px; font-size: clamp(42px, 4.5vw, 66px); line-height: 1.02; }
+.landing-reference-copy .bekuku-landing-description { max-width: 510px; font-size: 13px; line-height: 1.65; }
+.landing-section { max-width: 1440px; padding: 84px clamp(22px, 2.5vw, 42px); }
+.landing-section-heading h2 { font-size: clamp(28px, 3vw, 40px); }
+.landing-section-heading p:not(.landing-kicker) { font-size: 13px; }
+.landing-product-features h3 { font-size: 16px; }
+.landing-product-features p { font-size: 12px; }
+.landing-feature-strip { max-width: 1440px; margin-right: auto; margin-left: auto; padding-top: 22px; padding-bottom: 22px; }
+.landing-final-cta { max-width: 1440px; margin-right: auto; margin-left: auto; padding-top: 80px; padding-bottom: 80px; }
+.landing-final-cta h2 { font-size: clamp(28px, 3.5vw, 42px); }
+.landing-section[data-reveal],.landing-final-cta[data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .55s ease,transform .55s ease; }
+.landing-section[data-reveal].is-visible,.landing-final-cta[data-reveal].is-visible { opacity: 1; transform: none; }
+.landing-menu-toggle { display: none; }
+.landing-section { max-width: 1040px; margin: 0 auto; padding: 88px 24px; }
+.landing-section-heading { max-width: 620px; }
+.landing-section-heading.centered { margin: 0 auto 34px; text-align: center; }
+.landing-kicker { margin: 0 0 12px; color: #62d6c5; font-size: 10px; font-weight: 800; letter-spacing: 2px; }
+.landing-section-heading h2 { margin: 0 0 15px; color: #f5f8ff; font-size: clamp(30px, 4vw, 48px); line-height: 1.1; }
+.landing-section-heading p:not(.landing-kicker) { color: #a9b9dd; line-height: 1.7; }
+.landing-problem-section { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; }
+.landing-problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: center; }
+.landing-problem-grid div { display: flex; gap: 10px; align-items: center; padding: 15px; color: #dce6ff; background: rgba(13,27,77,.68); border: 1px solid rgba(126,157,231,.2); border-radius: 12px; font-size: 12px; }
+.landing-problem-grid i { color: #ff7583; }
+.landing-before-after { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center; padding: 22px; background: rgba(8,26,69,.72); border: 1px solid rgba(98,214,197,.2); border-radius: 16px; }
+.landing-before-after div { display: grid; gap: 7px; }
+.landing-before-after small { color: #9fb2df; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; }
+.landing-before-after strong { color: #dce6ff; font-size: 13px; }
+.landing-before-after > i { color: #62d6c5; font-size: 22px; }
+.landing-product-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.landing-product-features article { min-height: 285px; padding: 28px; background: #0d1b4d; border: 1px solid rgba(126,157,231,.28); border-radius: 15px; transition: transform .2s ease,border-color .2s ease; }
+.landing-product-features article:hover { transform: translateY(-5px); border-color: #62d6c5; }
+.landing-product-features article > i { display: grid; width: 42px; height: 42px; place-items: center; margin-bottom: 17px; color: #071b32; background: #62d6c5; border-radius: 11px; font-size: 20px; }
+.landing-product-features h3 { margin: 0 0 9px; color: #f5f8ff; font-size: 17px; }
+.landing-product-features p { min-height: 58px; margin: 0; color: #a9b9dd; font-size: 12px; line-height: 1.6; }
+.landing-product-features ul { display: grid; gap: 5px; margin: 15px 0 0; padding: 0; color: #dce6ff; font-size: 11px; list-style: none; }
+.landing-product-features li::before { content: "✓"; margin-right: 7px; color: #62d6c5; }
+.landing-benefit-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 70px; align-items: center; }
+.landing-preview-mini { min-height: 250px; padding: 30px; display: flex; flex-direction: column; justify-content: flex-end; background: #0d1b4d; border: 1px solid rgba(98,214,197,.3); border-radius: 20px; box-shadow: 0 16px 45px rgba(0,0,0,.25); }
+.landing-mini-chart { height: 100px; display: flex; align-items: end; gap: 13px; padding-bottom: 12px; border-bottom: 1px solid rgba(159,178,223,.2); }
+.landing-mini-chart i { flex: 1; background: #62d6c5; border-radius: 4px 4px 0 0; }
+.landing-preview-mini strong { margin-top: 20px; color: #f5f8ff; font-size: 24px; }
+.landing-preview-mini small { margin-top: 4px; color: #9fb2df; }
+.landing-benefit-list { display: grid; gap: 18px; margin-top: 25px; }
+.landing-benefit-list div { display: flex; gap: 13px; align-items: center; }
+.landing-benefit-list i { display: grid; width: 38px; height: 38px; place-items: center; flex-shrink: 0; color: #62d6c5; background: rgba(98,214,197,.12); border-radius: 10px; }
+.landing-benefit-list strong,.landing-benefit-list small { display: block; }
+.landing-benefit-list strong { color: #f5f8ff; font-size: 14px; }
+.landing-benefit-list small { margin-top: 4px; color: #a9b9dd; font-size: 12px; }
+.landing-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+.landing-steps > div { position: relative; padding: 25px; background: rgba(13,27,77,.7); border: 1px solid rgba(126,157,231,.25); border-radius: 15px; }
+.landing-steps b { position: absolute; top: 18px; right: 20px; color: rgba(98,214,197,.35); font-size: 24px; }
+.landing-steps i { color: #62d6c5; font-size: 25px; }
+.landing-steps h3 { margin: 18px 0 7px; color: #f5f8ff; font-size: 16px; }
+.landing-steps p { margin: 0; color: #a9b9dd; font-size: 12px; line-height: 1.55; }
+.landing-preview-section { max-width: 1120px; }
+.landing-large-preview { display: grid; grid-template-columns: 160px 1fr; min-height: 310px; overflow: hidden; background: #0b1945; border: 1px solid #315cff; border-radius: 18px; box-shadow: 0 0 35px rgba(49,92,255,.2); }
+.landing-preview-sidebar { display: grid; align-content: start; gap: 5px; padding: 22px 13px; background: #081a45; }
+.landing-preview-sidebar strong { margin-bottom: 18px; color: #f5f8ff; }
+.landing-preview-sidebar strong i { margin-right: 5px; color: #62d6c5; }
+.landing-preview-sidebar span { padding: 9px; color: #9fb2df; border-radius: 7px; font-size: 11px; }
+.landing-preview-sidebar span.active { color: #62d6c5; background: rgba(49,92,255,.3); }
+.landing-preview-content { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; align-content: start; padding: 25px; }
+.landing-preview-content > div:not(.landing-preview-graph) { padding: 15px; background: #12245c; border: 1px solid rgba(126,157,231,.2); border-radius: 10px; }
+.landing-preview-content small,.landing-preview-content strong { display: block; }
+.landing-preview-content small { color: #9fb2df; font-size: 10px; }
+.landing-preview-content strong { margin-top: 7px; color: #f5f8ff; font-size: 18px; }
+.landing-preview-graph { grid-column: 1 / -1; display: flex; align-items: end; gap: 15px; height: 170px; padding: 20px; border-bottom: 1px solid rgba(159,178,223,.2); }
+.landing-preview-graph i { flex: 1; background: #62d6c5; border-radius: 5px 5px 0 0; }
+.landing-final-cta { max-width: 1040px; margin: 0 auto 80px; padding: 65px 30px; color: #f5f8ff; text-align: center; background: #0d1b4d; border-radius: 20px; }
+.landing-final-cta h2 { margin: 0 0 14px; font-size: clamp(28px,4vw,46px); line-height: 1.1; }
+.landing-final-cta > p:not(.landing-kicker) { max-width: 560px; margin: 0 auto 24px; color: #dce6ff; }
+.landing-final-cta > div { display: flex; justify-content: center; gap: 10px; }
+.landing-footer { display: grid; grid-template-columns: 1fr auto; gap: 40px; padding: 45px max(24px, calc((100% - 1040px)/2)); color: #a9b9dd; background: #06112f; }
+.landing-footer .bekuku-auth-brand { margin-bottom: 13px; }
+.landing-footer p { max-width: 360px; margin: 0; font-size: 12px; line-height: 1.6; }
+.landing-footer > div:nth-child(2) { display: grid; gap: 8px; align-content: start; }
+.landing-footer > div:nth-child(2) strong { color: #f5f8ff; }
+.landing-footer a:not(.bekuku-auth-brand) { color: #a9b9dd; font-size: 12px; text-decoration: none; }
+.landing-footer a:not(.bekuku-auth-brand):hover { color: #62d6c5; }
+.landing-footer > small { grid-column: 1 / -1; padding-top: 20px; border-top: 1px solid rgba(126,157,231,.2); }
+
+@media (max-width: 800px) {
+    .landing-menu-toggle { display: inline-grid; width: 38px; height: 38px; place-items: center; color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(126,157,231,.3); border-radius: 10px; font-size: 21px; }
+    .landing-reference-page .bekuku-landing-nav { position: relative; }
+    .landing-reference-page .bekuku-landing-nav-links,.landing-reference-page .landing-nav-actions { display: none; }
+    .landing-reference-page .bekuku-landing-nav.is-open .bekuku-landing-nav-links { display: flex; position: absolute; z-index: 10; top: 64px; left: 16px; right: 16px; flex-direction: column; align-items: stretch; padding: 10px; background: #081a45; border: 1px solid rgba(126,157,231,.3); border-radius: 12px; }
+    .landing-reference-page .bekuku-landing-nav.is-open .bekuku-landing-nav-links a { display: block; text-align: left; }
+    .landing-reference-page .bekuku-landing-nav.is-open .landing-nav-actions { display: flex; position: absolute; z-index: 11; top: 225px; left: 26px; right: 26px; }
+    .landing-problem-section,.landing-benefit-section { grid-template-columns: 1fr; gap: 30px; }
+    .landing-product-features { grid-template-columns: repeat(2,1fr); }
+    .landing-steps { grid-template-columns: 1fr; }
+    .landing-large-preview { grid-template-columns: 1fr; }
+    .landing-preview-sidebar { grid-template-columns: repeat(5,1fr); padding: 12px; }
+    .landing-preview-sidebar strong { display: none; }
+    .landing-preview-sidebar span { text-align: center; font-size: 9px; }
+}
+
+@media (max-width: 520px) {
+    .landing-section { padding: 58px 16px; }
+    .landing-problem-grid,.landing-product-features { grid-template-columns: 1fr; }
+    .landing-before-after { grid-template-columns: 1fr; gap: 12px; }
+    .landing-before-after > i { transform: rotate(90deg); justify-self: center; }
+    .landing-preview-content { grid-template-columns: 1fr; padding: 14px; }
+    .landing-preview-graph { height: 120px; grid-column: auto; gap: 7px; padding: 12px; }
+    .landing-final-cta { margin: 0 12px 45px; padding: 45px 18px; border-radius: 15px; }
+    .landing-final-cta > div { flex-direction: column; }
+    .landing-footer { grid-template-columns: 1fr; gap: 25px; }
+    .landing-footer > small { grid-column: auto; }
+}
+
+/* Match the authenticated sales-menu visual system. */
+.landing-reference-page {
+    --landing-bg: #07112f;
+    --landing-panel: #0d1b4d;
+    --landing-surface: #12245c;
+    --landing-text: #f5f8ff;
+    --landing-body: #dce6ff;
+    --landing-muted: #9fb2df;
+    --landing-border: rgba(126, 157, 231, .34);
+    --landing-border-soft: rgba(126, 157, 231, .20);
+    --landing-accent: #62d6c5;
+    --landing-primary: #315cff;
+    color: var(--landing-body);
+    background: var(--landing-bg) !important;
+    font-size: 14px;
+}
+
+.landing-reference-page .landing-shell,
+.landing-reference-page .bekuku-landing-nav,
+.landing-reference-page .landing-dashboard-card,
+.landing-reference-page .landing-feature-strip,
+.landing-reference-page .landing-problem-grid div,
+.landing-reference-page .landing-before-after,
+.landing-reference-page .landing-product-features article,
+.landing-reference-page .landing-preview-mini,
+.landing-reference-page .landing-steps > div,
+.landing-reference-page .landing-large-preview,
+.landing-reference-page .landing-final-cta {
+    border-color: var(--landing-border);
+    border-radius: 14px;
+}
+
+.landing-reference-page .bekuku-landing-nav {
+    background: #081a45 !important;
+    border: 1px solid var(--landing-border-soft);
+}
+
+.landing-reference-page .landing-dashboard-card,
+.landing-reference-page .landing-product-features article,
+.landing-reference-page .landing-preview-mini,
+.landing-reference-page .landing-large-preview,
+.landing-reference-page .landing-final-cta {
+    background: var(--landing-panel) !important;
+    border: 1px solid var(--landing-border);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .22);
+}
+
+.landing-reference-page .landing-dashboard-stats > div,
+.landing-reference-page .landing-chart,
+.landing-reference-page .landing-preview-content > div:not(.landing-preview-graph),
+.landing-reference-page .landing-preview-sidebar {
+    background: var(--landing-surface) !important;
+    border-color: var(--landing-border);
+}
+
+.landing-reference-page h1,
+.landing-reference-page h2,
+.landing-reference-page h3,
+.landing-reference-page h4,
+.landing-reference-page strong,
+.landing-reference-page .landing-dashboard-top,
+.landing-reference-page .landing-dashboard-top time,
+.landing-reference-page .landing-dashboard-top span {
+    color: var(--landing-text);
+}
+
+.landing-reference-page p,
+.landing-reference-page small,
+.landing-reference-page .landing-section-heading p:not(.landing-kicker),
+.landing-reference-page .landing-dashboard-stats small,
+.landing-reference-page .landing-dashboard-stats p,
+.landing-reference-page .landing-preview-content small,
+.landing-reference-page .landing-footer a:not(.bekuku-auth-brand) {
+    color: var(--landing-muted);
+}
+
+.landing-reference-page .landing-kicker,
+.landing-reference-page .landing-reference-badge,
+.landing-reference-page .landing-dashboard-top i,
+.landing-reference-page .landing-dashboard-stats i,
+.landing-reference-page .landing-preview-sidebar i,
+.landing-reference-page .landing-benefit-list i {
+    color: var(--landing-accent);
+}
+
+.landing-reference-page .bekuku-landing-cta,
+.landing-reference-page .landing-demo-button,
+.landing-reference-page .landing-reference-cta a {
+    border-radius: 9px;
+    font-size: 13px;
+}
+
+.landing-reference-page .bekuku-landing-cta {
+    background: var(--landing-primary) !important;
+    box-shadow: 0 8px 22px rgba(49, 92, 255, .28);
+}
+
+.landing-reference-page .landing-feature-strip,
+.landing-reference-page .landing-footer > small {
+    border-top-color: var(--landing-border-soft);
+}
+
+.landing-reference-page .landing-dashboard-card {
+    min-height: 390px;
+}
+
+.landing-reference-page .landing-dashboard-stats > div,
+.landing-reference-page .landing-chart,
+.landing-reference-page .landing-product-features article {
+    border-radius: 12px;
+}
+
+.landing-reference-page .landing-dashboard-stats strong {
+    font-size: 20px;
+}
+
+.landing-reference-page .landing-chart {
+    border: 1px solid var(--landing-border);
+}
+
+.landing-reference-page .landing-chart-bars i,
+.landing-reference-page .landing-bars i,
+.landing-reference-page .landing-mini-chart i,
+.landing-reference-page .landing-preview-graph i {
+    background: var(--landing-accent) !important;
+}
+
+/* Use the sales-menu blue accent instead of the former green accent. */
+.landing-reference-page {
+    --landing-accent: #4ca0ff;
+}
+
+.landing-reference-page .landing-kicker,
+.landing-reference-page .landing-reference-badge,
+.landing-reference-page .landing-before-after > i,
+.landing-reference-page .landing-product-features article:hover,
+.landing-reference-page .landing-product-features li::before,
+.landing-reference-page .landing-benefit-list i,
+.landing-reference-page .landing-steps i,
+.landing-reference-page .landing-preview-sidebar strong i,
+.landing-reference-page .landing-preview-sidebar span.active,
+.landing-reference-page .landing-footer a:not(.bekuku-auth-brand):hover {
+    color: #4ca0ff !important;
+}
+
+.landing-reference-page .landing-before-after,
+.landing-reference-page .landing-preview-mini {
+    border-color: rgba(76, 160, 255, .3);
+}
+
+.landing-reference-page .landing-product-features article:hover {
+    border-color: #4ca0ff;
+}
+
+.landing-reference-page .landing-product-features article > i,
+.landing-reference-page .landing-bars i,
+.landing-reference-page .landing-mini-chart i,
+.landing-reference-page .landing-preview-graph i,
+.landing-reference-page .landing-chart-bars i {
+    background: #4ca0ff !important;
+}
+
+.landing-reference-page .landing-benefit-list i {
+    background: rgba(76, 160, 255, .12);
+}
+
+.landing-reference-page .landing-steps b {
+    color: rgba(76, 160, 255, .35);
+}
+
+.landing-reference-page .landing-dashboard-top span b {
+    background: #4ca0ff !important;
+}
+
+/* Final landing-only color normalization for legacy selectors. */
+body.landing-reference-page {
+    --bekuku-accent: #4ca0ff !important;
+    --bekuku-accent-strong: #2878d7 !important;
+}
+
+body.landing-reference-page .bekuku-brand-mark,
+body.landing-reference-page .landing-reference-badge,
+body.landing-reference-page .landing-kicker,
+body.landing-reference-page .landing-before-after > i,
+body.landing-reference-page .landing-product-features article > i,
+body.landing-reference-page .landing-product-features li::before,
+body.landing-reference-page .landing-benefit-list i,
+body.landing-reference-page .landing-steps i,
+body.landing-reference-page .landing-preview-sidebar strong i,
+body.landing-reference-page .landing-preview-sidebar span.active,
+body.landing-reference-page .landing-footer a:hover {
+    color: #4ca0ff !important;
+    border-color: #4ca0ff !important;
+}
+
+body.landing-reference-page .bekuku-brand-mark,
+body.landing-reference-page .landing-product-features article > i,
+body.landing-reference-page .landing-bars i,
+body.landing-reference-page .landing-mini-chart i,
+body.landing-reference-page .landing-preview-graph i,
+body.landing-reference-page .landing-chart-bars i,
+body.landing-reference-page .landing-dashboard-top span b,
+body.landing-reference-page .landing-benefit-list i {
+    background-color: #4ca0ff !important;
+    background-image: none !important;
+}
+
+body.landing-reference-page .landing-reference-copy h1 em,
+body.landing-reference-page .bekuku-landing-copy h1 em,
+body.landing-reference-page .bekuku-landing-trust i,
+body.landing-reference-page .landing-dashboard-top i,
+body.landing-reference-page .landing-dashboard-stats i,
+body.landing-reference-page .landing-preview-sidebar i,
+body.landing-reference-page .landing-preview-mini i,
+body.landing-reference-page .landing-benefit-list i,
+body.landing-reference-page .landing-steps i,
+body.landing-reference-page .landing-kicker,
+body.landing-reference-page .landing-reference-badge,
+body.landing-reference-page .landing-before-after > i {
+    color: #4ca0ff !important;
+}
+
+body.landing-reference-page .landing-before-after,
+body.landing-reference-page .landing-preview-mini,
+body.landing-reference-page .landing-product-features article,
+body.landing-reference-page .landing-large-preview {
+    border-color: rgba(76, 160, 255, .34) !important;
+}
+
+body.landing-reference-page .landing-dashboard-card::before,
+body.landing-reference-page .landing-feature-strip::before {
+    background: #4ca0ff !important;
+}
+
+body.landing-reference-page .landing-feature-strip i,
+body.landing-reference-page .landing-feature-strip .landing-feature-icon,
+body.landing-reference-page .landing-product-features article > i,
+body.landing-reference-page .landing-benefit-list i {
+    color: #ffffff !important;
+    background-color: #4ca0ff !important;
+    border-color: #4ca0ff !important;
+}
+
+body.landing-reference-page .landing-feature-strip,
+body.landing-reference-page .landing-feature-strip * ,
+body.landing-reference-page .landing-product-features li::before,
+body.landing-reference-page .landing-problem-grid i,
+body.landing-reference-page .landing-before-after > i,
+body.landing-reference-page .landing-steps i,
+body.landing-reference-page .landing-preview-sidebar strong i,
+body.landing-reference-page .landing-preview-sidebar span.active,
+body.landing-reference-page .landing-kicker {
+    color: #4ca0ff !important;
+}
+
+body.landing-reference-page .landing-feature-strip .landing-feature-icon i,
+body.landing-reference-page .landing-feature-strip > div > i {
+    color: #ffffff !important;
+}
+
+/* One consistent decorative icon treatment across every landing section. */
+body.landing-reference-page .landing-feature-strip i,
+body.landing-reference-page .landing-product-features article > i,
+body.landing-reference-page .landing-benefit-list i,
+body.landing-reference-page .landing-steps > div > i {
+    display: inline-grid !important;
+    width: 42px !important;
+    height: 42px !important;
+    flex: 0 0 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    border: 1px solid #4ca0ff !important;
+    border-radius: 10px !important;
+    color: #ffffff !important;
+    background: #4ca0ff !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+body.landing-reference-page .landing-feature-strip i,
+body.landing-reference-page .landing-product-features article > i,
+body.landing-reference-page .landing-benefit-list i,
+body.landing-reference-page .landing-steps > div > i {
+    margin: 0 0 14px;
+}
+
+body.landing-reference-page .landing-benefit-list div {
+    align-items: center;
+}
+
+body.landing-reference-page .landing-steps > div > i {
+    margin-bottom: 0;
+}
+
+body.landing-reference-page .bekuku-brand-mark {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 10px !important;
+    color: #ffffff !important;
+    background: #4ca0ff !important;
+}
+
+/* Use the available viewport for the lower landing sections. */
+body.landing-reference-page .landing-section,
+body.landing-reference-page .landing-final-cta,
+body.landing-reference-page .landing-footer {
+    width: 100%;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+body.landing-reference-page .landing-section {
+    padding-left: clamp(22px, 3vw, 48px);
+    padding-right: clamp(22px, 3vw, 48px);
+}
+
+body.landing-reference-page .landing-final-cta {
+    margin-bottom: 64px;
+    padding: 64px clamp(24px, 5vw, 80px);
+}
+
+body.landing-reference-page .landing-footer {
+    padding-left: clamp(22px, 3vw, 48px);
+    padding-right: clamp(22px, 3vw, 48px);
+}
+
+body.landing-reference-page .landing-bottom-statement {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 42px clamp(22px, 3vw, 48px);
+    color: #07112f !important;
+    background: #dceaff !important;
+    text-align: center;
+}
+
+body.landing-reference-page .landing-bottom-statement p,
+body.landing-reference-page .landing-bottom-statement h2,
+body.landing-reference-page .landing-bottom-statement em {
+    color: #07112f !important;
+}
+
+body.landing-reference-page .landing-bottom-statement p {
+    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+body.landing-reference-page .landing-bottom-statement h2 {
+    margin: 0;
+    font-size: clamp(24px, 3vw, 38px);
+}
+
+body.landing-reference-page .landing-bottom-statement em {
+    color: #2878d7 !important;
+    font-style: normal;
+}
+
+body.landing-reference-page .landing-feature-strip {
+    padding: 28px clamp(22px, 3vw, 42px);
+}
+
+body.landing-reference-page .landing-feature-strip > div {
+    gap: 14px;
+    padding: 8px clamp(12px, 1.5vw, 22px);
+}
+
+body.landing-reference-page .landing-feature-strip strong {
+    color: #f5f8ff !important;
+    font-size: 14px !important;
+    line-height: 1.35;
+}
+
+body.landing-reference-page .landing-feature-strip small {
+    margin-top: 5px;
+    color: #9fb2df !important;
+    font-size: 11px !important;
+    line-height: 1.45;
+}
+
+body.landing-reference-page .landing-feature-strip i {
+    width: 48px !important;
+    height: 48px !important;
+    flex-basis: 48px;
+    font-size: 20px !important;
+}
+
+body.landing-reference-page .landing-footer .bekuku-auth-brand,
+body.landing-reference-page .landing-footer .bekuku-auth-brand > span:last-child,
+body.landing-reference-page .landing-footer > div:nth-child(2) strong {
+    color: #dce6ff !important;
+}
+
+body.landing-reference-page .landing-footer .bekuku-brand-mark,
+body.landing-reference-page .landing-footer .bekuku-brand-mark i {
+    color: #dce6ff !important;
+}
+
+body.landing-reference-page .landing-section-heading h2 {
+    font-size: clamp(36px, 4vw, 52px) !important;
+    line-height: 1.12;
+}
+
+body.landing-reference-page .landing-section-heading p:not(.landing-kicker) {
+    font-size: 16px !important;
+    line-height: 1.65;
+}
+
+body.landing-reference-page .landing-kicker {
+    font-size: 12px !important;
+    line-height: 1.4;
+}
+
+body.landing-reference-page .landing-product-features h3 {
+    font-size: 20px !important;
+    line-height: 1.3;
+}
+
+body.landing-reference-page .landing-product-features p {
+    min-height: 72px;
+    font-size: 15px !important;
+    line-height: 1.6;
+}
+
+body.landing-reference-page .landing-product-features ul {
+    gap: 8px;
+    margin-top: 18px;
+    font-size: 14px !important;
+    line-height: 1.45;
+}
+
+body.landing-reference-page .landing-product-features li::before {
+    margin-right: 9px;
+}
+
+body.landing-reference-page .landing-benefit-list strong {
+    font-size: 17px;
+}
+
+body.landing-reference-page .landing-benefit-list small {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+body.landing-reference-page .landing-steps h3 {
+    font-size: 19px;
+}
+
+body.landing-reference-page .landing-steps p,
+body.landing-reference-page .landing-preview-content small,
+body.landing-reference-page .landing-preview-sidebar span {
+    font-size: 14px;
+    line-height: 1.55;
+}

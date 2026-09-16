@@ -1,0 +1,21 @@
+# Environment / konfigurasi rahasia
+.env
+.env.*
+!.env.example
+
+# Log
+*.log
+
+# VS Code
+.vscode/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+
+# Cache
+.cache/
