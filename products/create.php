@@ -1,16 +1,13 @@
 <?php
 
 require_once __DIR__ . "/../config/app.php";
+require_once __DIR__ . "/../config/database.php";
 
-
-require_once "../config/database.php";
-
-$message = "";
 $error = "";
 
 /*
 |--------------------------------------------------------------------------
-| Ambil data kategori
+| Ambil kategori
 |--------------------------------------------------------------------------
 */
 $stmtCategory = $conn->query("
@@ -23,7 +20,7 @@ $categories = $stmtCategory->fetchAll(PDO::FETCH_ASSOC);
 
 /*
 |--------------------------------------------------------------------------
-| Ambil data supplier
+| Ambil supplier
 |--------------------------------------------------------------------------
 */
 $stmtSupplier = $conn->query("
@@ -36,7 +33,7 @@ $suppliers = $stmtSupplier->fetchAll(PDO::FETCH_ASSOC);
 
 /*
 |--------------------------------------------------------------------------
-| Proses tambah produk
+| Proses form
 |--------------------------------------------------------------------------
 */
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -44,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $sku = trim($_POST["sku"] ?? "");
     $barcode = trim($_POST["barcode"] ?? "");
     $product_name = trim($_POST["product_name"] ?? "");
+
     $category_id = !empty($_POST["category_id"])
         ? (int) $_POST["category_id"]
         : null;
@@ -54,9 +52,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $purchase_price = (float) ($_POST["purchase_price"] ?? 0);
     $selling_price = (float) ($_POST["selling_price"] ?? 0);
+
     $unit = trim($_POST["unit"] ?? "pcs");
+
     $stock = (int) ($_POST["stock"] ?? 0);
     $min_stock = (int) ($_POST["min_stock"] ?? 5);
+
     $status = $_POST["status"] ?? "aktif";
 
     /*
@@ -66,26 +67,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     */
 
     if ($product_name === "") {
+
         $error = "Nama produk wajib diisi.";
+
     } elseif (!$category_id) {
+
         $error = "Kategori wajib dipilih.";
+
     } elseif ($purchase_price < 0) {
+
         $error = "Harga beli tidak boleh kurang dari 0.";
+
     } elseif ($selling_price < 0) {
+
         $error = "Harga jual tidak boleh kurang dari 0.";
+
     } elseif ($stock < 0) {
+
         $error = "Stok tidak boleh kurang dari 0.";
+
     } elseif ($min_stock < 0) {
+
         $error = "Minimum stok tidak boleh kurang dari 0.";
+
     } else {
 
         try {
 
             /*
             |--------------------------------------------------------------------------
-            | Cek SKU jika diisi
+            | Cek SKU
             |--------------------------------------------------------------------------
             */
+
             if ($sku !== "") {
 
                 $stmtCheckSku = $conn->prepare("
@@ -106,9 +120,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             /*
             |--------------------------------------------------------------------------
-            | Cek barcode jika diisi
+            | Cek Barcode
             |--------------------------------------------------------------------------
             */
+
             if ($barcode !== "") {
 
                 $stmtCheckBarcode = $conn->prepare("
@@ -132,6 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             | Simpan produk
             |--------------------------------------------------------------------------
             */
+
             $stmt = $conn->prepare("
                 INSERT INTO products
                 (
@@ -179,16 +195,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             /*
             |--------------------------------------------------------------------------
-            | Ambil ID produk yang baru dibuat
+            | ID produk
             |--------------------------------------------------------------------------
             */
+
             $product_id = $conn->lastInsertId();
 
             /*
             |--------------------------------------------------------------------------
-            | Jika stok awal > 0, catat sebagai stok masuk
+            | Catat stok awal
             |--------------------------------------------------------------------------
             */
+
             if ($stock > 0) {
 
                 $stmtMovement = $conn->prepare("
@@ -221,9 +239,70 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             /*
             |--------------------------------------------------------------------------
-            | Kembali ke halaman produk
+            | Jika popup
             |--------------------------------------------------------------------------
             */
+
+            if (
+                isset($_GET["popup"]) &&
+                $_GET["popup"] === "1"
+            ) {
+                ?>
+                <!DOCTYPE html>
+                <html lang="id">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta
+                        name="viewport"
+                        content="width=device-width, initial-scale=1.0"
+                    >
+
+                    <title>Produk Berhasil Ditambahkan</title>
+
+                    <link
+                        rel="stylesheet"
+                        href="<?= bekuku_url('assets/css/style.css') ?>"
+                    >
+
+                    <link
+                        rel="stylesheet"
+                        href="<?= bekuku_url('assets/css/popup.css') ?>?v=20260919"
+                    >
+                </head>
+
+                <body class="bekuku-product-popup-page">
+
+                    <div class="bekuku-success-page">
+
+                        <div class="bekuku-success-icon">
+                            ✓
+                        </div>
+
+                        <h2>Produk Berhasil Ditambahkan</h2>
+
+                        <p>
+                            Produk berhasil disimpan.
+                        </p>
+
+                    </div>
+
+                    <script>
+                        setTimeout(function () {
+                            if (window.parent && window.parent !== window) {
+                                window.parent.location.reload();
+                            } else {
+                                window.location.href = "index.php";
+                            }
+                        }, 500);
+                    </script>
+
+                </body>
+                </html>
+                <?php
+
+                exit;
+            }
+
             header("Location: index.php");
             exit;
 
@@ -234,32 +313,518 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
+/*
+|--------------------------------------------------------------------------
+| Mode popup
+|--------------------------------------------------------------------------
+*/
+
+$isPopup =
+    isset($_GET["popup"]) &&
+    $_GET["popup"] === "1";
+
+
+/*
+|--------------------------------------------------------------------------
+| POPUP
+|--------------------------------------------------------------------------
+*/
+
+if ($isPopup):
 ?>
 
 <!DOCTYPE html>
+
 <html lang="id">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Tambah Produk - BEKUKU</title>
-
-    <!-- AdminLTE -->
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
     >
 
-    <!-- Bootstrap Icons -->
+    <title>Tambah Produk</title>
+
+    <link
+        rel="stylesheet"
+        href="<?= bekuku_url('assets/css/style.css') ?>"
+    >
+
+    <link
+        rel="stylesheet"
+        href="<?= bekuku_url('assets/css/popup.css') ?>?v=2026091904"
+    >
+
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
 
-    <!-- CSS Custom -->
+</head>
+
+
+<body class="bekuku-product-popup-page">
+
+
+<div class="bekuku-product-popup">
+
+
+    <!-- FORM -->
+
+    <form
+        method="POST"
+        class="bekuku-product-form"
+        autocomplete="off"
+    >
+
+        <?= bekuku_csrf_field() ?>
+
+
+        <?php if ($error !== ""): ?>
+
+            <div class="bekuku-product-error">
+
+                <i class="bi bi-exclamation-triangle-fill"></i>
+
+                <span>
+                    <?= htmlspecialchars($error) ?>
+                </span>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <div class="bekuku-product-grid">
+
+
+            <!-- SKU -->
+
+            <div class="bekuku-field">
+
+                <label for="sku">
+                    SKU
+                </label>
+
+                <input
+                    id="sku"
+                    type="text"
+                    name="sku"
+                    placeholder="Contoh: BK-001"
+                    value="<?= htmlspecialchars($_POST["sku"] ?? "") ?>"
+                >
+
+            </div>
+
+
+            <!-- BARCODE -->
+
+            <div class="bekuku-field">
+
+                <label for="barcode">
+                    Barcode
+                </label>
+
+                <input
+                    id="barcode"
+                    type="text"
+                    name="barcode"
+                    placeholder="Contoh: 8991234567890"
+                    value="<?= htmlspecialchars($_POST["barcode"] ?? "") ?>"
+                >
+
+            </div>
+
+
+            <!-- NAMA PRODUK -->
+
+            <div class="bekuku-field bekuku-field-full">
+
+                <label for="product_name">
+
+                    Nama Produk
+
+                    <span>*</span>
+
+                </label>
+
+                <input
+                    id="product_name"
+                    type="text"
+                    name="product_name"
+                    placeholder="Contoh: Nugget Ayam"
+                    required
+                    value="<?= htmlspecialchars($_POST["product_name"] ?? "") ?>"
+                >
+
+            </div>
+
+
+            <!-- KATEGORI -->
+
+            <div class="bekuku-field">
+
+                <label for="category_id">
+
+                    Kategori
+
+                    <span>*</span>
+
+                </label>
+
+                <select
+                    id="category_id"
+                    name="category_id"
+                    required
+                >
+
+                    <option value="">
+                        -- Pilih Kategori --
+                    </option>
+
+                    <?php foreach ($categories as $category): ?>
+
+                        <option
+                            value="<?= $category["category_id"] ?>"
+                            <?= (
+                                ($_POST["category_id"] ?? "") ==
+                                $category["category_id"]
+                            )
+                                ? "selected"
+                                : ""
+                            ?>
+                        >
+
+                            <?= htmlspecialchars($category["name"]) ?>
+
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
+
+            </div>
+
+
+            <!-- SUPPLIER -->
+
+            <div class="bekuku-field">
+
+                <label for="supplier_id">
+                    Supplier
+                </label>
+
+                <select
+                    id="supplier_id"
+                    name="supplier_id"
+                >
+
+                    <option value="">
+                        -- Tidak Ada Supplier --
+                    </option>
+
+                    <?php foreach ($suppliers as $supplier): ?>
+
+                        <option
+                            value="<?= $supplier["supplier_id"] ?>"
+                            <?= (
+                                ($_POST["supplier_id"] ?? "") ==
+                                $supplier["supplier_id"]
+                            )
+                                ? "selected"
+                                : ""
+                            ?>
+                        >
+
+                            <?= htmlspecialchars(
+                                $supplier["supplier_name"]
+                            ) ?>
+
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
+
+            </div>
+
+
+            <!-- HARGA BELI -->
+
+            <div class="bekuku-field">
+
+                <label for="purchase_price">
+
+                    Harga Beli
+
+                    <span>*</span>
+
+                </label>
+
+                <div class="bekuku-money">
+
+                    <span>Rp</span>
+
+                    <input
+                        id="purchase_price"
+                        type="number"
+                        name="purchase_price"
+                        min="0"
+                        step="0.01"
+                        required
+                        value="<?= htmlspecialchars(
+                            $_POST["purchase_price"] ?? "0"
+                        ) ?>"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- HARGA JUAL -->
+
+            <div class="bekuku-field">
+
+                <label for="selling_price">
+
+                    Harga Jual
+
+                    <span>*</span>
+
+                </label>
+
+                <div class="bekuku-money">
+
+                    <span>Rp</span>
+
+                    <input
+                        id="selling_price"
+                        type="number"
+                        name="selling_price"
+                        min="0"
+                        step="0.01"
+                        required
+                        value="<?= htmlspecialchars(
+                            $_POST["selling_price"] ?? "0"
+                        ) ?>"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- SATUAN -->
+
+            <div class="bekuku-field">
+
+                <label for="unit">
+                    Satuan
+                </label>
+
+                <select
+                    id="unit"
+                    name="unit"
+                >
+
+                    <?php
+                    $units = [
+                        "pcs" => "pcs",
+                        "pack" => "pack",
+                        "box" => "box",
+                        "kg" => "kg"
+                    ];
+                    ?>
+
+                    <?php foreach ($units as $value => $label): ?>
+
+                        <option
+                            value="<?= $value ?>"
+                            <?= (
+                                ($_POST["unit"] ?? "pcs") === $value
+                            )
+                                ? "selected"
+                                : ""
+                            ?>
+                        >
+
+                            <?= $label ?>
+
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
+
+            </div>
+
+
+            <!-- STOK AWAL -->
+
+            <div class="bekuku-field">
+
+                <label for="stock">
+                    Stok Awal
+                </label>
+
+                <input
+                    id="stock"
+                    type="number"
+                    name="stock"
+                    min="0"
+                    value="<?= htmlspecialchars(
+                        $_POST["stock"] ?? "0"
+                    ) ?>"
+                >
+
+            </div>
+
+
+            <!-- MINIMUM STOK -->
+
+            <div class="bekuku-field">
+
+                <label for="min_stock">
+                    Minimum Stok
+                </label>
+
+                <input
+                    id="min_stock"
+                    type="number"
+                    name="min_stock"
+                    min="0"
+                    value="<?= htmlspecialchars(
+                        $_POST["min_stock"] ?? "5"
+                    ) ?>"
+                >
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="bekuku-field">
+
+                <label for="status">
+                    Status
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                >
+
+                    <option
+                        value="aktif"
+                        <?= (
+                            ($_POST["status"] ?? "aktif") === "aktif"
+                        )
+                            ? "selected"
+                            : ""
+                        ?>
+                    >
+                        Aktif
+                    </option>
+
+                    <option
+                        value="nonaktif"
+                        <?= (
+                            ($_POST["status"] ?? "") === "nonaktif"
+                        )
+                            ? "selected"
+                            : ""
+                        ?>
+                    >
+                        Nonaktif
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- BUTTON -->
+
+        <div class="bekuku-product-actions">
+
+            <button
+                type="button"
+                class="bekuku-btn bekuku-btn-secondary"
+                data-popup-close
+            >
+
+                Batal
+
+            </button>
+
+
+            <button
+                type="submit"
+                class="bekuku-btn bekuku-btn-primary"
+            >
+
+                <i class="bi bi-save"></i>
+
+                Simpan Produk
+
+            </button>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+
+</body>
+
+</html>
+
+<?php
+exit;
+endif;
+
+
+/*
+|--------------------------------------------------------------------------
+| HALAMAN NORMAL
+|--------------------------------------------------------------------------
+*/
+?>
+
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Tambah Produk - BEKUKU</title>
+
+    <link
+        rel="stylesheet"
+        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
     <link
         rel="stylesheet"
         href="<?= bekuku_url('assets/css/style.css') ?>"
@@ -267,15 +832,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 </head>
 
+
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
 
 <div class="app-wrapper">
 
+
     <?php require_once __DIR__ . "/../includes/header.php"; ?>
+
 
     <main class="app-main">
 
-        <!-- Header -->
+
         <div class="app-content-header">
 
             <div class="container-fluid">
@@ -295,15 +864,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <ol class="breadcrumb float-sm-end">
 
                             <li class="breadcrumb-item">
+
                                 <a href="<?= bekuku_url() ?>">
                                     Dashboard
                                 </a>
+
                             </li>
 
                             <li class="breadcrumb-item">
+
                                 <a href="index.php">
                                     Produk
                                 </a>
+
                             </li>
 
                             <li class="breadcrumb-item active">
@@ -321,7 +894,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
 
 
-        <!-- Content -->
         <div class="app-content">
 
             <div class="container-fluid">
@@ -341,9 +913,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             </div>
 
 
-                            <form method="POST"><?= bekuku_csrf_field() ?>
+                            <form method="POST">
+
+                                <?= bekuku_csrf_field() ?>
+
 
                                 <div class="card-body">
+
 
                                     <?php if ($error !== ""): ?>
 
@@ -351,368 +927,361 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                                             <i class="bi bi-exclamation-triangle"></i>
 
-                                            <?= htmlspecialchars($error); ?>
+                                            <?= htmlspecialchars($error) ?>
 
                                         </div>
 
                                     <?php endif; ?>
 
 
-                                    <!-- SKU -->
-                                    <div class="mb-3">
-
-                                        <label class="form-label">
-                                            SKU
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="sku"
-                                            class="form-control"
-                                            placeholder="Contoh: BK-001"
-                                            value="<?= htmlspecialchars($_POST["sku"] ?? ""); ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <!-- Barcode -->
-                                    <div class="mb-3">
-
-                                        <label class="form-label">
-                                            Barcode
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="barcode"
-                                            class="form-control"
-                                            placeholder="Contoh: 8991234567890"
-                                            value="<?= htmlspecialchars($_POST["barcode"] ?? ""); ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <!-- Nama Produk -->
-                                    <div class="mb-3">
-
-                                        <label class="form-label">
-
-                                            Nama Produk
-
-                                            <span class="text-danger">
-                                                *
-                                            </span>
-
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="product_name"
-                                            class="form-control"
-                                            placeholder="Contoh: Nugget Ayam"
-                                            required
-                                            value="<?= htmlspecialchars($_POST["product_name"] ?? ""); ?>"
-                                        >
-
-                                    </div>
-
-
-                                    <!-- Kategori -->
-                                    <div class="mb-3">
-
-                                        <label class="form-label">
-
-                                            Kategori
-
-                                            <span class="text-danger">
-                                                *
-                                            </span>
-
-                                        </label>
-
-                                        <select
-                                            name="category_id"
-                                            class="form-select"
-                                            required
-                                        >
-
-                                            <option value="">
-                                                -- Pilih Kategori --
-                                            </option>
-
-                                            <?php foreach ($categories as $category): ?>
-
-                                                <option
-                                                    value="<?= $category["category_id"]; ?>"
-                                                    <?= (($_POST["category_id"] ?? "") == $category["category_id"]) ? "selected" : ""; ?>
-                                                >
-
-                                                    <?= htmlspecialchars($category["name"]); ?>
-
-                                                </option>
-
-                                            <?php endforeach; ?>
-
-                                        </select>
-
-                                    </div>
-
-
-                                    <!-- Supplier -->
-                                    <div class="mb-3">
-
-                                        <label class="form-label">
-                                            Supplier
-                                        </label>
-
-                                        <select
-                                            name="supplier_id"
-                                            class="form-select"
-                                        >
-
-                                            <option value="">
-                                                -- Tidak Ada Supplier --
-                                            </option>
-
-                                            <?php foreach ($suppliers as $supplier): ?>
-
-                                                <option
-                                                    value="<?= $supplier["supplier_id"]; ?>"
-                                                    <?= (($_POST["supplier_id"] ?? "") == $supplier["supplier_id"]) ? "selected" : ""; ?>
-                                                >
-
-                                                    <?= htmlspecialchars($supplier["supplier_name"]); ?>
-
-                                                </option>
-
-                                            <?php endforeach; ?>
-
-                                        </select>
-
-                                    </div>
-
-
                                     <div class="row">
 
-                                        <!-- Harga Beli -->
-                                        <div class="col-md-6">
 
-                                            <div class="mb-3">
+                                        <div class="col-md-6 mb-3">
 
-                                                <label class="form-label">
+                                            <label class="form-label">
+                                                SKU
+                                            </label>
 
-                                                    Harga Beli
-
-                                                    <span class="text-danger">
-                                                        *
-                                                    </span>
-
-                                                </label>
-
-                                                <div class="input-group">
-
-                                                    <span class="input-group-text">
-                                                        Rp
-                                                    </span>
-
-                                                    <input
-                                                        type="number"
-                                                        name="purchase_price"
-                                                        class="form-control"
-                                                        min="0"
-                                                        step="0.01"
-                                                        required
-                                                        value="<?= htmlspecialchars($_POST["purchase_price"] ?? "0"); ?>"
-                                                    >
-
-                                                </div>
-
-                                            </div>
+                                            <input
+                                                type="text"
+                                                name="sku"
+                                                class="form-control"
+                                                value="<?= htmlspecialchars(
+                                                    $_POST["sku"] ?? ""
+                                                ) ?>"
+                                            >
 
                                         </div>
 
 
-                                        <!-- Harga Jual -->
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
 
-                                            <div class="mb-3">
+                                            <label class="form-label">
+                                                Barcode
+                                            </label>
 
-                                                <label class="form-label">
-
-                                                    Harga Jual
-
-                                                    <span class="text-danger">
-                                                        *
-                                                    </span>
-
-                                                </label>
-
-                                                <div class="input-group">
-
-                                                    <span class="input-group-text">
-                                                        Rp
-                                                    </span>
-
-                                                    <input
-                                                        type="number"
-                                                        name="selling_price"
-                                                        class="form-control"
-                                                        min="0"
-                                                        step="0.01"
-                                                        required
-                                                        value="<?= htmlspecialchars($_POST["selling_price"] ?? "0"); ?>"
-                                                    >
-
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="row">
-
-                                        <!-- Satuan -->
-                                        <div class="col-md-4">
-
-                                            <div class="mb-3">
-
-                                                <label class="form-label">
-                                                    Satuan
-                                                </label>
-
-                                                <select
-                                                    name="unit"
-                                                    class="form-select"
-                                                >
-
-                                                    <option
-                                                        value="pcs"
-                                                        <?= (($_POST["unit"] ?? "pcs") === "pcs") ? "selected" : ""; ?>
-                                                    >
-                                                        pcs
-                                                    </option>
-
-                                                    <option
-                                                        value="pack"
-                                                        <?= (($_POST["unit"] ?? "") === "pack") ? "selected" : ""; ?>
-                                                    >
-                                                        pack
-                                                    </option>
-
-                                                    <option
-                                                        value="box"
-                                                        <?= (($_POST["unit"] ?? "") === "box") ? "selected" : ""; ?>
-                                                    >
-                                                        box
-                                                    </option>
-
-                                                    <option
-                                                        value="kg"
-                                                        <?= (($_POST["unit"] ?? "") === "kg") ? "selected" : ""; ?>
-                                                    >
-                                                        kg
-                                                    </option>
-
-                                                </select>
-
-                                            </div>
+                                            <input
+                                                type="text"
+                                                name="barcode"
+                                                class="form-control"
+                                                value="<?= htmlspecialchars(
+                                                    $_POST["barcode"] ?? ""
+                                                ) ?>"
+                                            >
 
                                         </div>
 
 
-                                        <!-- Stok Awal -->
-                                        <div class="col-md-4">
+                                        <div class="col-md-12 mb-3">
 
-                                            <div class="mb-3">
+                                            <label class="form-label">
 
-                                                <label class="form-label">
-                                                    Stok Awal
-                                                </label>
+                                                Nama Produk
+
+                                                <span class="text-danger">
+                                                    *
+                                                </span>
+
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                name="product_name"
+                                                class="form-control"
+                                                required
+                                                value="<?= htmlspecialchars(
+                                                    $_POST["product_name"] ?? ""
+                                                ) ?>"
+                                            >
+
+                                        </div>
+
+
+                                        <div class="col-md-6 mb-3">
+
+                                            <label class="form-label">
+
+                                                Kategori
+
+                                                <span class="text-danger">
+                                                    *
+                                                </span>
+
+                                            </label>
+
+                                            <select
+                                                name="category_id"
+                                                class="form-select"
+                                                required
+                                            >
+
+                                                <option value="">
+                                                    -- Pilih Kategori --
+                                                </option>
+
+                                                <?php foreach ($categories as $category): ?>
+
+                                                    <option
+                                                        value="<?= $category["category_id"] ?>"
+                                                        <?= (
+                                                            ($_POST["category_id"] ?? "") ==
+                                                            $category["category_id"]
+                                                        )
+                                                            ? "selected"
+                                                            : ""
+                                                        ?>
+                                                    >
+
+                                                        <?= htmlspecialchars(
+                                                            $category["name"]
+                                                        ) ?>
+
+                                                    </option>
+
+                                                <?php endforeach; ?>
+
+                                            </select>
+
+                                        </div>
+
+
+                                        <div class="col-md-6 mb-3">
+
+                                            <label class="form-label">
+                                                Supplier
+                                            </label>
+
+                                            <div class="d-flex gap-2">
+
+    <select
+        name="supplier_id"
+        id="supplier_id"
+        class="form-select"
+    >
+
+        <option value="">
+            -- Tidak Ada Supplier --
+        </option>
+
+        <?php foreach ($suppliers as $supplier): ?>
+
+            <option
+                value="<?= (int)$supplier["supplier_id"] ?>"
+            >
+                <?= htmlspecialchars($supplier["supplier_name"]) ?>
+            </option>
+
+        <?php endforeach; ?>
+
+    </select>
+
+
+    <button
+        type="button"
+        class="btn btn-primary"
+        data-popup-supplier
+    >
+
+        <i class="bi bi-plus-lg"></i>
+
+        Tambah
+
+    </button>
+
+</div>
+
+                                        </div>
+
+
+                                        <div class="col-md-6 mb-3">
+
+                                            <label class="form-label">
+
+                                                Harga Beli
+
+                                                <span class="text-danger">
+                                                    *
+                                                </span>
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <span class="input-group-text">
+                                                    Rp
+                                                </span>
 
                                                 <input
                                                     type="number"
-                                                    name="stock"
+                                                    name="purchase_price"
                                                     class="form-control"
                                                     min="0"
-                                                    value="<?= htmlspecialchars($_POST["stock"] ?? "0"); ?>"
+                                                    step="0.01"
+                                                    required
+                                                    value="<?= htmlspecialchars(
+                                                        $_POST["purchase_price"] ?? "0"
+                                                    ) ?>"
                                                 >
-
-                                                <div class="form-text">
-                                                    Masukkan stok yang tersedia saat produk dibuat.
-                                                </div>
 
                                             </div>
 
                                         </div>
 
 
-                                        <!-- Minimum Stok -->
-                                        <div class="col-md-4">
+                                        <div class="col-md-6 mb-3">
 
-                                            <div class="mb-3">
+                                            <label class="form-label">
 
-                                                <label class="form-label">
-                                                    Minimum Stok
-                                                </label>
+                                                Harga Jual
+
+                                                <span class="text-danger">
+                                                    *
+                                                </span>
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <span class="input-group-text">
+                                                    Rp
+                                                </span>
 
                                                 <input
                                                     type="number"
-                                                    name="min_stock"
+                                                    name="selling_price"
                                                     class="form-control"
                                                     min="0"
-                                                    value="<?= htmlspecialchars($_POST["min_stock"] ?? "5"); ?>"
+                                                    step="0.01"
+                                                    required
+                                                    value="<?= htmlspecialchars(
+                                                        $_POST["selling_price"] ?? "0"
+                                                    ) ?>"
                                                 >
-
-                                                <div class="form-text">
-                                                    Batas untuk peringatan stok rendah.
-                                                </div>
 
                                             </div>
 
                                         </div>
 
+
+                                        <div class="col-md-4 mb-3">
+
+                                            <label class="form-label">
+                                                Satuan
+                                            </label>
+
+                                            <select
+                                                name="unit"
+                                                class="form-select"
+                                            >
+
+                                                <?php foreach ($units as $value => $label): ?>
+
+                                                    <option
+                                                        value="<?= $value ?>"
+                                                        <?= (
+                                                            ($_POST["unit"] ?? "pcs") === $value
+                                                        )
+                                                            ? "selected"
+                                                            : ""
+                                                        ?>
+                                                    >
+
+                                                        <?= $label ?>
+
+                                                    </option>
+
+                                                <?php endforeach; ?>
+
+                                            </select>
+
+                                        </div>
+
+
+                                        <div class="col-md-4 mb-3">
+
+                                            <label class="form-label">
+                                                Stok Awal
+                                            </label>
+
+                                            <input
+                                                type="number"
+                                                name="stock"
+                                                class="form-control"
+                                                min="0"
+                                                value="<?= htmlspecialchars(
+                                                    $_POST["stock"] ?? "0"
+                                                ) ?>"
+                                            >
+
+                                        </div>
+
+
+                                        <div class="col-md-4 mb-3">
+
+                                            <label class="form-label">
+                                                Minimum Stok
+                                            </label>
+
+                                            <input
+                                                type="number"
+                                                name="min_stock"
+                                                class="form-control"
+                                                min="0"
+                                                value="<?= htmlspecialchars(
+                                                    $_POST["min_stock"] ?? "5"
+                                                ) ?>"
+                                            >
+
+                                        </div>
+
+
+                                        <div class="col-md-12 mb-3">
+
+                                            <label class="form-label">
+                                                Status
+                                            </label>
+
+                                            <select
+                                                name="status"
+                                                class="form-select"
+                                            >
+
+                                                <option
+                                                    value="aktif"
+                                                    <?= (
+                                                        ($_POST["status"] ?? "aktif") === "aktif"
+                                                    )
+                                                        ? "selected"
+                                                        : ""
+                                                    ?>
+                                                >
+                                                    Aktif
+                                                </option>
+
+                                                <option
+                                                    value="nonaktif"
+                                                    <?= (
+                                                        ($_POST["status"] ?? "") === "nonaktif"
+                                                    )
+                                                        ? "selected"
+                                                        : ""
+                                                    ?>
+                                                >
+                                                    Nonaktif
+                                                </option>
+
+                                            </select>
+
+                                        </div>
+
+
                                     </div>
 
-
-                                    <!-- Status -->
-                                    <div class="mb-3">
-
-                                        <label class="form-label">
-                                            Status
-                                        </label>
-
-                                        <select
-                                            name="status"
-                                            class="form-select"
-                                        >
-
-                                            <option
-                                                value="aktif"
-                                                <?= (($_POST["status"] ?? "aktif") === "aktif") ? "selected" : ""; ?>
-                                            >
-                                                Aktif
-                                            </option>
-
-                                            <option
-                                                value="nonaktif"
-                                                <?= (($_POST["status"] ?? "") === "nonaktif") ? "selected" : ""; ?>
-                                            >
-                                                Nonaktif
-                                            </option>
-
-                                        </select>
-
-                                    </div>
 
                                 </div>
 
 
-                                <!-- Footer -->
                                 <div class="card-footer">
 
                                     <button
@@ -740,6 +1309,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                                 </div>
 
+
                             </form>
 
                         </div>
@@ -752,15 +1322,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         </div>
 
+
     </main>
 
 
     <?php require_once __DIR__ . "/../includes/footer.php"; ?>
 
+
 </div>
 
 
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
+<script
+    src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"
+></script>
+
+<script
+    src="<?= bekuku_url('assets/js/popup-supplier.js') ?>?v=1"
+></script>
 
 </body>
 

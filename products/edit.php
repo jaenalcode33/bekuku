@@ -307,99 +307,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <div class="app-wrapper">
 
 
-    <?php require_once __DIR__ . "/../includes/header.php"; ?>
-
-
     <main class="app-main">
 
-
-        <!-- Header -->
-
-        <div class="app-content-header">
-
-            <div class="container-fluid">
-
-                <div class="row">
-
-                    <div class="col-sm-6">
-
-                        <h3 class="mb-0">
-
-                            Edit Produk
-
-                        </h3>
-
-                    </div>
-
-
-                    <div class="col-sm-6">
-
-                        <ol class="breadcrumb float-sm-end">
-
-                            <li class="breadcrumb-item">
-
-                                <a href="<?= bekuku_url() ?>">
-
-                                    Dashboard
-
-                                </a>
-
-                            </li>
-
-
-                            <li class="breadcrumb-item">
-
-                                <a href="index.php">
-
-                                    Produk
-
-                                </a>
-
-                            </li>
-
-
-                            <li class="breadcrumb-item active">
-
-                                Edit Produk
-
-                            </li>
-
-                        </ol>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- Content -->
-
-        <div class="app-content">
-
-            <div class="container-fluid">
-
-                <div class="row">
-
-                    <div class="col-md-10">
-
                         <div class="card card-warning">
-
-
-                            <!-- Card Header -->
-
-                            <div class="card-header">
-
-                                <h3 class="card-title">
-
-                                    Edit Data Produk
-
-                                </h3>
-
-                            </div>
 
 
 
@@ -878,20 +788,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                         </div>
 
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
     </main>
-
-
-
-    <?php require_once __DIR__ . "/../includes/footer.php"; ?>
-
 
 </div>
 

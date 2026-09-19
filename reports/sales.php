@@ -2,8 +2,17 @@
 
 require_once __DIR__ . "/../config/app.php";
 
-
 require_once "../config/database.php";
+
+
+/*
+|--------------------------------------------------------------------------
+| TIMEZONE BEKUKU
+|--------------------------------------------------------------------------
+| Semua tanggal dan waktu sistem menggunakan WIB.
+*/
+
+date_default_timezone_set('Asia/Jakarta');
 
 
 /*
@@ -79,40 +88,108 @@ foreach ($transactions as $transaction) {
     }
 }
 
+
 $payment_summary = [];
+
 foreach ($transactions as $transaction) {
-    $method = strtolower((string) ($transaction['payment_method'] ?? ''));
+
+    $method =
+        strtolower(
+            (string) ($transaction['payment_method'] ?? '')
+        );
+
     $payment_summary[$method] = [
-        'count' => ($payment_summary[$method]['count'] ?? 0) + 1,
-        'total' => ($payment_summary[$method]['total'] ?? 0) + (float) $transaction['total_amount'],
+
+        'count' =>
+            ($payment_summary[$method]['count'] ?? 0) + 1,
+
+        'total' =>
+            ($payment_summary[$method]['total'] ?? 0)
+            + (float) $transaction['total_amount'],
+
     ];
 }
 
+
 $top_products = [];
+
 if ($transactions) {
+
     $transaction_ids = array_map(
-        static fn (array $transaction): int => (int) $transaction['transaction_id'],
+
+        static fn (array $transaction): int =>
+            (int) $transaction['transaction_id'],
+
         $transactions
+
     );
-    $placeholders = implode(',', array_fill(0, count($transaction_ids), '?'));
+
+    $placeholders =
+        implode(
+            ',',
+            array_fill(
+                0,
+                count($transaction_ids),
+                '?'
+            )
+        );
+
     $detail_stmt = $conn->prepare("
-        SELECT p.product_name, SUM(td.quantity) AS quantity_sold, SUM(td.subtotal) AS total_sales
+        SELECT
+            p.product_name,
+            SUM(td.quantity) AS quantity_sold,
+            SUM(td.subtotal) AS total_sales
         FROM transaction_details td
-        INNER JOIN products p ON p.product_id = td.product_id
-        INNER JOIN transactions t ON t.transaction_id = td.transaction_id
+        INNER JOIN products p
+            ON p.product_id = td.product_id
+        INNER JOIN transactions t
+            ON t.transaction_id = td.transaction_id
         WHERE td.transaction_id IN ($placeholders)
           AND t.status = 'selesai'
-        GROUP BY td.product_id, p.product_name
-        ORDER BY quantity_sold DESC, total_sales DESC
+        GROUP BY
+            td.product_id,
+            p.product_name
+        ORDER BY
+            quantity_sold DESC,
+            total_sales DESC
         LIMIT 10
     ");
+
     $detail_stmt->execute($transaction_ids);
-    $top_products = $detail_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $top_products =
+        $detail_stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$current_user = function_exists('bekuku_user') ? bekuku_user() : [];
-$printed_date = date('d-m-Y');
-$printed_time = date('H:i');
+
+/*
+|--------------------------------------------------------------------------
+| USER & WAKTU CETAK
+|--------------------------------------------------------------------------
+*/
+
+$current_user =
+    function_exists('bekuku_user')
+        ? bekuku_user()
+        : [];
+
+
+$printed_now = new DateTimeImmutable(
+    'now',
+    new DateTimeZone('Asia/Jakarta')
+);
+
+
+$printed_date =
+    $printed_now->format('d-m-Y');
+
+
+$printed_time =
+    $printed_now->format('H:i');
+
+
+$printed_at =
+    $printed_now->format('d-m-Y H:i');
 
 
 /*
@@ -130,8 +207,6 @@ function rupiah($amount)
         '.'
     );
 }
-
-$printed_at = date('d-m-Y H:i');
 
 ?>
 
@@ -154,35 +229,29 @@ $printed_at = date('d-m-Y H:i');
     <!-- AdminLTE -->
 
     <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
-    >
+    rel="stylesheet"
+    href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+>
 
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+>
 
-    <!-- Bootstrap Icons -->
+<link
+    rel="stylesheet"
+    href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091637"
+>
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
-
-
-    <!-- CSS BEKUKU -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091637"
-    >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/reports-sales.css') ?>?v=2026091655"
-    >
+<link
+    rel="stylesheet"
+    href="<?= bekuku_url('assets/css/reports-sales.css') ?>?v=2026091919"
+>
 
 </head>
 
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary report-page report-print">
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary report-page">
 
 
 <div class="app-wrapper">
@@ -231,9 +300,14 @@ $printed_at = date('d-m-Y H:i');
                     </div>
                 </div>
                     <div class="dashboard-hero-actions">
-                        <button type="button" data-print class="btn dashboard-secondary-action">
-                            <i class="bi bi-printer me-1"></i>Cetak Laporan
-                        </button>
+                        <button
+    type="button"
+    data-print
+    class="btn dashboard-product-add-button"
+>
+    <i class="bi bi-printer me-1"></i>
+    Cetak Laporan
+</button>
                     </div>
                 </div>
             </section>
@@ -1338,9 +1412,13 @@ $printed_at = date('d-m-Y H:i');
 
 <!-- AdminLTE JS -->
 
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/reports-sales.js') ?>?v=2026091655"></script>
+<script
+    src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"
+></script>
 
+<script
+    src="<?= bekuku_url('assets/js/reports-sales.js') ?>?v=2026091919"
+></script>
 
 </body>
 

@@ -226,24 +226,6 @@ foreach ($movements as $movement) {
         ====================================================== -->
 
         <div class="container-fluid dashboard-wrapper">
-            <section class="dashboard-hero">
-                <div class="dashboard-hero-content">
-                    <div>
-                        <div class="dashboard-hero-title">
-                            <i class="bi bi-arrow-left-right me-2"></i>Riwayat Stok
-                        </div>
-                        <p class="dashboard-hero-subtitle">
-                            Pantau seluruh stok masuk dan stok keluar produk BEKUKU.
-                        </p>
-                    </div>
-                    <div class="dashboard-hero-actions">
-                        <a href="<?= bekuku_url('products/') ?>" class="btn dashboard-secondary-action">
-                            <i class="bi bi-box-seam me-1"></i>Data Produk
-                        </a>
-                    </div>
-                </div>
-            </section>
-
 
         <!-- =====================================================
              CONTENT
@@ -252,60 +234,6 @@ foreach ($movements as $movement) {
         <div class="app-content">
 
             <div class="container-fluid">
-
-
-                <!-- =================================================
-                     HEADER CARD
-                ================================================== -->
-
-                <div class="card movement-card mb-4">
-
-                    <div class="card-body">
-
-                        <div
-                            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"
-                        >
-
-                            <div>
-
-                                <h5 class="mb-1">
-
-                                    <i class="bi bi-box-seam me-2"></i>
-
-                                    Pergerakan Stok
-
-                                </h5>
-
-                                <p class="text-muted mb-0">
-
-                                    Pantau seluruh stok masuk dan stok keluar
-                                    produk BEKUKU.
-
-                                </p>
-
-                            </div>
-
-
-                            <div>
-
-                                <a
-                                    href="index.php"
-                                    class="btn dashboard-secondary-action"
-                                >
-
-                                    <i class="bi bi-box-seam me-1"></i>
-
-                                    Data Produk
-
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
 
 
                 <!-- =================================================

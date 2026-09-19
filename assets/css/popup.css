@@ -1,0 +1,604 @@
+/* =========================================================
+   BEKUKU - POPUP TAMBAH PRODUK
+   ========================================================= */
+
+html,
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+/* =========================================================
+   MODAL UTAMA
+   ========================================================= */
+
+.bekuku-modal {
+    position: fixed !important;
+    inset: 0 !important;
+
+    z-index: 99999 !important;
+
+    display: none;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 20px !important;
+
+    box-sizing: border-box !important;
+
+    overflow: hidden !important;
+}
+
+.bekuku-modal.is-open {
+    display: flex !important;
+}
+
+
+/* =========================================================
+   BACKDROP
+   ========================================================= */
+
+.bekuku-modal-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+
+    z-index: 99998 !important;
+
+    background: rgba(3, 10, 35, .78) !important;
+
+    backdrop-filter: blur(6px);
+}
+
+
+/* =========================================================
+   DIALOG
+   ========================================================= */
+
+.bekuku-modal-dialog {
+    position: relative !important;
+
+    width: min(920px, calc(100vw - 40px)) !important;
+
+    height: min(850px, calc(100vh - 40px)) !important;
+
+    max-width: 920px !important;
+    max-height: calc(100vh - 40px) !important;
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden !important;
+
+    box-sizing: border-box !important;
+
+    background: #0d1b4f !important;
+
+    border: 1px solid #3b5595 !important;
+
+    border-radius: 18px !important;
+
+    box-shadow: 0 30px 80px rgba(0,0,0,.65) !important;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.bekuku-modal-header {
+    flex: 0 0 62px !important;
+
+    width: 100% !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: space-between !important;
+
+    box-sizing: border-box !important;
+
+    padding: 0 20px !important;
+
+    background: #10245d !important;
+
+    border-bottom: 1px solid #3b5595 !important;
+}
+
+.bekuku-modal-title {
+    margin: 0 !important;
+
+    color: #fff !important;
+
+    font-size: 18px !important;
+
+    font-weight: 700 !important;
+}
+
+.bekuku-modal-close {
+    width: 38px !important;
+    height: 38px !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-radius: 9px !important;
+
+    color: #fff !important;
+
+    background: rgba(255,255,255,.10) !important;
+
+    font-size: 24px !important;
+
+    cursor: pointer !important;
+}
+
+
+/* =========================================================
+   BODY MODAL
+   ========================================================= */
+
+.bekuku-modal-body {
+    flex: 1 1 0 !important;
+
+    width: 100% !important;
+
+    min-height: 0 !important;
+
+    height: auto !important;
+
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+
+    overflow-y: auto !important;
+
+    overflow-x: hidden !important;
+
+    -webkit-overflow-scrolling: touch !important;
+}
+
+
+/* =========================================================
+   FRAME
+   ========================================================= */
+
+.bekuku-modal-frame {
+    display: block !important;
+
+    width: 100% !important;
+
+    min-height: 100% !important;
+
+    height: auto !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+
+    overflow: visible !important;
+}
+
+
+/* =========================================================
+   IFRAME
+   ========================================================= */
+
+.bekuku-modal-frame iframe {
+    display: block !important;
+
+    width: 100% !important;
+
+    height: 100% !important;
+
+    min-height: 700px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+
+    box-sizing: border-box !important;
+
+    overflow: auto !important;
+}
+
+
+/* =========================================================
+   HALAMAN DI DALAM IFRAME
+   ========================================================= */
+
+body.bekuku-product-popup-page {
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    height: auto !important;
+
+    min-height: 100vh !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+
+    overflow-y: visible !important;
+
+    overflow-x: hidden !important;
+
+    background: #0d1b4f !important;
+}
+
+
+/* =========================================================
+   CONTAINER FORM
+   ========================================================= */
+
+.bekuku-product-popup {
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    height: auto !important;
+
+    min-height: 100% !important;
+
+    margin: 0 !important;
+
+    padding: 22px !important;
+
+    box-sizing: border-box !important;
+
+    background: #0d1b4f !important;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.bekuku-product-form {
+
+    width: 100% !important;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.bekuku-product-grid {
+
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr) !important;
+
+    gap: 17px 18px !important;
+
+    width: 100% !important;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   FIELD
+   ========================================================= */
+
+.bekuku-field {
+
+    display: block !important;
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    height: auto !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+}
+
+.bekuku-field-full {
+    grid-column: 1 / -1 !important;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.bekuku-field label {
+
+    display: block !important;
+
+    width: 100% !important;
+
+    margin: 0 0 7px !important;
+
+    padding: 0 !important;
+
+    color: #edf3ff !important;
+
+    font-size: 14px !important;
+
+    font-weight: 600 !important;
+
+    line-height: 1.3 !important;
+}
+
+.bekuku-field label span {
+    color: #ff667b !important;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.bekuku-field input,
+.bekuku-field select {
+
+    display: block !important;
+
+    width: 100% !important;
+
+    height: 44px !important;
+
+    min-height: 44px !important;
+
+    max-width: none !important;
+
+    margin: 0 !important;
+
+    padding: 9px 12px !important;
+
+    box-sizing: border-box !important;
+
+    color: #fff !important;
+
+    background: #132760 !important;
+
+    border: 1px solid #3b5798 !important;
+
+    border-radius: 9px !important;
+
+    outline: none !important;
+
+    box-shadow: none !important;
+
+    font-size: 14px !important;
+}
+
+.bekuku-field input:focus,
+.bekuku-field select:focus {
+    border-color: #6c91ff !important;
+
+    box-shadow:
+        0 0 0 3px rgba(108,145,255,.15) !important;
+}
+
+.bekuku-field input::placeholder {
+    color: #8198cb !important;
+}
+
+
+/* =========================================================
+   HARGA
+   ========================================================= */
+
+.bekuku-money {
+    display: flex !important;
+
+    width: 100% !important;
+
+    height: 44px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+}
+
+.bekuku-money span {
+    flex: 0 0 50px !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    height: 44px !important;
+
+    color: #fff !important;
+
+    background: #132760 !important;
+
+    border: 1px solid #3b5798 !important;
+
+    border-right: 0 !important;
+
+    border-radius: 9px 0 0 9px !important;
+
+    box-sizing: border-box !important;
+}
+
+.bekuku-money input {
+    flex: 1 1 auto !important;
+
+    width: auto !important;
+
+    min-width: 0 !important;
+
+    border-radius: 0 9px 9px 0 !important;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.bekuku-product-actions {
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: flex-end !important;
+
+    gap: 10px !important;
+
+    width: 100% !important;
+
+    height: auto !important;
+
+    margin: 22px 0 0 !important;
+
+    padding: 17px 0 0 !important;
+
+    border-top: 1px solid rgba(120,150,220,.25) !important;
+
+    box-sizing: border-box !important;
+}
+
+.bekuku-btn {
+
+    min-height: 42px !important;
+
+    padding: 9px 18px !important;
+
+    border-radius: 9px !important;
+
+    font-size: 14px !important;
+
+    font-weight: 600 !important;
+
+    cursor: pointer !important;
+}
+
+.bekuku-btn-primary {
+    color: #fff !important;
+
+    background: #527cff !important;
+
+    border: 1px solid #527cff !important;
+}
+
+.bekuku-btn-secondary {
+    color: #fff !important;
+
+    background: rgba(255,255,255,.08) !important;
+
+    border: 1px solid rgba(255,255,255,.2) !important;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.bekuku-product-error {
+
+    display: flex !important;
+
+    gap: 9px !important;
+
+    width: 100% !important;
+
+    margin: 0 0 17px !important;
+
+    padding: 12px 14px !important;
+
+    color: #ffdfe4 !important;
+
+    background: rgba(220,53,69,.15) !important;
+
+    border: 1px solid rgba(255,100,120,.35) !important;
+
+    border-radius: 9px !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .bekuku-modal {
+        align-items: flex-end !important;
+
+        padding: 0 !important;
+    }
+
+    .bekuku-modal-dialog {
+
+        width: 100% !important;
+
+        max-width: none !important;
+
+        height: 94vh !important;
+
+        max-height: 94vh !important;
+
+        border-radius:
+            18px 18px 0 0 !important;
+    }
+
+    .bekuku-product-popup {
+        padding: 16px !important;
+    }
+
+    .bekuku-product-grid {
+
+        grid-template-columns: 1fr !important;
+
+        gap: 14px !important;
+    }
+
+    .bekuku-field-full {
+        grid-column: 1 !important;
+    }
+}

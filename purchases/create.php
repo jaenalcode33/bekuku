@@ -1,339 +1,523 @@
 <?php
 
 require_once __DIR__ . "/../config/app.php";
+require_once __DIR__ . "/../config/database.php";
+
+$isPopup = isset($_GET['popup']) && $_GET['popup'] === '1';
+
+$error = null;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    try {
+
+        if (!bekuku_verify_csrf()) {
+            throw new InvalidArgumentException('Token keamanan tidak valid. Silakan coba lagi.');
+        }
+
+        $supplierId = (int)($_POST['supplier_id'] ?? 0);
+
+        $purchaseDate = trim($_POST['purchase_date'] ?? '');
+
+        $invoiceNumber = trim($_POST['invoice_number'] ?? '');
+
+        $note = trim($_POST['note'] ?? '');
+
+        $paymentAmount = (float)($_POST['payment_amount'] ?? 0);
+
+        $productIds = $_POST['product_id'] ?? [];
+
+        $quantities = $_POST['quantity'] ?? [];
+
+        $purchasePrices = $_POST['purchase_price'] ?? [];
+
+        $batchNumbers = $_POST['batch_number'] ?? [];
+
+        $expiryDates = $_POST['expiry_date'] ?? [];
 
 
-require_once __DIR__ . "/config/database.php";
+        if ($supplierId <= 0) {
+            throw new InvalidArgumentException('Supplier wajib dipilih.');
+        }
 
 
-/*
-|--------------------------------------------------------------------------
-| FUNGSI RUPIAH
-|--------------------------------------------------------------------------
-*/
+        if ($purchaseDate === '') {
+            throw new InvalidArgumentException('Tanggal pembelian wajib diisi.');
+        }
 
-function rupiah($number)
-{
-    return 'Rp ' . number_format(
-        (float) $number,
-        0,
-        ',',
-        '.'
-    );
+
+        $dateTime = DateTime::createFromFormat('Y-m-d\TH:i', $purchaseDate);
+
+        if (!$dateTime) {
+            $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $purchaseDate);
+        }
+
+        if (!$dateTime) {
+            throw new InvalidArgumentException('Format tanggal pembelian tidak valid.');
+        }
+
+
+        if (!is_array($productIds) || count($productIds) === 0) {
+            throw new InvalidArgumentException('Minimal harus ada satu produk.');
+        }
+
+
+        $rows = [];
+
+        $total = 0;
+
+
+        foreach ($productIds as $i => $productId) {
+
+            $productId = (int)$productId;
+
+            $quantity = (int)($quantities[$i] ?? 0);
+
+            $purchasePrice = (float)($purchasePrices[$i] ?? 0);
+
+            $batchNumber = trim($batchNumbers[$i] ?? '');
+
+            $expiryDate = trim($expiryDates[$i] ?? '');
+
+
+            if ($productId <= 0) {
+                throw new InvalidArgumentException('Produk pada baris ' . ($i + 1) . ' belum dipilih.');
+            }
+
+
+            if ($quantity <= 0) {
+                throw new InvalidArgumentException('Qty produk pada baris ' . ($i + 1) . ' harus lebih dari 0.');
+            }
+
+
+            if ($purchasePrice < 0) {
+                throw new InvalidArgumentException('Harga beli produk pada baris ' . ($i + 1) . ' tidak valid.');
+            }
+
+
+            if ($batchNumber === '') {
+                $batchNumber = 'BATCH-' . date('YmdHis') . '-' . ($i + 1);
+            }
+
+
+            $subtotal = round(
+                $quantity * $purchasePrice,
+                2
+            );
+
+
+            $total += $subtotal;
+
+
+            $rows[] = [
+                'product_id' => $productId,
+                'quantity' => $quantity,
+                'purchase_price' => $purchasePrice,
+                'subtotal' => $subtotal,
+                'batch_number' => $batchNumber,
+                'expiry_date' => $expiryDate !== '' ? $expiryDate : null,
+            ];
+
+        }
+
+
+        $total = round($total, 2);
+
+
+        if ($total <= 0) {
+            throw new InvalidArgumentException('Total pembelian harus lebih dari Rp 0.');
+        }
+
+
+        if ($paymentAmount < 0) {
+            throw new InvalidArgumentException('Pembayaran tidak boleh kurang dari Rp 0.');
+        }
+
+
+        if ($paymentAmount > $total) {
+            throw new InvalidArgumentException('Pembayaran tidak boleh lebih besar dari total pembelian.');
+        }
+
+
+        $remaining = round(
+            $total - $paymentAmount,
+            2
+        );
+
+
+        $status = $remaining <= 0.009
+            ? 'lunas'
+            : 'hutang';
+
+
+        $conn->beginTransaction();
+
+
+        /*
+         * CEK SUPPLIER
+         */
+
+        $supplierStmt = $conn->prepare("
+            SELECT supplier_id
+            FROM suppliers
+            WHERE supplier_id = :supplier_id
+            LIMIT 1
+        ");
+
+        $supplierStmt->execute([
+            ':supplier_id' => $supplierId
+        ]);
+
+
+        if (!$supplierStmt->fetch(PDO::FETCH_ASSOC)) {
+            throw new InvalidArgumentException('Supplier tidak ditemukan.');
+        }
+
+
+        /*
+         * INSERT PEMBELIAN
+         */
+
+        $purchaseStmt = $conn->prepare("
+            INSERT INTO purchases
+            (
+                purchase_date,
+                supplier_id,
+                invoice_number,
+                total_amount,
+                payment_amount,
+                remaining_amount,
+                status,
+                note
+            )
+            VALUES
+            (
+                :purchase_date,
+                :supplier_id,
+                :invoice_number,
+                :total_amount,
+                :payment_amount,
+                :remaining_amount,
+                :status,
+                :note
+            )
+        ");
+
+
+        $purchaseStmt->execute([
+            ':purchase_date' => $dateTime->format('Y-m-d H:i:s'),
+            ':supplier_id' => $supplierId,
+            ':invoice_number' => $invoiceNumber !== ''
+                ? $invoiceNumber
+                : null,
+            ':total_amount' => $total,
+            ':payment_amount' => $paymentAmount,
+            ':remaining_amount' => $remaining,
+            ':status' => $status,
+            ':note' => $note !== ''
+                ? $note
+                : null,
+        ]);
+
+
+        $purchaseId = (int)$conn->lastInsertId();
+
+
+        /*
+         * PREPARE QUERY DETAIL
+         */
+
+        $detailStmt = $conn->prepare("
+            INSERT INTO purchase_details
+            (
+                purchase_id,
+                product_id,
+                quantity,
+                purchase_price,
+                subtotal
+            )
+            VALUES
+            (
+                :purchase_id,
+                :product_id,
+                :quantity,
+                :purchase_price,
+                :subtotal
+            )
+        ");
+
+
+        /*
+         * PREPARE QUERY BATCH
+         */
+
+        $batchStmt = $conn->prepare("
+            INSERT INTO batches
+            (
+                purchase_detail_id,
+                product_id,
+                batch_number,
+                expiry_date,
+                quantity,
+                remaining_quantity
+            )
+            VALUES
+            (
+                :purchase_detail_id,
+                :product_id,
+                :batch_number,
+                :expiry_date,
+                :quantity,
+                :remaining_quantity
+            )
+        ");
+
+
+        /*
+         * UPDATE STOCK
+         */
+
+        $stockStmt = $conn->prepare("
+            UPDATE products
+            SET stock = stock + :quantity
+            WHERE product_id = :product_id
+        ");
+
+
+        /*
+         * STOCK MOVEMENT
+         */
+
+        $movementStmt = $conn->prepare("
+            INSERT INTO stock_movements
+            (
+                product_id,
+                movement_type,
+                quantity,
+                reference_type,
+                reference_id,
+                note
+            )
+            VALUES
+            (
+                :product_id,
+                'masuk',
+                :quantity,
+                'purchase',
+                :reference_id,
+                :note
+            )
+        ");
+
+
+        foreach ($rows as $row) {
+
+
+            /*
+             * INSERT DETAIL
+             */
+
+            $detailStmt->execute([
+                ':purchase_id' => $purchaseId,
+                ':product_id' => $row['product_id'],
+                ':quantity' => $row['quantity'],
+                ':purchase_price' => $row['purchase_price'],
+                ':subtotal' => $row['subtotal'],
+            ]);
+
+
+            $detailId = (int)$conn->lastInsertId();
+
+
+            /*
+             * INSERT BATCH
+             */
+
+            $batchStmt->execute([
+                ':purchase_detail_id' => $detailId,
+                ':product_id' => $row['product_id'],
+                ':batch_number' => $row['batch_number'],
+                ':expiry_date' => $row['expiry_date'],
+                ':quantity' => $row['quantity'],
+                ':remaining_quantity' => $row['quantity'],
+            ]);
+
+
+            /*
+             * UPDATE STOCK
+             */
+
+            $stockStmt->execute([
+                ':quantity' => $row['quantity'],
+                ':product_id' => $row['product_id'],
+            ]);
+
+
+            if ($stockStmt->rowCount() === 0) {
+                throw new InvalidArgumentException(
+                    'Produk dengan ID ' . $row['product_id'] . ' tidak ditemukan.'
+                );
+            }
+
+
+            /*
+             * STOCK MOVEMENT
+             */
+
+            $movementStmt->execute([
+                ':product_id' => $row['product_id'],
+                ':quantity' => $row['quantity'],
+                ':reference_id' => $purchaseId,
+                ':note' => 'Pembelian #' . $purchaseId,
+            ]);
+
+        }
+
+
+        /*
+         * AUDIT LOG
+         */
+
+        bekuku_audit(
+            'create',
+            'purchase',
+            $purchaseId,
+            [
+                'supplier_id' => $supplierId,
+                'total_amount' => $total,
+                'payment_amount' => $paymentAmount,
+                'status' => $status,
+            ]
+        );
+
+
+        $conn->commit();
+
+
+        /*
+         * JIKA POPUP
+         */
+
+        if ($isPopup) {
+
+            ?>
+
+            <!DOCTYPE html>
+
+            <html lang="id">
+
+            <head>
+
+                <meta charset="UTF-8">
+
+                <title>Tersimpan</title>
+
+            </head>
+
+            <body>
+
+                <script>
+                    window.parent.postMessage(
+                        {
+                            type: 'purchase-saved',
+                            purchaseId: <?= $purchaseId ?>
+                        },
+                        window.location.origin
+                    );
+                </script>
+
+            </body>
+
+            </html>
+
+            <?php
+
+            exit;
+
+        }
+
+
+        /*
+         * JIKA BUKAN POPUP
+         */
+
+        header(
+            'Location: ' .
+            bekuku_url(
+                'purchases/detail.php?id=' . $purchaseId
+            )
+        );
+
+        exit;
+
+
+    } catch (Throwable $e) {
+
+
+        if ($conn->inTransaction()) {
+            $conn->rollBack();
+        }
+
+
+        if ($e instanceof InvalidArgumentException) {
+
+            $error = $e->getMessage();
+
+        } else {
+
+            $error = 'Pembelian gagal disimpan. Periksa data dan koneksi database.';
+
+        }
+
+
+        bekuku_log(
+            'Purchase create failed',
+            [
+                'error' => $e->getMessage()
+            ]
+        );
+
+    }
+
 }
 
 
 /*
-|--------------------------------------------------------------------------
-| TANGGAL HARI INI
-|--------------------------------------------------------------------------
-*/
+ * DATA SUPPLIER
+ */
 
-$today = date('Y-m-d');
-
-
-/*
-|--------------------------------------------------------------------------
-| STATISTIK PENJUALAN HARI INI
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->prepare("
+$suppliers = $conn->query("
     SELECT
-        COUNT(*) AS total_transactions,
-        COALESCE(SUM(total_amount), 0) AS total_sales
-    FROM transactions
-    WHERE status = 'selesai'
-      AND DATE(transaction_date) = :today
-");
-
-$stmt->execute([
-    ':today' => $today
-]);
-
-$todayStats = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$today_transactions = (int) ($todayStats['total_transactions'] ?? 0);
-$today_sales = (float) ($todayStats['total_sales'] ?? 0);
+        supplier_id,
+        supplier_name
+    FROM suppliers
+    ORDER BY supplier_name ASC
+")->fetchAll(PDO::FETCH_ASSOC);
 
 
 /*
-|--------------------------------------------------------------------------
-| TOTAL PRODUK AKTIF
-|--------------------------------------------------------------------------
-*/
+ * DATA PRODUK
+ */
 
-$stmt = $conn->query("
-    SELECT COUNT(*) 
-    FROM products
-    WHERE status = 'aktif'
-");
-
-$total_products = (int) $stmt->fetchColumn();
-
-
-/*
-|--------------------------------------------------------------------------
-| TOTAL STOK
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT COALESCE(SUM(stock), 0)
-    FROM products
-    WHERE status = 'aktif'
-");
-
-$total_stock = (int) $stmt->fetchColumn();
-
-
-/*
-|--------------------------------------------------------------------------
-| STOK MENIPIS
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT COUNT(*)
-    FROM products
-    WHERE status = 'aktif'
-      AND stock > 0
-      AND stock <= min_stock
-");
-
-$low_stock = (int) $stmt->fetchColumn();
-
-
-/*
-|--------------------------------------------------------------------------
-| STOK HABIS
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT COUNT(*)
-    FROM products
-    WHERE status = 'aktif'
-      AND stock <= 0
-");
-
-$out_of_stock = (int) $stmt->fetchColumn();
-
-
-/*
-|--------------------------------------------------------------------------
-| BATCH AKAN EXPIRED 7 HARI
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT COUNT(*)
-    FROM batches
-    WHERE remaining_quantity > 0
-      AND expiry_date IS NOT NULL
-      AND expiry_date >= CURDATE()
-      AND expiry_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
-");
-
-$expiring_batches = (int) $stmt->fetchColumn();
-
-
-/*
-|--------------------------------------------------------------------------
-| BATCH SUDAH EXPIRED
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT COUNT(*)
-    FROM batches
-    WHERE remaining_quantity > 0
-      AND expiry_date IS NOT NULL
-      AND expiry_date < CURDATE()
-");
-
-$expired_batches = (int) $stmt->fetchColumn();
-
-
-/*
-|--------------------------------------------------------------------------
-| PENJUALAN 7 HARI TERAKHIR
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT
-        DATE(transaction_date) AS sale_date,
-        COALESCE(SUM(total_amount), 0) AS total
-    FROM transactions
-    WHERE status = 'selesai'
-      AND DATE(transaction_date) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-      AND DATE(transaction_date) <= CURDATE()
-    GROUP BY DATE(transaction_date)
-    ORDER BY sale_date ASC
-");
-
-$salesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-/*
-|--------------------------------------------------------------------------
-| SIAPKAN DATA CHART
-|--------------------------------------------------------------------------
-*/
-
-$chart_labels = [];
-$chart_values = [];
-
-$salesByDate = [];
-
-foreach ($salesData as $sale) {
-    $salesByDate[$sale['sale_date']] = (float) $sale['total'];
-}
-
-for ($i = 6; $i >= 0; $i--) {
-
-    $date = date(
-        'Y-m-d',
-        strtotime("-{$i} days")
-    );
-
-    $chart_labels[] = date(
-        'd/m',
-        strtotime($date)
-    );
-
-    $chart_values[] = $salesByDate[$date] ?? 0;
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| PRODUK TERLARIS
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT
-        p.product_name,
-        COALESCE(SUM(td.quantity), 0) AS total_sold
-    FROM transaction_details td
-    INNER JOIN transactions t
-        ON td.transaction_id = t.transaction_id
-    INNER JOIN products p
-        ON td.product_id = p.product_id
-    WHERE t.status = 'selesai'
-    GROUP BY
-        p.product_id,
-        p.product_name
-    ORDER BY total_sold DESC
-    LIMIT 5
-");
-
-$best_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-/*
-|--------------------------------------------------------------------------
-| TRANSAKSI TERBARU
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT
-        t.transaction_id,
-        t.transaction_date,
-        t.total_amount,
-        t.payment_method,
-        t.status,
-        c.customer_name
-    FROM transactions t
-    LEFT JOIN customers c
-        ON t.customer_id = c.customer_id
-    ORDER BY t.transaction_id DESC
-    LIMIT 5
-");
-
-$recent_transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-/*
-|--------------------------------------------------------------------------
-| PRODUK STOK MENIPIS
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
+$products = $conn->query("
     SELECT
         product_id,
         product_name,
-        stock,
-        min_stock
+        sku,
+        purchase_price,
+        unit
     FROM products
     WHERE status = 'aktif'
-      AND stock <= min_stock
-    ORDER BY stock ASC, product_name ASC
-    LIMIT 5
-");
-
-$low_stock_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ORDER BY product_name ASC
+")->fetchAll(PDO::FETCH_ASSOC);
 
 
-/*
-|--------------------------------------------------------------------------
-| BATCH AKAN EXPIRED
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT
-        b.batch_id,
-        b.batch_number,
-        b.expiry_date,
-        b.remaining_quantity,
-        p.product_name
-    FROM batches b
-    INNER JOIN products p
-        ON b.product_id = p.product_id
-    WHERE b.remaining_quantity > 0
-      AND b.expiry_date IS NOT NULL
-      AND b.expiry_date >= CURDATE()
-      AND b.expiry_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
-    ORDER BY b.expiry_date ASC
-    LIMIT 5
-");
-
-$expiring_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-/*
-|--------------------------------------------------------------------------
-| BATCH EXPIRED
-|--------------------------------------------------------------------------
-*/
-
-$stmt = $conn->query("
-    SELECT
-        b.batch_id,
-        b.batch_number,
-        b.expiry_date,
-        b.remaining_quantity,
-        p.product_name
-    FROM batches b
-    INNER JOIN products p
-        ON b.product_id = p.product_id
-    WHERE b.remaining_quantity > 0
-      AND b.expiry_date IS NOT NULL
-      AND b.expiry_date < CURDATE()
-    ORDER BY b.expiry_date ASC
-    LIMIT 5
-");
-
-$expired_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$defaultDate = date('Y-m-d\TH:i');
 
 ?>
 
 <!DOCTYPE html>
+
 <html lang="id">
 
 <head>
@@ -345,951 +529,577 @@ $expired_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Dashboard - BEKUKU POS</title>
+    <title>Pembelian Baru - BEKUKU POS</title>
 
-    <!-- AdminLTE -->
+
     <link
         rel="stylesheet"
         href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
     >
 
-    <!-- Bootstrap Icons -->
+
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
 
-    <!-- CSS Global -->
+
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>"
+        href="<?= bekuku_url('assets/css/popup-pembelian.css') ?>?v=20260919"
     >
 
 </head>
 
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<body class="bekuku-purchase-popup-page">
 
 
-<div class="app-wrapper">
+<div class="purchase-form-shell">
 
 
-    <?php require_once __DIR__ . "/../includes/header.php"; ?>
+<form
+    method="post"
+    id="purchaseForm"
+    autocomplete="off"
+>
 
 
-    <main class="app-main">
+<?= bekuku_csrf_field() ?>
 
 
-        <div class="container-fluid p-4">
+<?php if ($error !== null): ?>
 
+    <div class="alert alert-danger purchase-alert">
 
-            <!-- =====================================================
-                 HEADER
-            ====================================================== -->
+        <i class="bi bi-exclamation-triangle me-2"></i>
 
-            <div class="mb-4">
+        <?= htmlspecialchars($error) ?>
 
-                <h1 class="fw-bold mb-1">
-                    Dashboard
-                </h1>
+    </div>
 
-                <p class="text-secondary mb-0">
-                    Selamat datang di sistem Point of Sale BEKUKU.
-                </p>
+<?php endif; ?>
 
-            </div>
 
+<?php if (empty($suppliers)): ?>
 
-            <!-- =====================================================
-                 STATISTIK
-            ====================================================== -->
+    <div class="alert alert-warning purchase-alert">
 
-            <div class="row g-3 mb-4">
+        Belum ada supplier.
+        Tambahkan supplier terlebih dahulu.
 
+    </div>
 
-                <!-- PENJUALAN HARI INI -->
+<?php endif; ?>
 
-                <div class="col-lg-3 col-md-6">
 
-                    <div class="card h-100 border-0 shadow-sm">
+<?php if (empty($products)): ?>
 
-                        <div class="card-body">
+    <div class="alert alert-warning purchase-alert">
 
-                            <div class="d-flex justify-content-between align-items-start">
+        Belum ada produk aktif yang bisa dibeli.
 
-                                <div>
+    </div>
 
-                                    <div class="text-secondary small">
-                                        Penjualan Hari Ini
-                                    </div>
+<?php endif; ?>
 
-                                    <div class="fs-4 fw-bold mt-2">
-                                        <?= rupiah($today_sales) ?>
-                                    </div>
 
-                                </div>
+<div class="purchase-section">
 
-                                <div class="fs-2 text-warning">
-                                    <i class="bi bi-cash-stack"></i>
-                                </div>
 
-                            </div>
+    <div class="purchase-section-title">
 
-                            <div class="small text-secondary mt-3">
+        <i class="bi bi-file-earmark-text"></i>
 
-                                <?= number_format(
-                                    $today_transactions,
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?>
+        Informasi Pembelian
 
-                                transaksi
+    </div>
 
-                            </div>
 
-                        </div>
+    <div class="row g-2">
 
-                    </div>
 
-                </div>
+        <div class="col-md-4">
 
+            <label class="form-label">
 
-                <!-- PRODUK -->
+                Supplier
 
-                <div class="col-lg-3 col-md-6">
+                <span>*</span>
 
-                    <div class="card h-100 border-0 shadow-sm">
+            </label>
 
-                        <div class="card-body">
 
-                            <div class="d-flex justify-content-between align-items-start">
+            <select
+                name="supplier_id"
+                class="form-select"
+                required
+            >
 
-                                <div>
+                <option value="">
+                    Pilih supplier
+                </option>
 
-                                    <div class="text-secondary small">
-                                        Produk Aktif
-                                    </div>
 
-                                    <div class="fs-4 fw-bold mt-2">
-                                        <?= number_format(
-                                            $total_products,
-                                            0,
-                                            ',',
-                                            '.'
-                                        ) ?>
-                                    </div>
+                <?php foreach ($suppliers as $supplier): ?>
 
-                                </div>
+                    <option
+                        value="<?= (int)$supplier['supplier_id'] ?>"
+                        <?= (
+                            (string)($_POST['supplier_id'] ?? '') ===
+                            (string)$supplier['supplier_id']
+                        ) ? 'selected' : '' ?>
+                    >
 
-                                <div class="fs-2 text-primary">
-                                    <i class="bi bi-box-seam"></i>
-                                </div>
+                        <?= htmlspecialchars(
+                            $supplier['supplier_name']
+                        ) ?>
 
-                            </div>
+                    </option>
 
-                            <div class="small text-secondary mt-3">
+                <?php endforeach; ?>
 
-                                Total stok:
-                                <?= number_format(
-                                    $total_stock,
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- STOK MENIPIS -->
-
-                <div class="col-lg-3 col-md-6">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <div class="card-body">
-
-                            <div class="d-flex justify-content-between align-items-start">
-
-                                <div>
-
-                                    <div class="text-secondary small">
-                                        Stok Menipis
-                                    </div>
-
-                                    <div class="fs-4 fw-bold mt-2">
-                                        <?= number_format(
-                                            $low_stock,
-                                            0,
-                                            ',',
-                                            '.'
-                                        ) ?>
-                                    </div>
-
-                                </div>
-
-                                <div class="fs-2 text-warning">
-                                    <i class="bi bi-exclamation-triangle"></i>
-                                </div>
-
-                            </div>
-
-                            <div class="small text-secondary mt-3">
-
-                                <?= number_format(
-                                    $out_of_stock,
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?>
-
-                                produk habis
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- EXPIRED -->
-
-                <div class="col-lg-3 col-md-6">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <div class="card-body">
-
-                            <div class="d-flex justify-content-between align-items-start">
-
-                                <div>
-
-                                    <div class="text-secondary small">
-                                        Expired
-                                    </div>
-
-                                    <div class="fs-4 fw-bold mt-2">
-                                        <?= number_format(
-                                            $expired_batches,
-                                            0,
-                                            ',',
-                                            '.'
-                                        ) ?>
-                                    </div>
-
-                                </div>
-
-                                <div class="fs-2 text-danger">
-                                    <i class="bi bi-calendar-x"></i>
-                                </div>
-
-                            </div>
-
-                            <div class="small text-secondary mt-3">
-
-                                <?= number_format(
-                                    $expiring_batches,
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?>
-
-                                batch akan expired
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-            <!-- =====================================================
-                 QUICK ACTION
-            ====================================================== -->
-
-            <div class="card border-0 shadow-sm mb-4">
-
-                <div class="card-body">
-
-                    <div class="d-flex flex-wrap gap-2">
-
-                        <a
-                            href="<?= bekuku_url('transactions/create.php') ?>"
-                            class="btn btn-warning"
-                        >
-                            <i class="bi bi-cart-plus me-1"></i>
-                            Transaksi Baru
-                        </a>
-
-                        <a
-                            href="/Bekuku/products/create.php"
-                            class="btn btn-outline-secondary"
-                        >
-                            <i class="bi bi-box-seam me-1"></i>
-                            Tambah Produk
-                        </a>
-
-                        <a
-                            href="<?= bekuku_url('purchases/') ?>"
-                            class="btn btn-outline-secondary"
-                        >
-                            <i class="bi bi-bag-plus me-1"></i>
-                            Pembelian
-                        </a>
-
-                        <a
-                            href="<?= bekuku_url('transactions/') ?>"
-                            class="btn btn-outline-secondary"
-                        >
-                            <i class="bi bi-clock-history me-1"></i>
-                            Riwayat Transaksi
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =====================================================
-                 CHART + PRODUK TERLARIS
-            ====================================================== -->
-
-            <div class="row g-4 mb-4">
-
-
-                <!-- CHART -->
-
-                <div class="col-lg-8">
-
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-header bg-white border-0 pt-3">
-
-                            <h5 class="fw-bold mb-1">
-                                Penjualan 7 Hari Terakhir
-                            </h5>
-
-                            <p class="text-secondary small mb-0">
-                                Ringkasan penjualan berdasarkan transaksi selesai.
-                            </p>
-
-                        </div>
-
-                        <div class="card-body">
-
-                            <canvas id="salesChart"></canvas>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PRODUK TERLARIS -->
-
-                <div class="col-lg-4">
-
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-header bg-white border-0 pt-3">
-
-                            <h5 class="fw-bold mb-1">
-                                Produk Terlaris
-                            </h5>
-
-                            <p class="text-secondary small mb-0">
-                                5 produk dengan penjualan tertinggi.
-                            </p>
-
-                        </div>
-
-                        <div class="card-body">
-
-                            <?php if (empty($best_products)): ?>
-
-                                <div class="text-center text-secondary py-4">
-
-                                    <i class="bi bi-box-seam fs-2"></i>
-
-                                    <div class="mt-2">
-                                        Belum ada data.
-                                    </div>
-
-                                </div>
-
-                            <?php else: ?>
-
-                                <div class="list-group list-group-flush">
-
-                                    <?php foreach ($best_products as $product): ?>
-
-                                        <div class="list-group-item px-0 d-flex justify-content-between">
-
-                                            <span>
-                                                <?= htmlspecialchars(
-                                                    $product['product_name']
-                                                ) ?>
-                                            </span>
-
-                                            <strong>
-                                                <?= number_format(
-                                                    (int) $product['total_sold'],
-                                                    0,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-                                            </strong>
-
-                                        </div>
-
-                                    <?php endforeach; ?>
-
-                                </div>
-
-                            <?php endif; ?>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-            <!-- =====================================================
-                 TRANSAKSI + STOK
-            ====================================================== -->
-
-            <div class="row g-4 mb-4">
-
-
-                <!-- TRANSAKSI TERBARU -->
-
-                <div class="col-lg-7">
-
-                    <div class="card border-0 shadow-sm">
-
-                        <div class="card-header bg-white border-0 pt-3">
-
-                            <div class="d-flex justify-content-between align-items-center">
-
-                                <div>
-
-                                    <h5 class="fw-bold mb-1">
-                                        Transaksi Terbaru
-                                    </h5>
-
-                                    <p class="text-secondary small mb-0">
-                                        5 transaksi terakhir.
-                                    </p>
-
-                                </div>
-
-                                <a
-                                    href="<?= bekuku_url('transactions/') ?>"
-                                    class="btn btn-sm btn-outline-secondary"
-                                >
-                                    Lihat Semua
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                        <div class="card-body p-0">
-
-                            <div class="table-responsive">
-
-                                <table class="table table-hover mb-0">
-
-                                    <thead>
-
-                                        <tr>
-
-                                            <th>ID</th>
-                                            <th>Tanggal</th>
-                                            <th>Customer</th>
-                                            <th>Total</th>
-                                            <th>Status</th>
-
-                                        </tr>
-
-                                    </thead>
-
-                                    <tbody>
-
-                                    <?php if (empty($recent_transactions)): ?>
-
-                                        <tr>
-
-                                            <td
-                                                colspan="5"
-                                                class="text-center text-secondary py-4"
-                                            >
-                                                Belum ada transaksi.
-                                            </td>
-
-                                        </tr>
-
-                                    <?php else: ?>
-
-                                        <?php foreach ($recent_transactions as $transaction): ?>
-
-                                            <tr>
-
-                                                <td>
-                                                    #<?= (int) $transaction['transaction_id'] ?>
-                                                </td>
-
-                                                <td>
-
-                                                    <?= !empty(
-                                                        $transaction['transaction_date']
-                                                    )
-                                                        ? htmlspecialchars(
-                                                            date(
-                                                                'd/m/Y H:i',
-                                                                strtotime(
-                                                                    $transaction['transaction_date']
-                                                                )
-                                                            )
-                                                        )
-                                                        : '-'
-                                                    ?>
-
-                                                </td>
-
-                                                <td>
-
-                                                    <?= htmlspecialchars(
-                                                        $transaction['customer_name']
-                                                        ?: 'Umum'
-                                                    ) ?>
-
-                                                </td>
-
-                                                <td>
-
-                                                    <strong>
-                                                        <?= rupiah(
-                                                            $transaction['total_amount']
-                                                        ) ?>
-                                                    </strong>
-
-                                                </td>
-
-                                                <td>
-
-                                                    <?php if (
-                                                        strtolower(
-                                                            trim(
-                                                                $transaction['status'] ?? ''
-                                                            )
-                                                        ) === 'selesai'
-                                                    ): ?>
-
-                                                        <span class="badge text-bg-success">
-                                                            Selesai
-                                                        </span>
-
-                                                    <?php elseif (
-                                                        strtolower(
-                                                            trim(
-                                                                $transaction['status'] ?? ''
-                                                            )
-                                                        ) === 'batal'
-                                                    ): ?>
-
-                                                        <span class="badge text-bg-danger">
-                                                            Batal
-                                                        </span>
-
-                                                    <?php else: ?>
-
-                                                        <span class="badge text-bg-warning">
-                                                            Pending
-                                                        </span>
-
-                                                    <?php endif; ?>
-
-                                                </td>
-
-                                            </tr>
-
-                                        <?php endforeach; ?>
-
-                                    <?php endif; ?>
-
-                                    </tbody>
-
-                                </table>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- STOK MENIPIS -->
-
-                <div class="col-lg-5">
-
-                    <div class="card border-0 shadow-sm">
-
-                        <div class="card-header bg-white border-0 pt-3">
-
-                            <h5 class="fw-bold mb-1">
-                                Stok Menipis
-                            </h5>
-
-                            <p class="text-secondary small mb-0">
-                                Produk yang perlu diperhatikan.
-                            </p>
-
-                        </div>
-
-                        <div class="card-body">
-
-                            <?php if (empty($low_stock_products)): ?>
-
-                                <div class="text-center text-secondary py-3">
-
-                                    <i class="bi bi-check-circle fs-2"></i>
-
-                                    <div class="mt-2">
-                                        Semua stok aman.
-                                    </div>
-
-                                </div>
-
-                            <?php else: ?>
-
-                                <?php foreach ($low_stock_products as $product): ?>
-
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-
-                                        <div>
-
-                                            <div class="fw-semibold">
-
-                                                <?= htmlspecialchars(
-                                                    $product['product_name']
-                                                ) ?>
-
-                                            </div>
-
-                                            <small class="text-secondary">
-
-                                                Minimum:
-                                                <?= number_format(
-                                                    (int) $product['min_stock'],
-                                                    0,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-
-                                            </small>
-
-                                        </div>
-
-                                        <?php if (
-                                            (int) $product['stock'] <= 0
-                                        ): ?>
-
-                                            <span class="badge text-bg-danger">
-                                                Habis
-                                            </span>
-
-                                        <?php else: ?>
-
-                                            <span class="badge text-bg-warning">
-
-                                                <?= number_format(
-                                                    (int) $product['stock'],
-                                                    0,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-
-                                            </span>
-
-                                        <?php endif; ?>
-
-                                    </div>
-
-                                <?php endforeach; ?>
-
-                            <?php endif; ?>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-            <!-- =====================================================
-                 EXPIRED
-            ====================================================== -->
-
-            <div class="row g-4 mb-4">
-
-
-                <!-- AKAN EXPIRED -->
-
-                <div class="col-lg-6">
-
-                    <div class="card border-0 shadow-sm">
-
-                        <div class="card-header bg-white border-0 pt-3">
-
-                            <h5 class="fw-bold mb-1">
-                                <i class="bi bi-calendar-event text-warning me-1"></i>
-                                Akan Expired
-                            </h5>
-
-                            <p class="text-secondary small mb-0">
-                                Batch yang akan expired dalam 7 hari.
-                            </p>
-
-                        </div>
-
-                        <div class="card-body">
-
-                            <?php if (empty($expiring_list)): ?>
-
-                                <div class="text-center text-secondary py-3">
-                                    Tidak ada batch yang akan expired.
-                                </div>
-
-                            <?php else: ?>
-
-                                <?php foreach ($expiring_list as $batch): ?>
-
-                                    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-
-                                        <div>
-
-                                            <div class="fw-semibold">
-
-                                                <?= htmlspecialchars(
-                                                    $batch['product_name']
-                                                ) ?>
-
-                                            </div>
-
-                                            <small class="text-secondary">
-
-                                                Batch:
-                                                <?= htmlspecialchars(
-                                                    $batch['batch_number']
-                                                ) ?>
-
-                                            </small>
-
-                                        </div>
-
-                                        <div class="text-end">
-
-                                            <div class="text-warning fw-semibold">
-
-                                                <?= htmlspecialchars(
-                                                    date(
-                                                        'd/m/Y',
-                                                        strtotime(
-                                                            $batch['expiry_date']
-                                                        )
-                                                    )
-                                                ) ?>
-
-                                            </div>
-
-                                            <small class="text-secondary">
-
-                                                Stok:
-                                                <?= number_format(
-                                                    (int) $batch['remaining_quantity'],
-                                                    0,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-
-                                            </small>
-
-                                        </div>
-
-                                    </div>
-
-                                <?php endforeach; ?>
-
-                            <?php endif; ?>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- EXPIRED -->
-
-                <div class="col-lg-6">
-
-                    <div class="card border-0 shadow-sm">
-
-                        <div class="card-header bg-white border-0 pt-3">
-
-                            <h5 class="fw-bold mb-1">
-                                <i class="bi bi-calendar-x text-danger me-1"></i>
-                                Batch Expired
-                            </h5>
-
-                            <p class="text-secondary small mb-0">
-                                Batch expired yang masih memiliki stok.
-                            </p>
-
-                        </div>
-
-                        <div class="card-body">
-
-                            <?php if (empty($expired_list)): ?>
-
-                                <div class="text-center text-secondary py-3">
-                                    Tidak ada batch expired.
-                                </div>
-
-                            <?php else: ?>
-
-                                <?php foreach ($expired_list as $batch): ?>
-
-                                    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-
-                                        <div>
-
-                                            <div class="fw-semibold">
-
-                                                <?= htmlspecialchars(
-                                                    $batch['product_name']
-                                                ) ?>
-
-                                            </div>
-
-                                            <small class="text-secondary">
-
-                                                Batch:
-                                                <?= htmlspecialchars(
-                                                    $batch['batch_number']
-                                                ) ?>
-
-                                            </small>
-
-                                        </div>
-
-                                        <div class="text-end">
-
-                                            <div class="text-danger fw-semibold">
-
-                                                <?= htmlspecialchars(
-                                                    date(
-                                                        'd/m/Y',
-                                                        strtotime(
-                                                            $batch['expiry_date']
-                                                        )
-                                                    )
-                                                ) ?>
-
-                                            </div>
-
-                                            <small class="text-secondary">
-
-                                                Stok:
-                                                <?= number_format(
-                                                    (int) $batch['remaining_quantity'],
-                                                    0,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-
-                                            </small>
-
-                                        </div>
-
-                                    </div>
-
-                                <?php endforeach; ?>
-
-                            <?php endif; ?>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
+            </select>
 
         </div>
 
 
-    </main>
+        <div class="col-md-4">
+
+            <label class="form-label">
+
+                Tanggal
+
+                <span>*</span>
+
+            </label>
 
 
-    <?php require_once __DIR__ . "/../includes/footer.php"; ?>
+            <input
+                type="datetime-local"
+                name="purchase_date"
+                class="form-control"
+                value="<?= htmlspecialchars(
+                    $_POST['purchase_date'] ?? $defaultDate
+                ) ?>"
+                required
+            >
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+
+                No. Invoice
+
+            </label>
+
+
+            <input
+                type="text"
+                name="invoice_number"
+                class="form-control"
+                maxlength="100"
+                value="<?= htmlspecialchars(
+                    $_POST['invoice_number'] ?? ''
+                ) ?>"
+                placeholder="INV-001"
+            >
+
+        </div>
+
+
+        <div class="col-12">
+
+            <label class="form-label">
+
+                Catatan
+
+            </label>
+
+
+            <input
+                type="text"
+                name="note"
+                class="form-control"
+                maxlength="255"
+                value="<?= htmlspecialchars(
+                    $_POST['note'] ?? ''
+                ) ?>"
+                placeholder="Catatan pembelian (opsional)"
+            >
+
+        </div>
+
+
+    </div>
 
 
 </div>
 
 
-<!-- AdminLTE -->
-
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
+<div class="purchase-section">
 
 
-<!-- Chart.js -->
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="purchase-section-head">
 
 
-<script>
+        <div class="purchase-section-title mb-0">
 
-window.bekukuChartLabels =
-    <?= json_encode($chart_labels) ?>;
+            <i class="bi bi-box-seam"></i>
 
-window.bekukuChartValues =
-    <?= json_encode($chart_values) ?>;
+            Produk
 
-</script>
+        </div>
 
 
-<!-- Dashboard JS -->
+        <button
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+            data-action="add-product-row"
+        >
 
-<script src="<?= bekuku_url('assets/dashboard/js/dashboard.js') ?>?v=2026091721"></script>
+            <i class="bi bi-plus-lg me-1"></i>
+
+            Tambah Produk
+
+        </button>
+
+
+    </div>
+
+
+    <div class="table-responsive purchase-table-wrap">
+
+
+        <table
+            class="table table-bordered align-middle mb-0 purchase-table"
+        >
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Produk
+                    </th>
+
+                    <th width="85">
+                        Qty
+                    </th>
+
+                    <th width="145">
+                        Harga Beli
+                    </th>
+
+                    <th width="145">
+                        Subtotal
+                    </th>
+
+                    <th width="125">
+                        Batch
+                    </th>
+
+                    <th width="130">
+                        Expired
+                    </th>
+
+                    <th width="48"></th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="productBody">
+
+
+                <tr class="product-row">
+
+
+                    <td>
+
+                        <select
+                            name="product_id[]"
+                            class="form-select product-select"
+                            required
+                        >
+
+                            <option value="">
+                                Pilih produk
+                            </option>
+
+
+                            <?php foreach ($products as $product): ?>
+
+                                <option
+                                    value="<?= (int)$product['product_id'] ?>"
+                                    data-price="<?= htmlspecialchars(
+                                        (string)$product['purchase_price']
+                                    ) ?>"
+                                >
+
+                                    <?= htmlspecialchars(
+                                        $product['product_name']
+                                    ) ?>
+
+
+                                    <?php if (!empty($product['sku'])): ?>
+
+                                        —
+                                        <?= htmlspecialchars(
+                                            $product['sku']
+                                        ) ?>
+
+                                    <?php endif; ?>
+
+                                </option>
+
+                            <?php endforeach; ?>
+
+
+                        </select>
+
+                    </td>
+
+
+                    <td>
+
+                        <input
+                            type="number"
+                            name="quantity[]"
+                            class="form-control quantity"
+                            min="1"
+                            value="1"
+                            required
+                        >
+
+                    </td>
+
+
+                    <td>
+
+                        <input
+                            type="number"
+                            name="purchase_price[]"
+                            class="form-control purchase-price"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                            required
+                        >
+
+                    </td>
+
+
+                    <td>
+
+                        <input
+                            type="text"
+                            class="form-control subtotal"
+                            value="Rp 0"
+                            readonly
+                        >
+
+                    </td>
+
+
+                    <td>
+
+                        <input
+                            type="text"
+                            name="batch_number[]"
+                            class="form-control"
+                            maxlength="100"
+                            placeholder="BATCH-001"
+                        >
+
+                    </td>
+
+
+                    <td>
+
+                        <input
+                            type="date"
+                            name="expiry_date[]"
+                            class="form-control"
+                        >
+
+                    </td>
+
+
+                    <td class="text-center">
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            data-action="remove-product-row"
+                            title="Hapus"
+                        >
+
+                            <i class="bi bi-trash"></i>
+
+                        </button>
+
+                    </td>
+
+
+                </tr>
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</div>
+
+
+<div class="purchase-bottom">
+
+
+    <div class="payment-box">
+
+
+        <div>
+
+            <label class="form-label">
+                Total Pembelian
+            </label>
+
+
+            <input
+                type="text"
+                id="totalDisplay"
+                class="form-control total-display"
+                value="Rp 0"
+                readonly
+            >
+
+        </div>
+
+
+        <div>
+
+            <label class="form-label">
+                Dibayar
+            </label>
+
+
+            <input
+                type="number"
+                id="paymentAmount"
+                name="payment_amount"
+                class="form-control"
+                min="0"
+                step="0.01"
+                value="<?= htmlspecialchars(
+                    $_POST['payment_amount'] ?? '0'
+                ) ?>"
+                required
+            >
+
+        </div>
+
+
+        <div>
+
+            <label class="form-label">
+                Sisa Hutang
+            </label>
+
+
+            <input
+                type="text"
+                id="remainingDisplay"
+                class="form-control remaining-display"
+                value="Rp 0"
+                readonly
+            >
+
+        </div>
+
+
+    </div>
+
+
+    <div class="purchase-actions">
+
+
+        <?php if ($isPopup): ?>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                data-purchase-close
+            >
+
+                <i class="bi bi-x-lg me-1"></i>
+
+                Batal
+
+            </button>
+
+        <?php else: ?>
+
+            <a
+                href="<?= bekuku_url('purchases/index.php') ?>"
+                class="btn btn-secondary"
+            >
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Kembali
+
+            </a>
+
+        <?php endif; ?>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+            id="savePurchaseButton"
+            <?= (
+                empty($suppliers) ||
+                empty($products)
+            ) ? 'disabled' : '' ?>
+        >
+
+            <i class="bi bi-check-lg me-1"></i>
+
+            Simpan Pembelian
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+
+<script
+    src="<?= bekuku_url('assets/js/purchases-create.js') ?>?v=20260919"
+></script>
+
+
+<script
+    src="<?= bekuku_url('assets/js/popup-pembelian-form.js') ?>?v=20260919"
+></script>
 
 
 </body>

@@ -1,9 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../config/app.php";
-
-
-require_once "../config/database.php";
+require_once __DIR__ . "/../config/database.php";
 
 $stmt = $conn->query("
     SELECT
@@ -51,6 +49,11 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
         href="<?= bekuku_url('assets/css/style.css') ?>"
     >
 
+    <link
+        rel="stylesheet"
+        href="<?= bekuku_url('assets/css/popup-pembelian.css') ?>?v=20260919"
+    >
+
 </head>
 
 
@@ -63,68 +66,21 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php require_once __DIR__ . "/../includes/header.php"; ?>
 
 
-    <!-- CONTENT -->
-
     <main class="app-main">
 
 
-        <!-- HEADER -->
-
         <div class="app-content-header">
-
-            <div class="container-fluid">
-
-                <div class="row">
-
-                    <div class="col-sm-6">
-
-                        <h3 class="mb-0">
-                            Pembelian
-                        </h3>
-
-                    </div>
-
-
-                    <div class="col-sm-6">
-
-                        <ol class="breadcrumb float-sm-end">
-
-                            <li class="breadcrumb-item">
-
-                                <a href="<?= bekuku_url() ?>">
-                                    Dashboard
-                                </a>
-
-                            </li>
-
-                            <li class="breadcrumb-item active">
-                                Pembelian
-                            </li>
-
-                        </ol>
-
-                    </div>
-
-                </div>
-
-            </div>
 
         </div>
 
-
-        <!-- CONTENT BODY -->
 
         <div class="app-content">
 
             <div class="container-fluid">
 
 
-                <!-- CARD -->
-
                 <div class="card">
 
-
-                    <!-- CARD HEADER -->
 
                     <div class="card-header">
 
@@ -139,25 +95,27 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </h3>
 
 
-                            <a
-                                href="create.php"
-                                class="btn btn-primary"
-                                data-modal-url="create.php"
-                                data-modal-title="Tambah Pembelian"
-                            >
+                            <?php if (bekuku_can('purchases.write')): ?>
 
-                                <i class="bi bi-plus-lg me-1"></i>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-popup-pembelian
+                                    data-popup-url="<?= bekuku_url('purchases/create.php?popup=1') ?>"
+                                >
 
-                                Pembelian Baru
+                                    <i class="bi bi-plus-lg me-1"></i>
 
-                            </a>
+                                    Pembelian Baru
+
+                                </button>
+
+                            <?php endif; ?>
 
                         </div>
 
                     </div>
 
-
-                    <!-- CARD BODY -->
 
                     <div class="card-body">
 
@@ -363,6 +321,7 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                             </table>
 
+
                         </div>
 
 
@@ -380,14 +339,11 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </main>
 
 
-    <?php require_once __DIR__ . "/../includes/footer.php"; ?>
-
-
 </div>
 
 
-<script src="<?= bekuku_url('assets/js/ui.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
+<script src="<?= bekuku_url('assets/js/popup-pembelian.js') ?>?v=20260919"></script>
+
 
 </body>
 

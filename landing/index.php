@@ -39,7 +39,7 @@ if (!bekuku_is_authenticated()) {
                     <p class="bekuku-landing-description">Aplikasi Point of Sale (POS) yang dirancang khusus untuk toko frozen food. Kelola transaksi, stok, dan laporan penjualan dalam satu sistem yang simpel, cepat, dan modern.</p>
                     <div class="landing-reference-cta">
                         <a class="bekuku-landing-cta" href="<?= bekuku_url('login.php') ?>"></i> Mulai Sekarang <i class="bi bi-arrow-right"></i></a>
-                        <a class="landing-demo-button" href="#fitur"><i class="bi bi-play-circle"></i> Lihat Demo</a>
+                        <a class="landing-demo-button" href="landing/demo.php"><i class="bi bi-play-circle"></i> Lihat Demo</a>
                     </div>
                     <div class="bekuku-landing-trust">
                         <span><i class="bi bi-check-circle-fill"></i> Mudah Digunakan</span>
