@@ -26,7 +26,6 @@ Perbedaan sederhananya:
 
 Pada POS sederhana:
 
-```text
 Barang
    ↓
 Penjualan
