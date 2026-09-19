@@ -1,454 +1,384 @@
-# BEKUKU
+# 📦 BEKUKU
 
 ### Point of Sale & Inventory Management System for Frozen Food
 
-**BEKUKU** adalah aplikasi **Point of Sale (POS) dan Inventory Management** yang dirancang untuk membantu pengelolaan bisnis frozen food secara terintegrasi.
-
-BEKUKU menggabungkan pengelolaan produk, kategori, supplier, pembelian, stok berbasis batch, tanggal kedaluwarsa, sistem FEFO, customer, piutang, penjualan, laporan, dan pembayaran QRIS dalam satu sistem.
-
-> BEKUKU — Sistem POS dan Manajemen Inventori untuk Bisnis Frozen Food.
-
----
-
-## Project Overview
-
-BEKUKU dikembangkan sebagai sistem informasi untuk membantu proses operasional toko frozen food.
-
-Sistem dirancang tidak hanya untuk mencatat jumlah stok, tetapi juga untuk mengelola stok berdasarkan **batch dan tanggal kedaluwarsa**.
-
-Konsep **FEFO (First Expired, First Out)** digunakan dalam proses pengeluaran stok sehingga batch dengan tanggal kedaluwarsa yang lebih dekat dapat diprioritaskan.
+![PHP](https://img.shields.io/badge/PHP-8.x-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)
 
 ---
 
-## Features
+## 📌 About The Project
 
-### Dashboard
+**BEKUKU** adalah aplikasi berbasis web untuk membantu mengelola operasional bisnis frozen food dalam satu sistem.
 
-* Ringkasan informasi bisnis.
-* Informasi produk.
-* Informasi stok.
-* Ringkasan transaksi.
-* Informasi penjualan.
-* Monitoring aktivitas operasional.
+Aplikasi ini menggabungkan **Point of Sale (POS)** dan **Inventory Management** dengan sistem **batch inventory** dan **FEFO (First Expired, First Out)**.
 
-### Product Management
+BEKUKU dirancang untuk membantu proses:
 
-* Tambah produk.
-* Edit produk.
-* Hapus produk.
-* Daftar produk.
-* Kategori produk.
-* Harga jual.
-* Informasi stok.
-* Riwayat pergerakan stok.
+- 📦 Pengelolaan produk
+- 🏷️ Pengelolaan kategori
+- 🚚 Pengelolaan supplier
+- 🛒 Pembelian barang
+- 🧊 Manajemen batch
+- 📊 Pengelolaan stok
+- 💰 Penjualan / POS
+- 👥 Customer
+- 💳 Pembayaran
+- 💵 Piutang
+- 📈 Laporan
+- 👤 Manajemen pengguna
 
-### Category Management
+---
 
-* Tambah kategori.
-* Edit kategori.
-* Hapus kategori.
-* Pengelompokan produk berdasarkan kategori.
+# ✨ Main Features
 
-### Supplier Management
+## 📊 Dashboard
 
-* Data supplier.
-* Informasi supplier.
-* Riwayat pembelian berdasarkan supplier.
+Dashboard digunakan untuk menampilkan informasi penting mengenai aktivitas bisnis dan kondisi inventory secara terpusat.
 
-### Purchase Management
+---
 
-* Pencatatan pembelian.
-* Detail pembelian.
-* Supplier.
-* Produk.
-* Jumlah barang.
-* Harga beli.
-* Batch produk.
-* Tanggal kedaluwarsa.
-* Stok barang masuk.
+## 📦 Product Management
 
-### Batch Management
+Fitur untuk mengelola data produk.
 
-Setiap barang yang masuk dapat disimpan berdasarkan batch.
+- Tambah produk
+- Edit produk
+- Hapus produk
+- Kategori produk
+- Harga produk
+- Stok produk
+- Informasi produk
 
-Informasi batch meliputi:
+---
 
-* Produk.
-* Jumlah stok.
-* Tanggal masuk.
-* Tanggal kedaluwarsa.
-* Riwayat penggunaan batch.
+## 🏷️ Category Management
 
-### FEFO
+Fitur untuk mengelompokkan produk berdasarkan kategori.
+
+- Tambah kategori
+- Edit kategori
+- Hapus kategori
+- Pengelompokan produk
+
+---
+
+## 🚚 Supplier Management
+
+Digunakan untuk mengelola data supplier.
+
+- Data supplier
+- Informasi supplier
+- Riwayat pembelian
+
+---
+
+## 🛒 Purchase Management
+
+Sistem pembelian digunakan untuk mencatat barang yang masuk ke inventory.
+
+Informasi pembelian meliputi:
+
+- Supplier
+- Produk
+- Jumlah pembelian
+- Harga beli
+- Total pembelian
+- Batch
+- Tanggal masuk
+- Tanggal kedaluwarsa
+
+Setiap pembelian dapat menghasilkan batch baru sehingga stok dapat dilacak berdasarkan batch.
+
+---
+
+# 🧊 Batch Inventory
+
+BEKUKU menggunakan sistem inventory berbasis **batch**.
+
+Setiap barang yang masuk dapat memiliki informasi:
+
+```text
+Product
+   ↓
+Batch
+   ↓
+Stock
+   ↓
+Expired Date
+```
+
+Dengan sistem batch, stok dapat dilacak berdasarkan:
+
+- Produk
+- Batch
+- Jumlah stok
+- Tanggal masuk
+- Tanggal kedaluwarsa
+
+---
+
+# 🔄 FEFO Inventory System
 
 BEKUKU menerapkan konsep:
 
-**First Expired, First Out**
+> **FEFO — First Expired, First Out**
 
-Sistem memprioritaskan batch dengan tanggal kedaluwarsa paling dekat ketika stok digunakan untuk transaksi.
+Batch dengan tanggal kedaluwarsa yang paling dekat akan diprioritaskan ketika stok digunakan.
 
 Contoh:
 
 ```text
-Produk: Nugget Ayam
-
-Batch       Expired          Stock
------------------------------------
-BATCH-001   10 Jan 2027      10
-BATCH-002   20 Feb 2027      20
-BATCH-003   15 Mar 2027      30
+Batch A → Expired 10 Jan 2027 → Stock 10
+Batch B → Expired 20 Feb 2027 → Stock 20
+Batch C → Expired 15 Mar 2027 → Stock 30
 ```
 
-Jika customer membeli 12 produk:
+Jika terjadi penjualan sebanyak 12 produk:
 
 ```text
-BATCH-001 -> 10
-BATCH-002 -> 2
-BATCH-003 -> 0
+Batch A → 10
+Batch B →  2
 ```
 
-Stok setelah transaksi:
+Dengan konsep FEFO, penggunaan stok dapat disesuaikan dengan tanggal kedaluwarsa sehingga pengelolaan barang menjadi lebih terstruktur.
 
-```text
-BATCH-001 -> 0
-BATCH-002 -> 18
-BATCH-003 -> 30
-```
+---
 
-Detail transaksi menyimpan batch yang digunakan sehingga penggunaan stok dapat ditelusuri.
+# 💰 Sales / Point of Sale
 
-### Sales / POS
+Fitur penjualan digunakan untuk memproses transaksi customer.
 
-* Pembuatan transaksi penjualan.
-* Pemilihan customer.
-* Pemilihan produk.
-* Perhitungan subtotal.
-* Perhitungan total.
-* Pemilihan metode pembayaran.
-* Pemrosesan stok.
-* Penerapan FEFO.
-* Penyimpanan batch yang digunakan.
-* Riwayat transaksi.
+Fitur meliputi:
 
-### Automatic Stock Management
+- Pembuatan transaksi
+- Pemilihan customer
+- Pemilihan produk
+- Perhitungan subtotal
+- Perhitungan total
+- Metode pembayaran
+- Pengurangan stok
+- Penerapan FEFO
+- Penyimpanan batch yang digunakan
+- Riwayat transaksi
 
-Stok diperbarui berdasarkan aktivitas pembelian dan penjualan.
+---
 
-Alur utama:
+# 👥 Customer Management
 
-```text
-Purchase
-    |
-    v
-Product Batch
-    |
-    v
-Inventory
-    |
-    v
-Sales Transaction
-    |
-    v
-FEFO Selection
-    |
-    v
-Batch Stock Decrease
-```
+Digunakan untuk mengelola data customer.
 
-### Customer Management
+- Tambah customer
+- Edit customer
+- Hapus customer
+- Data customer
+- Riwayat transaksi
+- Informasi pembayaran
+- Pengelolaan piutang
 
-* Data customer.
-* Informasi customer.
-* Riwayat transaksi.
-* Informasi pembayaran.
-* Pengelolaan piutang.
+---
 
-### Debt / Piutang
+# 💳 Payment & Piutang
 
-Sistem dapat mencatat transaksi customer yang belum dibayar penuh.
-
-Status pembayaran dapat digunakan untuk membedakan:
+BEKUKU dapat mencatat transaksi berdasarkan status pembayaran.
 
 ```text
 Lunas
-Belum Lunas
 Sebagian Dibayar
+Belum Lunas
 ```
 
-### QRIS Payment
-
-BEKUKU menyediakan dukungan pembayaran QRIS melalui integrasi payment gateway.
-
-Konfigurasi payment gateway menggunakan environment variable sehingga credential tidak ditulis langsung pada source code.
-
-Contoh:
-
-```env
-MIDTRANS_ENVIRONMENT=sandbox
-MIDTRANS_SERVER_KEY=YOUR_SERVER_KEY
-```
-
-Credential asli tidak boleh dimasukkan ke repository.
-
-### Reports
-
-BEKUKU menyediakan modul laporan untuk membantu melihat data operasional.
-
-Laporan meliputi:
-
-* Laporan penjualan.
-* Laporan stok.
-* Riwayat transaksi.
-* Informasi persediaan.
-
-### Authentication & User Management
-
-* Login.
-* Logout.
-* User management.
-* Pengelolaan akses pengguna.
+Sistem juga mendukung pembayaran menggunakan **QRIS melalui payment gateway**.
 
 ---
 
-## System Concept
+# 📈 Reports
 
-BEKUKU menggunakan pendekatan **batch-based inventory**.
+Modul laporan digunakan untuk membantu monitoring aktivitas bisnis.
 
-Konsep hubungan produk dan batch:
+Laporan dapat digunakan untuk melihat:
+
+- Penjualan
+- Inventory
+- Stok
+- Transaksi
+- Aktivitas operasional
+
+---
+
+# 👤 User Management
+
+Sistem menyediakan fitur pengelolaan pengguna.
+
+- Login
+- Logout
+- User management
+- Pengelolaan akses pengguna
+
+---
+
+# 🔄 Business Flow
+
+```text
+                 SUPPLIER
+                    │
+                    ▼
+                PURCHASE
+                    │
+                    ▼
+               PRODUCT BATCH
+                    │
+                    ▼
+                INVENTORY
+                    │
+                    ▼
+                  FEFO
+                    │
+                    ▼
+               SALES / POS
+                 │     │
+                 │     └──────────► PAYMENT
+                 │
+                 ▼
+              CUSTOMER
+                    │
+                    ▼
+                 REPORT
+```
+
+---
+
+# 🧠 System Concept
+
+BEKUKU menggunakan konsep **Batch-Based Inventory Management**.
+
+## Product
 
 ```text
 PRODUCT
-    |
-    +------ CATEGORY
-    |
-    +------ BATCH
-              |
-              +------ STOCK
+   │
+   ├── CATEGORY
+   │
+   └── BATCH
+          │
+          ├── STOCK
+          ├── ENTRY DATE
+          └── EXPIRED DATE
 ```
 
-Pada transaksi penjualan:
+## Sales
 
 ```text
 CUSTOMER
-    |
-    v
+    │
+    ▼
   SALE
-    |
-    v
-SALE_DETAIL
-    |
-    +------ PRODUCT
-    |
-    +------ BATCH
+    │
+    ▼
+SALE DETAIL
+    │
+    ├── PRODUCT
+    │
+    └── BATCH
 ```
 
-Dengan menyimpan `batch_id` pada detail penjualan, sistem dapat mengetahui batch mana yang digunakan dalam suatu transaksi.
+Dengan menyimpan informasi batch pada transaksi, penggunaan stok dapat ditelusuri berdasarkan batch yang digunakan.
 
 ---
 
-## FEFO Workflow
+# 🛠️ Tech Stack
 
-Proses FEFO:
-
-```text
-Customer membeli produk
-          |
-          v
-Cari batch aktif
-          |
-          v
-Urutkan berdasarkan expired date
-          |
-          v
-Ambil batch dengan expired terdekat
-          |
-          v
-Apakah stok mencukupi?
-       /        \
-     Ya          Tidak
-     |             |
-     v             v
-Kurangi       Gunakan batch
-stok batch    berikutnya
-     |             |
-     +------ + ----+
-            |
-            v
-      Transaksi selesai
-```
+| Technology | Usage |
+|---|---|
+| PHP | Backend |
+| MySQL / MariaDB | Database |
+| JavaScript | Frontend Interaction |
+| HTML5 | Structure |
+| CSS3 | Styling |
+| Bootstrap | UI Components |
+| AdminLTE | Dashboard Interface |
+| Laragon | Local Development |
+| Git | Version Control |
+| GitHub | Repository |
+| Midtrans | QRIS Payment |
 
 ---
 
-## Business Flow
-
-```text
-SUPPLIER
-    |
-    v
-PURCHASE
-    |
-    v
-PRODUCT BATCH
-    |
-    v
-INVENTORY
-    |
-    v
-FEFO
-    |
-    v
-SALES / POS
-    |
-    +-------- CUSTOMER
-    |
-    +-------- PAYMENT
-    |
-    v
-REPORT
-```
-
----
-
-## Database
-
-Database utama:
-
-```text
-database/bekuku.sql
-```
-
-Migration:
-
-```text
-database/
-├── bekuku.sql
-└── migrations/
-    ├── 001_security_users_audit.sql
-    └── 002_qris_image_payment_method.sql
-```
-
-Konsep database mencakup:
-
-* Products
-* Categories
-* Suppliers
-* Customers
-* Purchases
-* Purchase Details
-* Batches
-* Sales
-* Sale Details
-* Debt
-* Debt Payments
-* Users
-* Audit / supporting tables
-
----
-
-## Tech Stack
-
-| Technology      | Purpose                  |
-| --------------- | ------------------------ |
-| PHP             | Backend                  |
-| MySQL / MariaDB | Database                 |
-| HTML5           | Markup                   |
-| CSS3            | Styling                  |
-| JavaScript      | Client-side interaction  |
-| AdminLTE        | Admin interface          |
-| Laragon         | Local development        |
-| Git             | Version control          |
-| GitHub          | Repository               |
-| Midtrans        | QRIS payment integration |
-
----
-
-## Project Structure
+# 📁 Project Structure
 
 ```text
 Bekuku/
-|
+│
 ├── assets/
 │   ├── css/
 │   ├── js/
 │   └── images/
-|
+│
 ├── categories/
-|
 ├── config/
-│   ├── app.php
-│   ├── database.php
-│   └── midtrans.php
-|
 ├── customers/
-|
 ├── dashboard/
-|
 ├── database/
-│   ├── bekuku.sql
-│   └── migrations/
-|
 ├── includes/
-|
 ├── landing/
-|
 ├── products/
-|
 ├── purchases/
-|
 ├── reports/
-|
 ├── suppliers/
-|
 ├── transactions/
-|
 ├── users/
-|
 ├── tests/
-|
+│
 ├── .gitignore
 ├── INSTALL.md
-└── index.php
+├── README.md
+├── index.php
+├── login.php
+└── logout.php
 ```
 
 ---
 
-## Requirements
+# ⚙️ Requirements
 
 Untuk menjalankan BEKUKU secara lokal:
 
-* Windows
-* PHP
-* MySQL atau MariaDB
-* Apache
-* Git
-* Browser modern
-* Laragon atau local development environment lainnya
+- Windows
+- PHP 8.x
+- MySQL / MariaDB
+- Apache
+- Git
+- Web Browser
+- Laragon atau local development environment lainnya
 
 ---
 
-## Installation
+# 🚀 Installation
 
-### 1. Clone Repository
+## 1. Clone Repository
 
 ```bash
 git clone https://github.com/jaenalcode33/bekuku.git
 ```
 
-Masuk ke folder project:
+## 2. Masuk ke Folder Project
 
 ```bash
 cd bekuku
 ```
 
-### 2. Letakkan Project
+## 3. Letakkan Project
 
 Jika menggunakan Laragon:
 
 ```text
-C:\laragon\www\bekuku
+C:\laragon\www\Bekuku
 ```
 
-### 3. Setup Database
+## 4. Buat Database
 
 Buat database:
 
@@ -456,45 +386,23 @@ Buat database:
 bekuku
 ```
 
-Kemudian import:
+Kemudian import database dari:
 
 ```text
 database/bekuku.sql
 ```
 
-### 4. Konfigurasi Database
+## 5. Konfigurasi Database
 
-Sesuaikan konfigurasi:
+Sesuaikan konfigurasi database pada:
 
 ```text
 config/database.php
 ```
 
-dengan konfigurasi MySQL/MariaDB lokal.
+dengan konfigurasi MySQL / MariaDB lokal.
 
-### 5. Environment Configuration
-
-Jika project menggunakan `.env`, buat file:
-
-```text
-.env
-```
-
-Contoh:
-
-```env
-DB_HOST=127.0.0.1
-DB_NAME=bekuku
-DB_USER=root
-DB_PASS=
-
-MIDTRANS_ENVIRONMENT=sandbox
-MIDTRANS_SERVER_KEY=YOUR_SERVER_KEY
-```
-
-Jangan memasukkan credential asli ke repository GitHub.
-
-### 6. Jalankan Laragon
+## 6. Jalankan Laragon
 
 Aktifkan:
 
@@ -506,74 +414,30 @@ MySQL / MariaDB
 Kemudian buka:
 
 ```text
-http://localhost/bekuku
+http://localhost/Bekuku
 ```
 
 ---
 
-## Git Workflow
+# 🔐 Security
 
-### Update Project
-
-Setelah melakukan perubahan:
-
-```bash
-git status
-```
-
-Tambahkan perubahan:
-
-```bash
-git add .
-```
-
-Buat commit:
-
-```bash
-git commit -m "Deskripsi perubahan"
-```
-
-Upload ke GitHub:
-
-```bash
-git push
-```
-
-### Mengambil Update
-
-Jika bekerja menggunakan komputer lain:
-
-```bash
-git pull
-```
-
-### Clone ke Komputer Baru
-
-```bash
-git clone https://github.com/jaenalcode33/bekuku.git
-```
-
----
-
-## Security
-
-Informasi sensitif tidak boleh disimpan langsung di repository.
+Jangan menyimpan credential sensitif secara langsung di repository.
 
 Contohnya:
 
-* Database password.
-* API key.
-* Midtrans Server Key.
-* Secret key.
-* Credential lainnya.
+- Database password
+- API Key
+- Midtrans Server Key
+- Secret Key
+- Credential lainnya
 
 Gunakan environment variable atau konfigurasi lokal.
 
-File `.env` telah dimasukkan ke `.gitignore` agar tidak ikut di-commit.
+Jangan commit file `.env` yang berisi credential asli.
 
 ---
 
-## Testing
+# 🧪 Testing
 
 Testing dasar tersedia pada:
 
@@ -583,88 +447,93 @@ tests/smoke.php
 
 Testing dapat dikembangkan untuk memvalidasi:
 
-* Koneksi database.
-* Proses transaksi.
-* Pengurangan stok.
-* FEFO.
-* Pembayaran.
-* Validasi data.
-* Integritas transaksi.
+- Database connection
+- Product management
+- Purchase transaction
+- Stock management
+- FEFO
+- Sales transaction
+- Payment
+- Data validation
 
 ---
 
-## Development Roadmap
+# 📌 Project Status
 
-* [x] Product Management
-* [x] Category Management
-* [x] Supplier Management
-* [x] Customer Management
-* [x] Purchase Management
-* [x] Batch Management
-* [x] Stock Management
-* [x] FEFO
-* [x] Sales / POS
-* [x] Sales Reports
-* [x] Stock Reports
-* [x] Customer Debt
-* [x] User Management
-* [x] QRIS Integration
-* [ ] Barcode Scanner
-* [ ] Low Stock Notification
-* [ ] Expired Product Notification
-* [ ] PDF Export
-* [ ] Excel Export
-* [ ] Automated Database Backup
-* [ ] Advanced Role & Permission
-* [ ] Expanded Audit Log
-* [ ] Improved UI/UX
-* [ ] Automated Testing
+🚧 **Active Development**
+
+BEKUKU masih dalam tahap pengembangan dan beberapa fitur dapat terus mengalami peningkatan.
 
 ---
 
-## Project Goals
+# 🔮 Future Development
 
-BEKUKU dikembangkan untuk menyediakan sistem pengelolaan frozen food yang mencakup:
+Beberapa fitur yang dapat dikembangkan:
 
-1. Point of Sale.
-2. Inventory Management.
-3. Batch Management.
-4. Expired Date Management.
-5. FEFO Inventory System.
-6. Purchase Management.
-7. Sales Management.
-8. Customer Management.
-9. Debt Management.
-10. Payment Management.
-11. Reporting.
-12. User Management.
+- [ ] Barcode Scanner
+- [ ] Low Stock Notification
+- [ ] Expired Product Notification
+- [ ] PDF Export
+- [ ] Excel Export
+- [ ] Automated Database Backup
+- [ ] Advanced Role & Permission
+- [ ] Extended Audit Log
+- [ ] Automated Testing
+- [ ] Improved UI/UX
 
 ---
 
-## Developer
+# 🎯 Project Goals
 
-**Jaenal**
+BEKUKU dikembangkan sebagai sistem terintegrasi untuk membantu bisnis frozen food dalam mengelola:
+
+```text
+PRODUCT
+    ↓
+PURCHASE
+    ↓
+BATCH
+    ↓
+INVENTORY
+    ↓
+FEFO
+    ↓
+SALES / POS
+    ↓
+PAYMENT
+    ↓
+REPORT
+```
+
+Tujuan utamanya adalah membuat proses pengelolaan inventory dan transaksi menjadi lebih terstruktur, mudah dipantau, dan dapat ditelusuri.
+
+---
+
+# 👨‍💻 Developer
+
+### Jaenal
+
+**Web Developer**
 
 GitHub:
 
-https://github.com/jaenalcode33
+[![GitHub](https://img.shields.io/badge/GitHub-jaenalcode33-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/jaenalcode33)
 
-Repository:
+### Repository
 
-https://github.com/jaenalcode33/bekuku
-
----
-
-## License
-
-Project ini dapat menggunakan lisensi sesuai kebutuhan pengembang.
-
-Jika repository akan digunakan sebagai project open-source, tambahkan file `LICENSE` dan tentukan jenis lisensi yang digunakan.
+[![Repository](https://img.shields.io/badge/Repository-BEKUKU-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/jaenalcode33/bekuku)
 
 ---
 
-## BEKUKU
+# 📄 License
 
-**Point of Sale & Inventory Management System for Frozen Food**
+Project ini dibuat sebagai project pembelajaran, pengembangan, dan portfolio.
 
-Aplikasi untuk mengelola produk, batch, stok, expired date, FEFO, pembelian, penjualan, customer, pembayaran, dan laporan dalam satu sistem.
+---
+
+<p align="center">
+  <strong>BEKUKU</strong><br>
+  Point of Sale & Inventory Management System
+  <br><br>
+  Made with ❤️ by <strong>Jaenal</strong>
+</p>
