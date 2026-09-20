@@ -794,6 +794,59 @@ Panduan pengguna umum tersedia pada INSTALL.md.
 - Transaksi database menjaga proses penjualan tetap konsisten.
 
 
+22A. AUDIT AKTIVITAS
+--------------------
+
+Audit Aktivitas berfungsi sebagai buku log digital untuk mencatat aktivitas
+penting pengguna di dalam sistem. Audit tidak mengubah data, tetapi membantu
+admin memantau, menelusuri, dan menjaga keamanan aktivitas aplikasi.
+
+Fungsi audit:
+
+- Mengetahui siapa yang melakukan aktivitas.
+- Mengetahui jenis aktivitas yang dilakukan.
+- Mengetahui data yang terkena dampak.
+- Mengetahui waktu dan alamat IP aktivitas.
+- Membantu menelusuri perubahan, penghapusan, dan masalah keamanan.
+
+Pencatatan audit dilakukan oleh fungsi `bekuku_audit()` di
+`config/app.php`. Fungsi tersebut menyimpan data ke tabel `audit_logs`.
+Kolom pentingnya adalah:
+
+- `user_id` dan `username`: pengguna yang melakukan aktivitas.
+- `action`: jenis aktivitas, seperti `login`, `logout`, `create`, `update`,
+  `delete`, atau `login_failed`.
+- `entity`: objek yang terpengaruh, seperti `user`, `product`, `category`,
+  `customer`, `supplier`, atau `transaction`.
+- `entity_id`: ID data yang terpengaruh.
+- `details`: informasi tambahan dalam format JSON.
+- `ip_address`: alamat IP pengguna.
+- `created_at`: tanggal dan waktu aktivitas.
+
+Contoh pencatatan:
+
+    bekuku_audit('delete', 'category', $category_id);
+
+Artinya sistem mencatat bahwa suatu kategori telah dihapus, termasuk ID
+kategorinya, pengguna yang menghapus, waktu, dan alamat IP.
+
+Contoh aktivitas yang dicatat:
+
+    admin   | login         | auth        | berhasil masuk
+    kasir   | create        | transaction | membuat transaksi
+    admin   | delete        | category   | menghapus kategori
+    admin   | update        | user       | mengubah pengguna
+    -       | login_failed  | auth        | login gagal
+
+Admin dapat melihat data audit melalui menu:
+
+    ADMINISTRASI > Audit Aktivitas
+
+Halaman audit hanya dapat diakses oleh admin. Tersedia filter berdasarkan
+aksi, entitas, username, dan rentang tanggal. Halaman menampilkan maksimal
+200 aktivitas terbaru agar tetap ringan digunakan.
+
+
 23. KEAMANAN YANG MASIH PERLU DITINGKATKAN
 -------------------------------------------
 
@@ -1074,3 +1127,65 @@ utama menggunakan POST agar tidak dapat dipicu hanya dengan membuka URL.
 Dengan pengembangan bertahap, BEKUKU POS dapat ditingkatkan dari aplikasi
 lokal menjadi sistem operasional toko yang lebih lengkap, aman, dan siap
 digunakan secara online.
+
+
+27. PEMBAGIAN ROLE ADMIN, KASIR, DAN GUDANG
+--------------------------------------------
+
+Pembagian tampilan dan hak akses pengguna dikendalikan oleh role yang
+disimpan pada session setelah proses login berhasil.
+
+File utama yang mengatur role:
+
+- login.php
+  Mengambil role dari tabel `users` dan menyimpannya ke
+  `$_SESSION['bekuku_user']`.
+
+- config/app.php
+  Menyediakan fungsi `bekuku_can()` untuk mengecek permission dan fungsi
+  `bekuku_role_can_access()` untuk membatasi halaman berdasarkan role.
+
+- includes/sidebar.php
+  Menampilkan menu navigasi sesuai permission pengguna. Menu Pengguna dan
+  Audit Aktivitas hanya ditampilkan untuk admin.
+
+Daftar role dan cakupan akses:
+
+- Admin
+  - Mengakses seluruh menu.
+  - Mengelola pengguna.
+  - Mengelola master data.
+  - Mengelola pembelian dan stok.
+  - Melakukan transaksi penjualan.
+  - Melihat seluruh laporan.
+  - Melihat Audit Aktivitas.
+
+- Kasir
+  - Membuka Transaksi Baru.
+  - Melihat Riwayat Transaksi.
+  - Mengelola customer.
+  - Melihat Laporan Penjualan.
+  - Tidak dapat mengakses menu Pengguna, Audit, pembelian, dan pengelolaan
+    stok gudang.
+
+- Gudang
+  - Mengelola Produk.
+  - Mengelola Kategori.
+  - Mengelola Supplier.
+  - Mencatat Pembelian.
+  - Melihat Batch & Expired.
+  - Melihat Pergerakan Stok.
+  - Melihat Laporan Stok.
+  - Tidak dapat membuka transaksi penjualan dan laporan penjualan.
+
+Permission yang digunakan:
+
+    users.manage     -> admin
+    master.write     -> admin, gudang
+    sales.write      -> admin, kasir
+    purchases.write  -> admin, gudang
+
+Pembatasan akses tetap dilakukan di server melalui `config/app.php`, bukan
+hanya dengan menyembunyikan menu menggunakan HTML. Karena itu, pengguna yang
+mencoba membuka URL secara langsung tetap akan diarahkan ke halaman akses
+ditolak apabila role-nya tidak memiliki izin.

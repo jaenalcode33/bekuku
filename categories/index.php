@@ -71,7 +71,7 @@ foreach ($categories as $category) {
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091623"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 
@@ -79,7 +79,7 @@ foreach ($categories as $category) {
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-kategori.css') ?>?v=2026091905"
+        href="<?= bekuku_url('assets/css/popup-kategori.css') ?>?v=202609200320"
     >
 
 </head>
@@ -127,31 +127,6 @@ foreach ($categories as $category) {
                             Kelola kategori produk BEKUKU dengan lebih rapi.
 
                         </p>
-
-
-                    </div>
-
-
-                    <div class="dashboard-hero-actions">
-
-
-                        <!--
-                            Tombol popup.
-                            Tidak ada CSS inline.
-                            Tidak ada JavaScript inline.
-                        -->
-
-                        <button
-                            type="button"
-                            id="btnTambahKategori"
-                            class="btn dashboard-product-add-button"
-                        >
-
-                            <i class="bi bi-plus-circle me-1"></i>
-
-                            Tambah Kategori
-
-                        </button>
 
 
                     </div>
@@ -301,7 +276,7 @@ foreach ($categories as $category) {
                  DAFTAR KATEGORI
                  ===================================================== -->
 
-            <section class="card products-list-card categories-list-card">
+            <section class="card products-list-card categories-list-card data-table-card">
 
 
                 <div class="card-header d-flex align-items-center justify-content-between">
@@ -316,6 +291,10 @@ foreach ($categories as $category) {
                     </h3>
 
 
+                    <div class="d-flex align-items-center gap-3">
+                    <button type="button" class="btn btn-outline-light data-table-filter-toggle" aria-expanded="false">
+                        <i class="bi bi-search me-1"></i>Cari
+                    </button>
                     <span class="products-count">
 
                         <?= number_format(count($categories)) ?>
@@ -323,6 +302,10 @@ foreach ($categories as $category) {
                         kategori
 
                     </span>
+                    <button type="button" id="btnTambahKategori" class="btn dashboard-product-add-button">
+                        <i class="bi bi-plus-circle me-1"></i>Tambah Kategori
+                    </button>
+                    </div>
 
 
                 </div>
@@ -451,7 +434,8 @@ foreach ($categories as $category) {
                                                     method="post"
                                                     action="delete.php"
                                                     class="d-inline"
-                                                    onsubmit="return confirm('Yakin ingin menghapus kategori ini?')"
+                                                    data-delete-confirm
+                                                    data-delete-label="kategori"
                                                 >
 
 
@@ -555,6 +539,7 @@ foreach ($categories as $category) {
 <script
     src="<?= bekuku_url('assets/js/popup-kategori.js') ?>?v=2026091905"
 ></script>
+<script src="<?= bekuku_url('assets/js/data-table-filter.js') ?>?v=202609200748"></script>
 
 
 </body>

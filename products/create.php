@@ -261,7 +261,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     <link
                         rel="stylesheet"
-                        href="<?= bekuku_url('assets/css/style.css') ?>"
+                        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
                     >
 
                     <link
@@ -350,12 +350,12 @@ if ($isPopup):
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup.css') ?>?v=2026091904"
+        href="<?= bekuku_url('assets/css/popup.css') ?>?v=202609200811"
     >
 
     <link
@@ -478,6 +478,7 @@ if ($isPopup):
                 <select
                     id="category_id"
                     name="category_id"
+                    data-searchable-select
                     required
                 >
 
@@ -520,6 +521,7 @@ if ($isPopup):
                 <select
                     id="supplier_id"
                     name="supplier_id"
+                    data-searchable-select
                 >
 
                     <option value="">
@@ -783,6 +785,7 @@ if ($isPopup):
 
 </div>
 
+<script src="<?= bekuku_url('assets/js/select-search.js') ?>?v=202609200811"></script>
 
 </body>
 
@@ -827,7 +830,7 @@ endif;
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 </head>
@@ -1339,6 +1342,8 @@ endif;
 <script
     src="<?= bekuku_url('assets/js/popup-supplier.js') ?>?v=1"
 ></script>
+
+<script src="<?= bekuku_url('assets/js/select-search.js') ?>?v=202609200807"></script>
 
 </body>
 

@@ -725,7 +725,7 @@ asort($categoryList);
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091622"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 
@@ -733,7 +733,7 @@ asort($categoryList);
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/transactions-create.css') ?>?v=2026091651"
+        href="<?= bekuku_url('assets/css/transactions-create.css') ?>?v=202609200738"
     >
 
 </head>
@@ -792,73 +792,21 @@ asort($categoryList);
                 <form
                     method="POST"
                     id="transactionForm"
+                    style="display: block; width: 100%; max-width: none;"
                 ><?= bekuku_csrf_field() ?>
 
-                    <div class="row g-4">
+                                <div
+                                    class="transaction-form-layout"
+                                    style="position: relative; display: block !important; width: 100%; max-width: none; min-height: 1px;"
+                                >
 
 
                         <!-- BAGIAN KIRI -->
 
-                        <div class="col-lg-8">
-
-
-                            <!-- CUSTOMER -->
-
-                            <div class="create-card">
-
-                                <div class="create-card-header">
-
-                                    <h3 class="create-card-title">
-
-                                        <i class="bi bi-person-circle"></i>
-
-                                        Customer
-
-                                    </h3>
-
-                                </div>
-
-
-                                <div class="create-card-body">
-
-                                    <label class="form-label fw-semibold">
-
-                                        Pilih Customer
-
-                                    </label>
-
-
-                                    <select
-                                        name="customer_id"
-                                        class="form-select customer-select"
-                                    >
-
-                                        <option value="">
-
-                                            Customer Umum
-
-                                        </option>
-
-
-                                        <?php foreach ($customers as $customer): ?>
-
-                                            <option
-                                                value="<?= $customer["customer_id"]; ?>"
-                                            >
-
-                                                <?= htmlspecialchars(
-                                                    $customer["customer_name"]
-                                                ); ?>
-
-                                            </option>
-
-                                        <?php endforeach; ?>
-
-                                    </select>
-
-                                </div>
-
-                            </div>
+                        <div
+                            class="transaction-products-column"
+                            style="display: block !important; width: 65% !important; max-width: 65% !important; min-width: 0;"
+                        >
 
 
                             <!-- PRODUK -->
@@ -902,7 +850,7 @@ asort($categoryList);
 
                                             <!-- SEARCH -->
 
-                                            <div class="col-md-8">
+                                            <div class="col-md-6">
 
                                                 <label class="filter-label">
 
@@ -934,7 +882,7 @@ asort($categoryList);
 
                                             <!-- CATEGORY -->
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
 
                                                 <label class="filter-label">
 
@@ -945,7 +893,7 @@ asort($categoryList);
 
                                                 <select
                                                     id="filterCategory"
-                                                    class="form-select category-select"
+                                                    class="form-select category-select searchable-filter-select"
                                                 >
 
                                                     <option value="">
@@ -977,7 +925,43 @@ asort($categoryList);
 
                                             </div>
 
-                                        </div>
+                                            <div class="col-md-3">
+
+                                                <label class="filter-label">
+
+                                                    Pilih Customer
+
+                                                </label>
+
+                                                <select
+                                                    name="customer_id"
+                                                    class="form-select customer-select"
+                                                    data-searchable-select
+                                                >
+
+                                                    <option value="">
+
+                                                        Customer Umum
+
+                                                    </option>
+
+                                                    <?php foreach ($customers as $customer): ?>
+
+                                                        <option
+                                                            value="<?= $customer["customer_id"]; ?>"
+                                                        >
+
+                                                            <?= htmlspecialchars(
+                                                                $customer["customer_name"]
+                                                            ); ?>
+
+                                                        </option>
+
+                                                    <?php endforeach; ?>
+
+                                                </select>
+
+                                            </div>
 
                                     </div>
 
@@ -1270,6 +1254,11 @@ asort($categoryList);
 
                                 </div>
 
+                                <div
+                                    id="productPagination"
+                                    class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mt-3 px-3 pb-3"
+                                ></div>
+
                             </div>
 
 
@@ -1278,7 +1267,10 @@ asort($categoryList);
 
                         <!-- BAGIAN KANAN -->
 
-                        <div class="col-lg-4">
+                        <div
+                            class="transaction-summary-column"
+                            style="position: absolute !important; top: 0; right: 0; display: block !important; width: 33% !important; max-width: 33% !important; min-width: 0;"
+                        >
 
 
                             <div class="summary-card">
@@ -1484,8 +1476,8 @@ asort($categoryList);
 
                         </div>
 
-
                     </div>
+
 
                 </form>
 
@@ -1553,7 +1545,7 @@ asort($categoryList);
 
 <!-- JavaScript Transaksi Baru -->
 
-<script src="<?= bekuku_url('assets/js/transactions-create.js') ?>?v=2026091651"></script>
+<script src="<?= bekuku_url('assets/js/transactions-create.js') ?>?v=202609200827"></script>
 
 <?php if ($transactionError !== null): ?>
     <script>

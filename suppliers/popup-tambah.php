@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-supplier.css') ?>?v=1"
+        href="<?= bekuku_url('assets/css/popup-supplier.css') ?>?v=202609200320"
     >
 
 </head>

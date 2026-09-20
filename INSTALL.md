@@ -201,6 +201,10 @@ Jika password belum diketahui, buat hash password baru:
 4. Gunakan menu Pengguna setelah login admin untuk mengganti password, atau
    perbarui kolom `users.password_hash` di database secara manual.
 
+Admin juga dapat membuka menu **Audit Aktivitas** untuk meninjau riwayat login,
+perubahan data, dan aktivitas penting lainnya. Riwayat dapat difilter berdasarkan
+aksi, entitas, pengguna, dan rentang tanggal.
+
 ## Langkah 8: Tes aplikasi
 
 Setelah berhasil login, coba urutan berikut:
@@ -265,7 +269,6 @@ assets/
 ├── css/
 │   ├── adminlte.min.css
 │   ├── style.css
-│   ├── products-index.css
 │   └── ...
 ├── js/
 │   ├── adminlte.min.js

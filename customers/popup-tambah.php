@@ -99,7 +99,7 @@ if ($is_popup):
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-customer.css') ?>?v=20260919"
+        href="<?= bekuku_url('assets/css/popup-customer.css') ?>?v=202609200320"
     >
 
 </head>

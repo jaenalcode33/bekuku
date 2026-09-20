@@ -56,7 +56,7 @@ $totalCustomers =
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091623"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 
@@ -64,7 +64,7 @@ $totalCustomers =
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-customer.css') ?>?v=20260919"
+        href="<?= bekuku_url('assets/css/popup-customer.css') ?>?v=202609200320"
     >
 
 </head>
@@ -117,32 +117,6 @@ $totalCustomers =
                             dengan lebih rapi.
 
                         </p>
-
-                    </div>
-
-
-                    <div
-                        class="dashboard-hero-actions"
-                    >
-
-
-                        <!-- TOMBOL POPUP CUSTOMER -->
-
-                        <button
-                            type="button"
-                            class="btn dashboard-product-add-button"
-                            data-popup-customer
-                            data-popup-url="<?= bekuku_url('customers/popup-tambah.php?popup=1') ?>"
-                        >
-
-                            <i
-                                class="bi bi-plus-circle me-1"
-                            ></i>
-
-                            Tambah Customer
-
-                        </button>
-
 
                     </div>
 
@@ -297,6 +271,7 @@ $totalCustomers =
                     </h3>
 
 
+                    <div class="d-flex align-items-center gap-3">
                     <span class="products-count">
 
                         <?= number_format($totalCustomers) ?>
@@ -304,6 +279,10 @@ $totalCustomers =
                         customer
 
                     </span>
+                    <button type="button" class="btn dashboard-product-add-button" data-popup-customer data-popup-url="<?= bekuku_url('customers/popup-tambah.php?popup=1') ?>">
+                        <i class="bi bi-plus-circle me-1"></i>Tambah Customer
+                    </button>
+                    </div>
 
 
                 </div>
@@ -407,7 +386,8 @@ $totalCustomers =
                                                     method="post"
                                                     action="delete.php"
                                                     class="d-inline"
-                                                    onsubmit="return confirm('Yakin ingin menghapus customer ini?')"
+                                                    data-delete-confirm
+                                                    data-delete-label="customer"
                                                 >
 
                                                     <input

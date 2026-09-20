@@ -284,6 +284,155 @@ Dengan menyimpan informasi batch pada transaksi, penggunaan stok dapat ditelusur
 
 ---
 
+## ERD Detail (Database Structure)
+
+Diagram relasi database BEKUKU berdasarkan struktur SQL yang ada pada `database/bekuku.sql` dan migration keamanan.
+
+```mermaid
+erDiagram
+    USERS {
+        int user_id PK
+        varchar username UK
+        varchar name
+        enum role
+        enum status
+    }
+    AUDIT_LOGS {
+        bigint audit_id PK
+        int user_id
+        varchar action
+        varchar entity
+        int entity_id
+        json details
+        timestamp created_at
+    }
+    CATEGORIES {
+        int category_id PK
+        varchar name UK
+    }
+    SUPPLIERS {
+        int supplier_id PK
+        varchar supplier_name
+        varchar phone
+    }
+    CUSTOMERS {
+        int customer_id PK
+        varchar customer_name
+        varchar phone
+    }
+    PRODUCTS {
+        int product_id PK
+        int category_id FK
+        int supplier_id FK
+        varchar product_name
+        decimal selling_price
+        int stock
+    }
+    PURCHASES {
+        int purchase_id PK
+        int supplier_id FK
+        decimal total_amount
+        enum status
+    }
+    PURCHASE_DETAILS {
+        int purchase_detail_id PK
+        int purchase_id FK
+        int product_id FK
+        int quantity
+        decimal subtotal
+    }
+    BATCHES {
+        int batch_id PK
+        int purchase_detail_id FK
+        int product_id FK
+        date expiry_date
+        int remaining_quantity
+    }
+    TRANSACTIONS {
+        int transaction_id PK
+        int customer_id FK
+        decimal total_amount
+        enum payment_method
+        enum status
+    }
+    TRANSACTION_DETAILS {
+        int transaction_id PK, FK
+        int product_id PK, FK
+        int quantity
+        decimal subtotal
+    }
+    STOCK_MOVEMENTS {
+        int movement_id PK
+        int product_id FK
+        enum movement_type
+        int quantity
+    }
+
+    CATEGORIES ||--o{ PRODUCTS : " "
+    SUPPLIERS o|--o{ PRODUCTS : " "
+    SUPPLIERS ||--o{ PURCHASES : " "
+    PURCHASES ||--|{ PURCHASE_DETAILS : " "
+    PRODUCTS ||--o{ PURCHASE_DETAILS : " "
+    PURCHASE_DETAILS ||--o{ BATCHES : " "
+    PRODUCTS ||--o{ BATCHES : " "
+    CUSTOMERS o|--o{ TRANSACTIONS : " "
+    TRANSACTIONS ||--|{ TRANSACTION_DETAILS : " "
+    PRODUCTS ||--o{ TRANSACTION_DETAILS : " "
+    PRODUCTS ||--o{ STOCK_MOVEMENTS : " "
+    USERS o|..o{ AUDIT_LOGS : " "
+```
+
+### Penjelasan relasi utama
+
+- `categories` memiliki banyak `products`.
+- `suppliers` dapat digunakan oleh `products` dan `purchases`.
+- `purchases` berisi banyak `purchase_details`.
+- `purchase_details` menghasilkan satu atau banyak `batches`.
+- `products` terhubung langsung ke `batches`, `stock_movements`, `transaction_details`.
+- `customers` dapat melakukan banyak `transactions`.
+- `transactions` berisi banyak `transaction_details`.
+- `stock_movements` mencatat semua perubahan stok masuk/keluar.
+- `users` dan `audit_logs` mencatat aktivitas sistem.
+
+### Kamus tabel penting
+
+- `users`: data pengguna sistem (`admin`, `kasir`, `gudang`)
+- `categories`: kelompok produk
+- `suppliers`: pemasok
+- `customers`: pelanggan
+- `products`: katalog produk, harga, stok, status
+- `purchases`: header pembelian
+- `purchase_details`: item pembelian
+- `batches`: batch stok dengan tanggal kedaluwarsa
+- `transactions`: header penjualan
+- `transaction_details`: item penjualan
+- `stock_movements`: histori mutasi stok
+- `audit_logs`: log aktivitas user dan entitas
+
+### Alur bisnis utama
+
+```text
+SUPPLIERS
+    |
+    v
+PURCHASES -> PURCHASE_DETAILS -> BATCHES -> PRODUCTS
+                                      |
+                                      v
+                              STOCK_MOVEMENTS
+                                      ^
+                                      |
+CUSTOMERS -> TRANSACTIONS -> TRANSACTION_DETAILS
+```
+
+1. Supplier melakukan pembelian.
+2. Pembelian dibuat pada `purchases` dan `purchase_details`.
+3. Produk masuk membuat `batches` dengan `expiry_date`.
+4. Stok bertambah dan dicatat di `stock_movements`.
+5. Saat penjualan terjadi, `transactions` dan `transaction_details` dibuat.
+6. Sistem mengurangi stok berdasarkan FEFO dengan batch yang paling cepat kadaluarsa.
+
+---
+
 ## Tech Stack
 
 | Technology | Usage |
@@ -396,6 +545,9 @@ config/database.php
 ```
 
 dengan konfigurasi MySQL / MariaDB lokal.
+
+Dokumentasi ERD lengkap dan kamus data tersedia di
+[`database/ERD.md`](database/ERD.md).
 
 ### 6. Jalankan Laragon
 

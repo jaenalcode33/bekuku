@@ -227,16 +227,16 @@ if ($payment_method === 'cash') {
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
     <!-- CSS Khusus Transaksi -->
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/transactions-create.css') ?>?v=2026091612"
+        href="<?= bekuku_url('assets/css/transactions-create.css') ?>?v=202609200455"
     >
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions-detail.css') ?>"
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions-detail.css') ?>?v=202609200517"
     >
 
 
@@ -268,115 +268,6 @@ if ($payment_method === 'cash') {
         <div class="app-content">
 
             <div class="container-fluid transaction-detail-wrapper">
-
-
-                <!-- =================================================
-                     HERO
-                ================================================== -->
-
-                <div class="detail-hero">
-
-                    <div class="row align-items-center">
-
-                        <div class="col-lg-8">
-
-                            <div class="detail-hero-content">
-
-                                <div class="detail-hero-title">
-
-                                    <i class="bi bi-receipt-cutoff me-2"></i>
-
-                                    Detail Transaksi
-                                    #<?= $transaction['transaction_id']; ?>
-
-                                </div>
-
-
-                                <p class="detail-hero-subtitle">
-
-                                    Informasi lengkap transaksi dan rincian produk BEKUKU.
-
-                                </p>
-
-
-                                <div class="detail-hero-meta">
-
-                                    <span class="hero-meta-item">
-
-                                        <i class="bi bi-calendar3"></i>
-
-                                        <?= date(
-                                            'd M Y',
-                                            strtotime($transaction['transaction_date'])
-                                        ); ?>
-
-                                    </span>
-
-
-                                    <span class="hero-meta-item">
-
-                                        <i class="bi bi-clock"></i>
-
-                                        <?= date(
-                                            'H:i',
-                                            strtotime($transaction['transaction_date'])
-                                        ); ?>
-
-                                    </span>
-
-
-                                    <span class="hero-meta-item">
-
-                                        <i class="bi bi-person"></i>
-
-                                        <?= htmlspecialchars(
-                                            $transaction['customer_name'] ?? 'Umum'
-                                        ); ?>
-
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="col-lg-4">
-
-                            <div class="detail-hero-actions justify-content-lg-end">
-
-
-                                <a
-                                    href="index.php"
-                                    class="btn btn-light no-print"
-                                >
-
-                                    <i class="bi bi-arrow-left me-1"></i>
-
-                                    Kembali
-
-                                </a>
-
-
-                                <button
-                                    type="button"
-                                    class="btn btn-dark no-print"
-                                    data-print
-                                >
-
-                                    <i class="bi bi-printer me-1"></i>
-
-                                    Cetak Struk
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
 
 
                 <!-- =================================================
@@ -616,7 +507,11 @@ if ($payment_method === 'cash') {
                      DETAIL PRODUK
                 ================================================== -->
 
-                <div class="detail-section">
+                <div class="row g-4 detail-payment-layout align-items-start">
+
+                    <div class="col-xl-8 col-lg-7">
+
+                        <div class="detail-section">
 
 
                     <div class="detail-section-header">
@@ -637,7 +532,6 @@ if ($payment_method === 'cash') {
                         </span>
 
                     </div>
-
 
                     <div class="detail-section-body">
 
@@ -813,15 +707,14 @@ if ($payment_method === 'cash') {
 
                 </div>
 
+                    </div>
+
 
                 <!-- =================================================
                      PEMBAYARAN
                 ================================================== -->
 
-                <div class="row justify-content-end">
-
-
-                    <div class="col-xl-5 col-lg-6 col-md-8">
+                    <div class="col-xl-4 col-lg-5">
 
 
                         <div class="payment-card">
@@ -960,6 +853,15 @@ if ($payment_method === 'cash') {
 
                                 </div>
 
+                                <button
+                                    type="button"
+                                    class="btn dashboard-product-add-button detail-print-button no-print"
+                                    data-print
+                                >
+                                    <i class="bi bi-printer me-1"></i>
+                                    Cetak Struk
+                                </button>
+
                             </div>
 
                         </div>
@@ -967,23 +869,6 @@ if ($payment_method === 'cash') {
                     </div>
 
                 </div>
-
-                <section class="receipt-preview-area no-print">
-                    <div class="receipt-preview-toolbar">
-                        <strong>Preview Struk</strong>
-                        <label>
-                            Ukuran
-                            <select id="receiptSize" aria-label="Ukuran struk">
-                                <option value="58">58mm</option>
-                                <option value="80" selected>80mm</option>
-                            </select>
-                        </label>
-                        <button type="button" class="btn btn-dark" data-print>
-                            <i class="bi bi-printer me-1"></i>
-                            Cetak Struk
-                        </button>
-                    </div>
-                </section>
 
                 <article class="receipt-print" id="receiptPrint">
                     <header class="receipt-header">
@@ -1060,7 +945,7 @@ if ($payment_method === 'cash') {
 
 <!-- JavaScript Transaksi Baru -->
 
-<script src="<?= bekuku_url('assets/js/transactions-create.js') ?>"></script>
+<script src="<?= bekuku_url('assets/js/transactions-create.js') ?>?v=202609200455"></script>
 
 </body>
 

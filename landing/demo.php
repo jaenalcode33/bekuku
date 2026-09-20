@@ -307,7 +307,7 @@ function demo_nav_active(string $path): bool
     <!-- BEKUKU CSS -->
     <link
         rel="stylesheet"
-        href="<?= demo_url('assets/css/style.css') ?>?v=2026091722"
+        href="<?= demo_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 </head>
@@ -940,97 +940,6 @@ function demo_nav_active(string $path): bool
 
                 </div>
 
-
-            </div>
-
-
-            <!-- =================================================
-                 QUICK ACTION
-            ================================================== -->
-
-            <div class="card dashboard-actions mb-4">
-
-                <div class="card-body">
-
-                    <div class="dashboard-actions-heading">
-
-                        <div>
-
-                            <div class="dashboard-section-kicker">
-                                MENU CEPAT
-                            </div>
-
-
-                            <div class="dashboard-section-description">
-                                Akses fitur utama BEKUKU.
-                            </div>
-
-                        </div>
-
-
-                        <i class="bi bi-lightning-charge-fill"></i>
-
-                    </div>
-
-
-                    <div class="dashboard-action-list">
-
-
-                        <a
-                            href="#"
-                            class="dashboard-action-button"
-                            data-demo-action
-                        >
-
-                            <i class="bi bi-cart-plus"></i>
-
-                            Transaksi Baru
-
-                        </a>
-
-
-                        <a
-                            href="#"
-                            class="dashboard-action-button"
-                            data-demo-action
-                        >
-
-                            <i class="bi bi-box-seam"></i>
-
-                            Tambah Produk
-
-                        </a>
-
-
-                        <a
-                            href="#"
-                            class="dashboard-action-button"
-                            data-demo-action
-                        >
-
-                            <i class="bi bi-truck"></i>
-
-                            Pembelian
-
-                        </a>
-
-
-                        <a
-                            href="#"
-                            class="dashboard-action-button"
-                            data-demo-action
-                        >
-
-                            <i class="bi bi-clock-history"></i>
-
-                            Riwayat Transaksi
-
-                        </a>
-
-
-                    </div>
-
-                </div>
 
             </div>
 
@@ -1777,7 +1686,7 @@ demoStyle.textContent = `
 
     background: rgba(98,214,197,.14);
 
-    color: #62d6c5;
+    color: #4c75ff;
 
     font-size: 20px;
 }

@@ -95,6 +95,18 @@ $stmtDetails->execute([
 
 $details = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
 
+$per_page = 10;
+$current_page = max(1, (int) ($_GET['page'] ?? 1));
+$total_pages = max(1, (int) ceil(count($details) / $per_page));
+$current_page = min($current_page, $total_pages);
+$page_offset = ($current_page - 1) * $per_page;
+$display_details = array_slice($details, $page_offset, $per_page);
+
+function rupiah($amount): string
+{
+    return 'Rp ' . number_format((float) $amount, 0, ',', '.');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -127,7 +139,17 @@ $details = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
+    >
+
+    <link
+        rel="stylesheet"
+        href="<?= bekuku_url('assets/css/menu-theme.css') ?>?v=202609200917"
+    >
+
+    <link
+        rel="stylesheet"
+        href="<?= bekuku_url('assets/css/purchase-detail.css') ?>?v=202609200650"
     >
 
 </head>
@@ -416,7 +438,7 @@ $details = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
                                 <?php if (count($details) > 0): ?>
 
 
-                                    <?php foreach ($details as $index => $detail): ?>
+                                    <?php foreach ($display_details as $index => $detail): ?>
 
 
                                         <tr>
@@ -424,7 +446,7 @@ $details = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
 
                                             <td>
 
-                                                <?= $index + 1; ?>
+                                                <?= $page_offset + $index + 1; ?>
 
                                             </td>
 
@@ -563,6 +585,28 @@ $details = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
 
 
                     </div>
+
+                    <?php if ($total_pages > 1): ?>
+                        <nav class="purchase-detail-pagination" aria-label="Navigasi detail pembelian">
+                            <small class="text-muted">
+                                Menampilkan <?= $page_offset + 1; ?>-<?= min($page_offset + $per_page, count($details)); ?>
+                                dari <?= count($details); ?> produk
+                            </small>
+                            <ul class="pagination mb-0">
+                                <?php
+                                $page_start = (int) (floor(($current_page - 1) / 10) * 10) + 1;
+                                $page_end = min($total_pages, $page_start + 9);
+                                for ($page = $page_start; $page <= $page_end; $page++):
+                                ?>
+                                    <li class="page-item <?= $page === $current_page ? 'active' : ''; ?>">
+                                        <a class="page-link" href="?id=<?= $purchase_id; ?>&page=<?= $page; ?>">
+                                            <?= $page; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+                            </ul>
+                        </nav>
+                    <?php endif; ?>
 
                 </div>
 
@@ -713,6 +757,65 @@ $details = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
 
     </main>
 
+    <div class="purchase-print-preview-wrap">
+        <article class="purchase-print-report" aria-label="Dokumen detail pembelian">
+            <header class="purchase-print-header">
+                <div>
+                    <div class="purchase-print-brand">BEKUKU</div>
+                    <div>FROZEN FOOD</div>
+                    <small>POINT OF SALE</small>
+                </div>
+                <div class="purchase-print-title">
+                    <h1>DETAIL PEMBELIAN</h1>
+                    <div>Invoice: <?= htmlspecialchars($purchase['invoice_number'] ?? '-'); ?></div>
+                </div>
+            </header>
+
+            <div class="purchase-print-meta">
+                <span>Supplier: <?= htmlspecialchars($purchase['supplier_name']); ?></span>
+                <span>Tanggal: <?= date('d-m-Y H:i', strtotime($purchase['purchase_date'])); ?></span>
+                <span>Status: <?= htmlspecialchars(ucfirst($purchase['status'])); ?></span>
+            </div>
+
+            <h2 class="purchase-print-section-title">PRODUK YANG DIBELI</h2>
+            <table class="purchase-print-table">
+                <thead>
+                    <tr>
+                        <th>No</th><th>Produk</th><th>SKU</th><th>Jumlah</th>
+                        <th>Harga Beli</th><th>Subtotal</th><th>Batch</th>
+                        <th>Expired</th><th>Sisa Batch</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($details as $index => $detail): ?>
+                        <tr>
+                            <td><?= $index + 1; ?></td>
+                            <td><?= htmlspecialchars($detail['product_name']); ?></td>
+                            <td><?= htmlspecialchars($detail['sku'] ?? '-'); ?></td>
+                            <td><?= number_format($detail['quantity']); ?></td>
+                            <td><?= rupiah($detail['purchase_price']); ?></td>
+                            <td><?= rupiah($detail['subtotal']); ?></td>
+                            <td><?= htmlspecialchars($detail['batch_number'] ?? '-'); ?></td>
+                            <td><?= $detail['expiry_date'] ? date('d-m-Y', strtotime($detail['expiry_date'])) : '-'; ?></td>
+                            <td><?= number_format($detail['remaining_quantity'] ?? 0); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <section class="purchase-print-total">
+                <div><span>TOTAL PEMBELIAN</span><strong><?= rupiah($purchase['total_amount']); ?></strong></div>
+                <div><span>DIBAYAR</span><strong><?= rupiah($purchase['payment_amount']); ?></strong></div>
+                <div><span>SISA HUTANG</span><strong><?= rupiah($purchase['remaining_amount']); ?></strong></div>
+            </section>
+
+            <footer class="purchase-print-footer">
+                <span>BEKUKU Â· POINT OF SALE</span>
+                <span>Dicetak <?= date('d-m-Y H:i'); ?></span>
+            </footer>
+        </article>
+    </div>
+
 
     <?php require_once __DIR__ . "/../includes/footer.php"; ?>
 
@@ -722,6 +825,7 @@ $details = $stmtDetails->fetchAll(PDO::FETCH_ASSOC);
 
 <script src="<?= bekuku_url('assets/js/ui.js') ?>"></script>
 <script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
+<script src="<?= bekuku_url('assets/js/purchase-detail.js') ?>?v=202609200650"></script>
 
 </body>
 

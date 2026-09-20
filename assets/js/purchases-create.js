@@ -1,5 +1,221 @@
 ﻿let productOptions = '';
 
+function positionProductDropdown(toggle, menu) {
+    const rect = toggle.getBoundingClientRect();
+    const viewportPadding = 12;
+    const gap = 4;
+    const availableBelow = window.innerHeight - rect.bottom - viewportPadding - gap;
+    const availableAbove = rect.top - viewportPadding - gap;
+    const openUp = availableBelow < 240 && availableAbove > availableBelow;
+    const height = Math.max(
+        120,
+        Math.min(300, openUp ? availableAbove : availableBelow)
+    );
+
+    menu.style.left = `${rect.left}px`;
+    menu.style.width = `${rect.width}px`;
+    menu.style.height = `${height}px`;
+    menu.style.maxHeight = `${height}px`;
+    menu.style.top = openUp ? 'auto' : `${rect.bottom + gap}px`;
+    menu.style.bottom = openUp
+        ? `${window.innerHeight - rect.top + gap}px`
+        : 'auto';
+}
+
+function initializeSupplierDropdown() {
+    const select = document.querySelector('select[name="supplier_id"]');
+
+    if (!select || select.parentElement.querySelector('.supplier-dropdown')) {
+        return;
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'supplier-dropdown product-dropdown';
+    wrapper.innerHTML = `
+        <button type="button" class="form-control product-dropdown-toggle">
+            Pilih supplier
+        </button>
+        <div class="product-dropdown-menu">
+            <input type="search" class="form-control product-dropdown-search"
+                placeholder="Cari nama supplier..." autocomplete="off">
+            <div class="product-dropdown-options"></div>
+        </div>
+    `;
+
+    select.parentNode.insertBefore(wrapper, select);
+    select.style.display = 'none';
+
+    const toggle = wrapper.querySelector('.product-dropdown-toggle');
+    const search = wrapper.querySelector('.product-dropdown-search');
+    const options = wrapper.querySelector('.product-dropdown-options');
+    const selectedOption = select.options[select.selectedIndex];
+
+    if (selectedOption && selectedOption.value) {
+        toggle.textContent = selectedOption.textContent.trim();
+    }
+
+    function renderOptions() {
+        const keyword = search.value.toLowerCase().trim();
+        options.innerHTML = '';
+
+        Array.from(select.options).forEach(function (option) {
+            if (!option.value || !option.textContent.toLowerCase().includes(keyword)) {
+                return;
+            }
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'product-dropdown-option';
+            button.textContent = option.textContent.trim();
+            button.dataset.value = option.value;
+            options.appendChild(button);
+        });
+
+        if (!options.children.length) {
+            options.innerHTML = '<span class="product-dropdown-empty">Supplier tidak ditemukan</span>';
+        }
+    }
+
+    toggle.addEventListener('click', function () {
+        document.querySelectorAll('.product-dropdown.is-open').forEach(function (item) {
+            if (item !== wrapper) item.classList.remove('is-open');
+        });
+        wrapper.classList.toggle('is-open');
+        renderOptions();
+        if (wrapper.classList.contains('is-open')) {
+            wrapper.style.zIndex = '2000';
+            const menu = wrapper.querySelector('.product-dropdown-menu');
+            positionProductDropdown(toggle, menu);
+            search.focus();
+        } else {
+            wrapper.style.zIndex = '';
+        }
+    });
+
+    search.addEventListener('input', renderOptions);
+    options.addEventListener('click', function (event) {
+        const option = event.target.closest('.product-dropdown-option');
+        if (!option) return;
+
+        select.value = option.dataset.value;
+        toggle.textContent = option.textContent;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        wrapper.classList.remove('is-open');
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!wrapper.contains(event.target)) wrapper.classList.remove('is-open');
+    });
+}
+
+function initializeProductDropdown(row) {
+    const select = row.querySelector('.product-select');
+
+    if (!select || row.querySelector('.product-dropdown')) {
+        return;
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'product-dropdown';
+    wrapper.innerHTML = `
+        <button type="button" class="form-control product-dropdown-toggle">
+            Pilih produk
+        </button>
+        <div class="product-dropdown-menu">
+            <input type="search" class="form-control product-dropdown-search"
+                placeholder="Cari nama produk atau SKU..." autocomplete="off">
+            <div class="product-dropdown-options"></div>
+        </div>
+    `;
+
+    select.parentNode.insertBefore(wrapper, select);
+    select.style.display = 'none';
+
+    const toggle = wrapper.querySelector('.product-dropdown-toggle');
+    const search = wrapper.querySelector('.product-dropdown-search');
+    const options = wrapper.querySelector('.product-dropdown-options');
+
+    function renderOptions() {
+        const keyword = search.value.toLowerCase().trim();
+        options.innerHTML = '';
+
+        Array.from(select.options).forEach(function (option) {
+            if (!option.value || !option.textContent.toLowerCase().includes(keyword)) {
+                return;
+            }
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'product-dropdown-option';
+            button.textContent = option.textContent.trim();
+            button.dataset.value = option.value;
+            options.appendChild(button);
+        });
+
+        if (!options.children.length) {
+            options.innerHTML = '<span class="product-dropdown-empty">Produk tidak ditemukan</span>';
+        }
+    }
+
+    function close() {
+        wrapper.classList.remove('is-open');
+    }
+
+    toggle.addEventListener('click', function () {
+        document.querySelectorAll('.product-dropdown.is-open').forEach(function (item) {
+            if (item !== wrapper) item.classList.remove('is-open');
+        });
+        wrapper.classList.toggle('is-open');
+        if (wrapper.classList.contains('is-open')) {
+            wrapper.style.zIndex = '2000';
+            const menu = search.closest('.product-dropdown-menu');
+            positionProductDropdown(toggle, menu);
+        } else {
+            wrapper.style.zIndex = '';
+        }
+        renderOptions();
+        if (wrapper.classList.contains('is-open')) search.focus();
+    });
+
+    search.addEventListener('input', renderOptions);
+    options.addEventListener('click', function (event) {
+        const option = event.target.closest('.product-dropdown-option');
+        if (!option) return;
+
+        select.value = option.dataset.value;
+        toggle.textContent = option.textContent;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        close();
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!wrapper.contains(event.target)) close();
+    });
+
+    renderOptions();
+}
+
+function filterProductOptions(searchInput) {
+    const row = searchInput.closest('.product-row');
+    const select = row?.querySelector('.product-select');
+
+    if (!select) {
+        return;
+    }
+
+    const keyword = searchInput.value.toLowerCase().trim();
+
+    Array.from(select.options).forEach(function (option) {
+        if (!option.value) {
+            option.hidden = false;
+            return;
+        }
+
+        option.hidden = keyword !== '' &&
+            !option.textContent.toLowerCase().includes(keyword);
+    });
+}
+
 
 function formatNumber(number) {
 
@@ -337,7 +553,7 @@ function addProductRow() {
 
 
     tbody.appendChild(row);
-
+    initializeProductDropdown(row);
 
     calculateTotal();
 
@@ -406,8 +622,10 @@ document.addEventListener(
             productOptions =
                 firstProduct.innerHTML;
 
+            initializeProductDropdown(firstProduct.closest('.product-row'));
         }
 
+        initializeSupplierDropdown();
 
         calculateTotal();
 
@@ -504,6 +722,10 @@ document.addEventListener(
 
             calculateTotal();
 
+        }
+
+        if (event.target.matches('.product-search')) {
+            filterProductOptions(event.target);
         }
 
 

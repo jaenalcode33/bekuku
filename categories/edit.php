@@ -192,7 +192,7 @@ if ($isPopup):
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091902"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 
@@ -357,7 +357,7 @@ endif;
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 </head>

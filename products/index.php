@@ -3,7 +3,22 @@
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../config/database.php';
 
-$stmt = $conn->query("
+$statsStmt = $conn->query("
+    SELECT
+        COUNT(*) AS total_products,
+        COALESCE(SUM(CASE WHEN status = 'aktif' THEN 1 ELSE 0 END), 0) AS active_products,
+        COALESCE(SUM(CASE WHEN status = 'aktif' THEN stock ELSE 0 END), 0) AS total_stock,
+        COALESCE(SUM(CASE WHEN status = 'aktif' AND stock <= min_stock THEN 1 ELSE 0 END), 0) AS low_stock_products
+    FROM products
+");
+$stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
+$productsPerPage = 10;
+$totalProductCount = (int) ($stats['total_products'] ?? 0);
+$totalPages = max(1, (int) ceil($totalProductCount / $productsPerPage));
+$currentPage = filter_var($_GET['page'] ?? 1, FILTER_VALIDATE_INT);
+$currentPage = $currentPage !== false ? max(1, min($currentPage, $totalPages)) : 1;
+$offset = ($currentPage - 1) * $productsPerPage;
+$stmt = $conn->prepare("
     SELECT
         p.product_id,
         p.sku,
@@ -17,23 +32,15 @@ $stmt = $conn->query("
     FROM products p
     LEFT JOIN categories c ON c.category_id = p.category_id
     ORDER BY p.product_name ASC
+    LIMIT :limit OFFSET :offset
 ");
-
+$stmt->bindValue(':limit', $productsPerPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$activeProducts = 0;
-$lowStockProducts = 0;
-$totalStock = 0;
-
-foreach ($products as $product) {
-    if ($product['status'] === 'aktif') {
-        $activeProducts++;
-        $totalStock += (int) $product['stock'];
-
-        if ((int) $product['stock'] <= (int) $product['min_stock']) {
-            $lowStockProducts++;
-        }
-    }
-}
+$activeProducts = (int) ($stats['active_products'] ?? 0);
+$lowStockProducts = (int) ($stats['low_stock_products'] ?? 0);
+$totalStock = (int) ($stats['total_stock'] ?? 0);
 
 function product_rupiah(float $amount): string
 {
@@ -48,7 +55,7 @@ function product_rupiah(float $amount): string
     <title>Data Produk - BEKUKU POS</title>
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091619">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 <div class="app-wrapper">
@@ -65,11 +72,6 @@ function product_rupiah(float $amount): string
                         <p class="dashboard-hero-subtitle">
                             Kelola katalog produk, harga, dan ketersediaan stok BEKUKU.
                         </p>
-                    </div>
-                    <div class="dashboard-hero-actions">
-                        <a href="<?= bekuku_url('products/create.php') ?>" class="btn dashboard-product-add-button">
-                            <i class="bi bi-plus-circle me-1"></i>Tambah Produk
-                        </a>
                     </div>
                 </div>
             </section>
@@ -101,10 +103,18 @@ function product_rupiah(float $amount): string
                 </div>
             </div>
 
-            <section class="card products-list-card">
+            <section class="card products-list-card data-table-card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h3 class="card-title"><i class="bi bi-list-ul me-2"></i>Daftar Produk</h3>
-                    <span class="products-count"><?= number_format(count($products)) ?> produk</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <button type="button" class="btn btn-outline-light data-table-filter-toggle" aria-expanded="false">
+                            <i class="bi bi-search me-1"></i>Cari
+                        </button>
+                        <span class="products-count"><?= number_format($totalProductCount) ?> produk</span>
+                        <a href="<?= bekuku_url('products/create.php') ?>" class="btn dashboard-product-add-button">
+                            <i class="bi bi-plus-circle me-1"></i>Tambah Produk
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     <?php if ($products !== []): ?>
@@ -150,7 +160,7 @@ function product_rupiah(float $amount): string
                                             <a href="<?= bekuku_url('products/edit.php?id=' . (int) $product['product_id']) ?>" class="btn btn-sm btn-outline-info" title="Edit produk">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form method="post" action="<?= bekuku_url('products/delete.php') ?>" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                                            <form method="post" action="<?= bekuku_url('products/delete.php') ?>" class="d-inline" data-delete-confirm data-delete-label="produk">
                                                 <input type="hidden" name="id" value="<?= (int) $product['product_id'] ?>">
                                                 <?= bekuku_csrf_field() ?>
                                                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus produk">
@@ -174,6 +184,32 @@ function product_rupiah(float $amount): string
                         </div>
                     <?php endif; ?>
                 </div>
+                <?php if ($totalPages > 1): ?>
+                    <div class="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <small class="text-muted">
+                            Menampilkan <?= (($currentPage - 1) * $productsPerPage) + 1 ?>-<?= min($currentPage * $productsPerPage, $totalProductCount) ?> dari <?= number_format($totalProductCount) ?> produk
+                        </small>
+                        <nav aria-label="Navigasi halaman produk">
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
+                                    <a class="page-link" href="?page=<?= max(1, $currentPage - 1) ?>" aria-label="Sebelumnya">&laquo;</a>
+                                </li>
+                                <?php
+                                $pageStart = (int) (floor(($currentPage - 1) / 10) * 10) + 1;
+                                $pageEnd = min($totalPages, $pageStart + 9);
+                                for ($page = $pageStart; $page <= $pageEnd; $page++):
+                                ?>
+                                    <li class="page-item <?= $page === $currentPage ? 'active' : '' ?>">
+                                        <a class="page-link" href="?page=<?= $page ?>"><?= $page ?></a>
+                                    </li>
+                                <?php endfor; ?>
+                                <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
+                                    <a class="page-link" href="?page=<?= min($totalPages, $currentPage + 1) ?>" aria-label="Berikutnya">&raquo;</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                <?php endif; ?>
             </section>
         </div>
     </main>
@@ -182,5 +218,6 @@ function product_rupiah(float $amount): string
 </div>
 <script src="<?= bekuku_url('assets/js/ui.js') ?>?v=2026091619"></script>
 <script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
+<script src="<?= bekuku_url('assets/js/data-table-filter.js') ?>?v=202609200748"></script>
 </body>
 </html>

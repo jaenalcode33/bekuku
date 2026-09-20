@@ -160,8 +160,7 @@ $expiring_batches =
 $stmt = $conn->prepare("
     SELECT COUNT(*)
     FROM batches
-    WHERE remaining_quantity > 0
-      AND expiry_date IS NOT NULL
+    WHERE expiry_date IS NOT NULL
       AND expiry_date < CURDATE()
 ");
 
@@ -359,8 +358,7 @@ $stmt = $conn->prepare("
     FROM batches b
     INNER JOIN products p
         ON b.product_id = p.product_id
-    WHERE b.remaining_quantity > 0
-      AND b.expiry_date IS NOT NULL
+    WHERE b.expiry_date IS NOT NULL
       AND b.expiry_date < CURDATE()
     ORDER BY b.expiry_date ASC
     LIMIT 5
@@ -411,7 +409,7 @@ $expired_batch_list =
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091722"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 </head>
@@ -650,101 +648,6 @@ $expired_batch_list =
 
                 </div>
 
-
-            </div>
-
-
-            <!-- =================================================
-                 QUICK ACTION
-            ================================================== -->
-
-            <div class="card dashboard-actions mb-4">
-
-                <div class="card-body">
-
-
-                    <div class="dashboard-actions-heading">
-
-                        <div>
-
-                            <div class="dashboard-section-kicker">
-
-                                MENU CEPAT
-
-                            </div>
-
-
-                            <div class="dashboard-section-description">
-
-                                Akses fitur utama BEKUKU.
-
-                            </div>
-
-                        </div>
-
-
-                        <i class="bi bi-lightning-charge-fill"></i>
-
-                    </div>
-
-
-                    <div class="dashboard-action-list">
-
-
-                        <a
-                            href="<?= bekuku_url('transactions/create.php') ?>"
-                            class="dashboard-action-button"
-                            data-no-modal
-                        >
-
-                            <i class="bi bi-cart-plus"></i>
-
-                            Transaksi Baru
-
-                        </a>
-
-
-                        <a
-                            href="/Bekuku/products/create.php"
-                            class="dashboard-action-button"
-                            data-modal-url="/Bekuku/products/create.php"
-                            data-modal-title="Tambah Produk"
-                        >
-
-                            <i class="bi bi-box-seam"></i>
-
-                            Tambah Produk
-
-                        </a>
-
-
-                        <a
-                            href="<?= bekuku_url('purchases/') ?>"
-                            class="dashboard-action-button"
-                        >
-
-                            <i class="bi bi-truck"></i>
-
-                            Pembelian
-
-                        </a>
-
-
-                        <a
-                            href="<?= bekuku_url('transactions/') ?>"
-                            class="dashboard-action-button"
-                        >
-
-                            <i class="bi bi-clock-history"></i>
-
-                            Riwayat Transaksi
-
-                        </a>
-
-
-                    </div>
-
-                </div>
 
             </div>
 

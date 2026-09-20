@@ -4,6 +4,13 @@ require_once __DIR__ . "/../config/app.php";
 $currentRequestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $currentRequestPath = preg_replace('#^' . preg_quote(bekuku_base_path(), '#') . '#', '', $currentRequestPath);
 $currentRequestPath = '/' . ltrim($currentRequestPath ?: '/', '/');
+$currentUserRole = strtolower(trim((string) (bekuku_user()['role'] ?? '')));
+$hideSectionLabels = in_array(
+    $currentUserRole,
+    ['kasir', 'gudang'],
+    true
+);
+$hideWarehouseSectionLabels = $currentUserRole === 'gudang';
 
 function bekuku_nav_active(string $path): bool
 {
@@ -125,9 +132,11 @@ function bekuku_nav_active(string $path): bool
 
                 <!-- TRANSAKSI -->
 
+                <?php if (!$hideWarehouseSectionLabels): ?>
                 <li class="nav-header">
                     TRANSAKSI
                 </li>
+                <?php endif; ?>
 
 
                 <li class="nav-item">
@@ -169,9 +178,11 @@ function bekuku_nav_active(string $path): bool
 
                 <!-- MASTER DATA -->
 
+                <?php if (!$hideWarehouseSectionLabels): ?>
                 <li class="nav-header">
                     MASTER DATA
                 </li>
+                <?php endif; ?>
 
 
                 <!-- KATEGORI -->
@@ -236,9 +247,11 @@ function bekuku_nav_active(string $path): bool
 
                 <!-- PRODUK -->
 
+                <?php if (!$hideSectionLabels): ?>
                 <li class="nav-header">
                     PRODUK
                 </li>
+                <?php endif; ?>
 
 
                 <!-- DATA PRODUK -->
@@ -283,9 +296,11 @@ function bekuku_nav_active(string $path): bool
 
                 <!-- PERSEDIAAN -->
 
+                <?php if (!$hideSectionLabels): ?>
                 <li class="nav-header">
                     PERSEDIAAN
                 </li>
+                <?php endif; ?>
 
 
                 <!-- PEMBELIAN -->
@@ -330,9 +345,11 @@ function bekuku_nav_active(string $path): bool
 
                 <!-- LAPORAN -->
 
+                <?php if (!$hideSectionLabels): ?>
                 <li class="nav-header">
                     LAPORAN
                 </li>
+                <?php endif; ?>
 
 
                 <!-- LAPORAN PENJUALAN -->
@@ -380,6 +397,12 @@ function bekuku_nav_active(string $path): bool
                     <a href="<?= bekuku_url('users/') ?>" class="nav-link <?= bekuku_nav_active('users/') ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-person-gear"></i>
                         <p>Pengguna</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?= bekuku_url('audit/') ?>" class="nav-link <?= bekuku_nav_active('audit/') ? 'active' : '' ?>">
+                        <i class="nav-icon bi bi-journal-text"></i>
+                        <p>Audit Aktivitas</p>
                     </a>
                 </li>
                 <?php endif; ?>

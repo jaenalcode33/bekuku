@@ -36,6 +36,40 @@
     box-shadow: var(--bekuku-shadow) !important;
 }
 
+.transaction-history-card .btn-primary,
+.transaction-history-card .btn-primary i,
+.transaction-history-card .btn-primary .bi {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+.transaction-history-table .btn.btn-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    min-width: 64px;
+    height: 36px;
+    min-height: 36px;
+    gap: 4px;
+    padding: 7px 10px;
+    color: #ffffff !important;
+    background: #315cff !important;
+    border: 1px solid #4c75ff !important;
+    border-radius: 7px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.transaction-history-table .btn.btn-info:hover,
+.transaction-history-table .btn.btn-info:focus-visible {
+    color: #ffffff !important;
+    background: #4c75ff !important;
+    border-color: #6f8dff !important;
+}
+
 .transaction-history-header,
 .summary-footer {
     background: rgba(18, 36, 92, .72) !important;
@@ -52,6 +86,64 @@
     color: var(--bekuku-text-body) !important;
     background: transparent !important;
     border-color: var(--bekuku-border-soft) !important;
+}
+
+.transaction-history-table .transaction-payment-badge {
+    color: #7ea7ff !important;
+    background: #102d68 !important;
+    border: 1px solid #315cff !important;
+    border-radius: 7px;
+}
+
+.transaction-history-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 16px;
+    padding: 16px 0 2px;
+    border-top: 1px solid rgba(126, 157, 231, .22);
+}
+
+.transaction-history-pagination .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.transaction-history-pagination .page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 38px;
+    color: #7ea7ff;
+    background: #102d68;
+    border: 1px solid #315cff;
+    border-radius: 7px !important;
+    font-weight: 700;
+}
+
+.transaction-history-pagination .page-item.active .page-link,
+.transaction-history-pagination .page-link:hover,
+.transaction-history-pagination .page-link:focus {
+    color: #ffffff;
+    background: #315cff;
+    border-color: #4c75ff;
+}
+
+.transaction-history-pagination .page-item.disabled .page-link {
+    color: #8da7df;
+    background: #0b2254;
+    border-color: #1b3e78;
+    opacity: 1;
+}
+
+@media (max-width: 767.98px) {
+    .transaction-history-pagination {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 
 

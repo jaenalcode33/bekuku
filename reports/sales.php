@@ -57,6 +57,22 @@ $stmt->execute([
 
 $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$per_page = 10;
+$current_page = max(1, (int) ($_GET['page'] ?? 1));
+$total_pages = max(1, (int) ceil(count($transactions) / $per_page));
+$current_page = min($current_page, $total_pages);
+$page_offset = ($current_page - 1) * $per_page;
+$display_transactions = array_slice(
+    $transactions,
+    $page_offset,
+    $per_page
+);
+
+$pagination_query = [
+    'start_date' => $start_date,
+    'end_date' => $end_date,
+];
+
 
 /*
 |--------------------------------------------------------------------------
@@ -240,12 +256,12 @@ function rupiah($amount)
 
 <link
     rel="stylesheet"
-    href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091637"
+    href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
 >
 
 <link
     rel="stylesheet"
-    href="<?= bekuku_url('assets/css/reports-sales.css') ?>?v=2026091919"
+    href="<?= bekuku_url('assets/css/reports-sales.css') ?>?v=202609200914"
 >
 
 </head>
@@ -299,16 +315,6 @@ function rupiah($amount)
                     </p>
                     </div>
                 </div>
-                    <div class="dashboard-hero-actions">
-                        <button
-    type="button"
-    data-print
-    class="btn dashboard-product-add-button"
->
-    <i class="bi bi-printer me-1"></i>
-    Cetak Laporan
-</button>
-                    </div>
                 </div>
             </section>
         </div>
@@ -441,7 +447,7 @@ function rupiah($amount)
 
                     <div class="col-lg-3 col-md-6 mb-3">
 
-                        <div class="card h-100 report-stat-card report-stat-total">
+                        <div class="card h-100 movement-stat-card report-stat-card report-stat-total">
 
                             <div class="card-body">
 
@@ -497,7 +503,7 @@ function rupiah($amount)
 
                     <div class="col-lg-3 col-md-6 mb-3">
 
-                        <div class="card h-100 report-stat-card report-stat-complete">
+                        <div class="card h-100 movement-stat-card report-stat-card report-stat-complete">
 
                             <div class="card-body">
 
@@ -553,7 +559,7 @@ function rupiah($amount)
 
                     <div class="col-lg-3 col-md-6 mb-3">
 
-                        <div class="card h-100 report-stat-card report-stat-sales">
+                        <div class="card h-100 movement-stat-card report-stat-card report-stat-sales">
 
                             <div class="card-body">
 
@@ -609,7 +615,7 @@ function rupiah($amount)
 
                     <div class="col-lg-3 col-md-6 mb-3">
 
-                        <div class="card h-100 report-stat-card report-stat-change">
+                        <div class="card h-100 movement-stat-card report-stat-card report-stat-change">
 
                             <div class="card-body">
 
@@ -714,14 +720,18 @@ function rupiah($amount)
                         </h3>
 
 
-                        <div class="card-tools">
-
+                        <div class="card-tools d-flex align-items-center gap-2">
                             <span class="badge text-bg-secondary">
-
                                 <?= $total_transactions; ?> Data
-
                             </span>
-
+                            <button
+                                type="button"
+                                data-print
+                                class="btn dashboard-product-add-button"
+                            >
+                                <i class="bi bi-printer me-1"></i>
+                                Cetak Laporan
+                            </button>
                         </div>
 
                     </div>
@@ -733,7 +743,7 @@ function rupiah($amount)
                         <div class="table-responsive">
 
                             <table
-                                class="table table-hover align-middle mb-0"
+                                class="table table-hover align-middle mb-0 sales-report-table"
                             >
 
                                 <thead>
@@ -871,10 +881,10 @@ function rupiah($amount)
                                     <?php else: ?>
 
 
-                                        <?php $no = 1; ?>
+                                        <?php $no = $page_offset + 1; ?>
 
 
-                                        <?php foreach ($transactions as $transaction): ?>
+                                        <?php foreach ($display_transactions as $transaction): ?>
 
 
                                             <?php
@@ -1240,8 +1250,12 @@ function rupiah($amount)
 
                                     <i class="bi bi-info-circle me-1"></i>
 
-                                    <?= $total_transactions; ?>
-                                    transaksi ditemukan.
+                                    Menampilkan
+                                    <?= $page_offset + 1; ?>-<?= min(
+                                        $page_offset + $per_page,
+                                        $total_transactions
+                                    ); ?>
+                                    dari <?= $total_transactions; ?> transaksi.
 
                                 </small>
 
@@ -1261,6 +1275,62 @@ function rupiah($amount)
                             </div>
 
                         </div>
+
+                        <?php if ($total_pages > 1): ?>
+                            <nav
+                                class="mt-3"
+                                aria-label="Navigasi halaman laporan penjualan"
+                            >
+                                <ul class="pagination justify-content-center flex-wrap mb-0">
+                                    <?php
+                                    $previous_query = $pagination_query;
+                                    $previous_query['page'] = $current_page - 1;
+                                    ?>
+                                    <li class="page-item <?= $current_page === 1 ? 'disabled' : ''; ?>">
+                                        <a
+                                            class="page-link"
+                                            href="?<?= htmlspecialchars(http_build_query($previous_query)); ?>"
+                                            aria-label="Halaman sebelumnya"
+                                        >
+                                            <i class="bi bi-chevron-left"></i>
+                                        </a>
+                                    </li>
+
+                                    <?php
+                                    $page_start = (int) (floor(($current_page - 1) / 10) * 10) + 1;
+                                    $page_end = min($total_pages, $page_start + 9);
+                                    for ($page = $page_start; $page <= $page_end; $page++):
+                                    ?>
+                                        <?php
+                                        $page_query = $pagination_query;
+                                        $page_query['page'] = $page;
+                                        ?>
+                                        <li class="page-item <?= $page === $current_page ? 'active' : ''; ?>">
+                                            <a
+                                                class="page-link"
+                                                href="?<?= htmlspecialchars(http_build_query($page_query)); ?>"
+                                            >
+                                                <?= $page; ?>
+                                            </a>
+                                        </li>
+                                    <?php endfor; ?>
+
+                                    <?php
+                                    $next_query = $pagination_query;
+                                    $next_query['page'] = $current_page + 1;
+                                    ?>
+                                    <li class="page-item <?= $current_page === $total_pages ? 'disabled' : ''; ?>">
+                                        <a
+                                            class="page-link"
+                                            href="?<?= htmlspecialchars(http_build_query($next_query)); ?>"
+                                            aria-label="Halaman berikutnya"
+                                        >
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        <?php endif; ?>
 
                     <?php endif; ?>
 

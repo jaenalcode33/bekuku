@@ -368,7 +368,7 @@ body.bekuku-product-popup-page {
 }
 
 .bekuku-field label span {
-    color: #ff667b !important;
+    color: #c77b84 !important;
 }
 
 
@@ -408,6 +408,45 @@ body.bekuku-product-popup-page {
     box-shadow: none !important;
 
     font-size: 14px !important;
+}
+
+.bekuku-product-popup .global-searchable-select > select {
+    display: none !important;
+}
+
+.bekuku-product-popup .global-searchable-select {
+    width: 100% !important;
+}
+
+.bekuku-product-popup .global-searchable-toggle {
+    display: block !important;
+    width: 100% !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    margin: 0 !important;
+    padding: 9px 38px 9px 12px !important;
+    box-sizing: border-box !important;
+    color: #fff !important;
+    background: #132760 !important;
+    border: 1px solid #3b5798 !important;
+    border-radius: 9px !important;
+    outline: none !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+    line-height: 24px !important;
+    text-align: left !important;
+}
+
+.bekuku-product-popup .global-searchable-toggle::after {
+    position: absolute;
+    right: 14px;
+    margin-top: 0;
+    color: #fff;
+}
+
+.bekuku-product-popup .global-searchable-toggle:focus {
+    border-color: #6c91ff !important;
+    box-shadow: 0 0 0 3px rgba(108, 145, 255, .15) !important;
 }
 
 .bekuku-field input:focus,
@@ -517,11 +556,13 @@ body.bekuku-product-popup-page {
 }
 
 .bekuku-btn-primary {
+    background: #315cff !important;
+    border-color: #4c75ff !important;
     color: #fff !important;
 
-    background: #527cff !important;
+    background: #315cff !important;
 
-    border: 1px solid #527cff !important;
+    border: 1px solid #4c75ff !important;
 }
 
 .bekuku-btn-secondary {

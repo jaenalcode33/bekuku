@@ -21,6 +21,13 @@ $stmt = $conn->query("
 
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$per_page = 10;
+$current_page = max(1, (int) ($_GET['page'] ?? 1));
+$total_pages = max(1, (int) ceil(count($purchases) / $per_page));
+$current_page = min($current_page, $total_pages);
+$page_offset = ($current_page - 1) * $per_page;
+$display_purchases = array_slice($purchases, $page_offset, $per_page);
+
 ?>
 
 <!DOCTYPE html>
@@ -46,12 +53,22 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
     <link
         rel="stylesheet"
         href="<?= bekuku_url('assets/css/popup-pembelian.css') ?>?v=20260919"
+    >
+
+    <link
+        rel="stylesheet"
+        href="<?= bekuku_url('assets/css/menu-theme.css') ?>?v=202609200917"
+    >
+
+    <link
+        rel="stylesheet"
+        href="<?= bekuku_url('assets/css/purchases-history.css') ?>?v=202609200655"
     >
 
 </head>
@@ -177,14 +194,14 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <?php if (count($purchases) > 0): ?>
 
 
-                                    <?php foreach ($purchases as $index => $purchase): ?>
+                                    <?php foreach ($display_purchases as $index => $purchase): ?>
 
 
                                         <tr>
 
 
                                             <td>
-                                                <?= $index + 1; ?>
+                                                <?= $page_offset + $index + 1; ?>
                                             </td>
 
 
@@ -323,6 +340,39 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
                         </div>
+
+                        <?php if ($total_pages > 1): ?>
+                            <div class="purchases-pagination">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Menampilkan <?= $page_offset + 1; ?>-<?= min($page_offset + $per_page, count($purchases)); ?>
+                                    dari <?= count($purchases); ?> pembelian.
+                                </small>
+                                <nav aria-label="Navigasi halaman riwayat pembelian">
+                                    <ul class="pagination justify-content-center flex-wrap mb-0">
+                                        <li class="page-item <?= $current_page === 1 ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?= $current_page - 1; ?>" aria-label="Halaman sebelumnya">
+                                                <i class="bi bi-chevron-left"></i>
+                                            </a>
+                                        </li>
+                                        <?php
+                                        $page_start = (int) (floor(($current_page - 1) / 10) * 10) + 1;
+                                        $page_end = min($total_pages, $page_start + 9);
+                                        for ($page = $page_start; $page <= $page_end; $page++):
+                                        ?>
+                                            <li class="page-item <?= $page === $current_page ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?page=<?= $page; ?>"><?= $page; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+                                        <li class="page-item <?= $current_page === $total_pages ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?= $current_page + 1; ?>" aria-label="Halaman berikutnya">
+                                                <i class="bi bi-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        <?php endif; ?>
 
 
                     </div>

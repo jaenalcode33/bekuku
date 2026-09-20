@@ -28,6 +28,13 @@ $stmt = $conn->query("
 
 $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$per_page = 10;
+$current_page = max(1, (int) ($_GET['page'] ?? 1));
+$total_pages = max(1, (int) ceil(count($transactions) / $per_page));
+$current_page = min($current_page, $total_pages);
+$page_offset = ($current_page - 1) * $per_page;
+$display_transactions = array_slice($transactions, $page_offset, $per_page);
+
 function rupiah($number)
 {
     return 'Rp ' . number_format(
@@ -49,7 +56,9 @@ function rupiah($number)
 
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091612">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/menu-theme.css') ?>?v=202609200917">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions-history.css') ?>?v=202609200917">
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -80,8 +89,8 @@ function rupiah($number)
         <div class="app-content">
             <div class="container-fluid">
 
-                <div class="card">
-                    <div class="card-header">
+                <div class="card transaction-history-card">
+                    <div class="card-header transaction-history-header">
                         <h3 class="card-title">
                             <i class="bi bi-receipt-cutoff"></i>
                             Data Transaksi
@@ -99,7 +108,7 @@ function rupiah($number)
 
                         <?php if (!empty($transactions)): ?>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover align-middle">
+                                <table class="table table-bordered table-hover align-middle transaction-history-table">
                                     <thead>
                                         <tr>
                                             <th width="60">No</th>
@@ -114,7 +123,7 @@ function rupiah($number)
                                     </thead>
 
                                     <tbody>
-                                        <?php $no = 1; foreach ($transactions as $transaction): ?>
+                                        <?php $no = $page_offset + 1; foreach ($display_transactions as $transaction): ?>
                                             <?php
                                             $status = strtolower($transaction['status'] ?? 'selesai');
                                             $paymentMethod = strtolower($transaction['payment_method'] ?? 'cash');
@@ -157,7 +166,7 @@ function rupiah($number)
                                                     <strong><?= rupiah($transaction['total_amount']); ?></strong>
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-light text-dark">
+                                                    <span class="badge transaction-payment-badge">
                                                         <?= htmlspecialchars($paymentLabel, ENT_QUOTES, 'UTF-8'); ?>
                                                     </span>
                                                 </td>
@@ -176,6 +185,45 @@ function rupiah($number)
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
+                            </div>
+
+                            <div class="transaction-history-pagination">
+                                <small class="text-muted">
+                                    Menampilkan <?= $page_offset + 1; ?>-<?= min($page_offset + $per_page, count($transactions)); ?>
+                                    dari <?= count($transactions); ?> transaksi
+                                </small>
+
+                                <?php if ($total_pages > 1): ?>
+                                    <nav aria-label="Navigasi riwayat transaksi">
+                                        <ul class="pagination mb-0">
+                                            <?php
+                                            $previous_query = ['page' => $current_page - 1];
+                                            $next_query = ['page' => $current_page + 1];
+                                            ?>
+                                            <li class="page-item <?= $current_page === 1 ? 'disabled' : ''; ?>">
+                                                <a class="page-link" href="?<?= htmlspecialchars(http_build_query($previous_query)); ?>" aria-label="Halaman sebelumnya">
+                                                    <i class="bi bi-chevron-left"></i>
+                                                </a>
+                                            </li>
+
+                                            <?php
+                                            $page_start = (int) (floor(($current_page - 1) / 10) * 10) + 1;
+                                            $page_end = min($total_pages, $page_start + 9);
+                                            for ($page = $page_start; $page <= $page_end; $page++):
+                                            ?>
+                                                <li class="page-item <?= $page === $current_page ? 'active' : ''; ?>">
+                                                    <a class="page-link" href="?page=<?= $page; ?>"><?= $page; ?></a>
+                                                </li>
+                                            <?php endfor; ?>
+
+                                            <li class="page-item <?= $current_page === $total_pages ? 'disabled' : ''; ?>">
+                                                <a class="page-link" href="?<?= htmlspecialchars(http_build_query($next_query)); ?>" aria-label="Halaman berikutnya">
+                                                    <i class="bi bi-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                <?php endif; ?>
                             </div>
                         <?php else: ?>
                             <div class="alert alert-info mb-0">

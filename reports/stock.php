@@ -31,6 +31,11 @@ $stmt = $conn->query("
 ");
 
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$productsPerPage = 10;
+$totalPages = max(1, (int) ceil(count($products) / $productsPerPage));
+$currentPage = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+$currentPage = $currentPage && $currentPage > 0 ? min($currentPage, $totalPages) : 1;
+$visibleProducts = array_slice($products, ($currentPage - 1) * $productsPerPage, $productsPerPage);
 
 
 /*
@@ -147,9 +152,9 @@ function rupiah($amount)
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091623"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/report-document.css') ?>?v=2026091645">
+    <link rel="stylesheet"                         href="<?= bekuku_url('assets/css/report-document.css') ?>?v=202609200623">
 
 </head>
 
@@ -189,9 +194,6 @@ function rupiah($amount)
                         <a href="../products/" class="btn dashboard-product-add-button">
                             <i class="bi bi-box-seam me-1"></i>Data Produk
                         </a>
-                        <button type="button" data-print class="btn dashboard-product-add-button">
-                            <i class="bi bi-printer me-1"></i>Cetak Laporan
-                        </button>
                     </div>
                 </div>
             </section>
@@ -595,7 +597,7 @@ function rupiah($amount)
 
                         <div class="table-responsive">
 
-                            <table class="table table-hover align-middle mb-0">
+                            <table class="table table-hover align-middle mb-0 stock-report-table">
 
                                 <thead>
 
@@ -685,7 +687,7 @@ function rupiah($amount)
                                 <tbody>
 
 
-                                    <?php if (empty($products)): ?>
+                                    <?php if (empty($visibleProducts)): ?>
 
 
                                         <tr>
@@ -732,7 +734,7 @@ function rupiah($amount)
                                         <?php $no = 1; ?>
 
 
-                                        <?php foreach ($products as $product): ?>
+                                        <?php foreach ($visibleProducts as $product): ?>
 
 
                                             <?php
@@ -1104,8 +1106,8 @@ function rupiah($amount)
                                     <i class="bi bi-info-circle me-1"></i>
 
                                     Menampilkan
-                                    <?= $total_products; ?>
-                                    produk.
+                                    <?= (($currentPage - 1) * $productsPerPage) + 1; ?>-<?= min($currentPage * $productsPerPage, $total_products); ?>
+                                    dari <?= $total_products; ?> produk.
 
                                 </small>
 
@@ -1130,6 +1132,27 @@ function rupiah($amount)
                                     </span>
 
                                 </div>
+                                <?php if ($totalPages > 1): ?>
+                                    <nav aria-label="Navigasi halaman laporan stok" class="mt-3">
+                                        <ul class="pagination pagination-sm justify-content-end mb-0">
+                                            <li class="page-item <?= $currentPage <= 1 ? 'disabled' : ''; ?>">
+                                                <a class="page-link" href="?page=<?= max(1, $currentPage - 1); ?>" aria-label="Sebelumnya">&laquo;</a>
+                                            </li>
+                                            <?php
+                                            $pageStart = (int) (floor(($currentPage - 1) / 10) * 10) + 1;
+                                            $pageEnd = min($totalPages, $pageStart + 9);
+                                            for ($page = $pageStart; $page <= $pageEnd; $page++):
+                                            ?>
+                                                <li class="page-item <?= $page === $currentPage ? 'active' : ''; ?>">
+                                                    <a class="page-link" href="?page=<?= $page; ?>"><?= $page; ?></a>
+                                                </li>
+                                            <?php endfor; ?>
+                                            <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : ''; ?>">
+                                                <a class="page-link" href="?page=<?= min($totalPages, $currentPage + 1); ?>" aria-label="Berikutnya">&raquo;</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                <?php endif; ?>
 
                             </div>
 
@@ -1240,6 +1263,7 @@ function rupiah($amount)
 
 <script src="<?= bekuku_url('assets/js/ui.js') ?>"></script>
 <script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
+<script src="<?= bekuku_url('assets/js/reports-stock.js') ?>?v=202609200355"></script>
 
 
 </body>

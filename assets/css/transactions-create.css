@@ -31,6 +31,110 @@
     padding-bottom: 40px;
 }
 
+.product-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.product-dropdown-toggle {
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-dropdown-toggle::after {
+    content: "\25BC";
+    float: right;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.product-dropdown-menu {
+    position: fixed;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    width: 100%;
+    max-height: 240px;
+    padding: 8px;
+    background: var(--bekuku-panel);
+    border: 1px solid var(--bekuku-border);
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.product-dropdown.is-open .product-dropdown-menu {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.product-dropdown-search {
+    margin-bottom: 6px;
+}
+
+.product-dropdown-options {
+    overflow-y: auto;
+}
+
+.product-dropdown-option {
+    display: block;
+    width: 100%;
+    padding: 8px 9px;
+    color: var(--bekuku-text);
+    background: transparent;
+    border: 0;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.product-dropdown-option:hover,
+.product-dropdown-option:focus {
+    color: #fff;
+    background: var(--bekuku-primary);
+}
+
+.transaction-form-layout {
+    display: grid !important;
+    grid-template-columns: minmax(0, 65%) minmax(0, calc(35% - 1rem)) !important;
+    align-items: start;
+    gap: 1rem;
+    width: 100%;
+    max-width: none;
+}
+
+.transaction-form-layout > .transaction-products-column {
+    grid-column: 1;
+    float: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding-right: 0 !important;
+}
+
+.transaction-form-layout > .transaction-summary-column {
+    grid-column: 2;
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+}
+
+@media (max-width: 767.98px) {
+    .transaction-form-layout {
+        display: block !important;
+    }
+
+    .transaction-form-layout > .transaction-products-column,
+    .transaction-form-layout > .transaction-summary-column {
+        grid-column: auto;
+        width: 100% !important;
+    }
+}
+
 
 /*
 |--------------------------------------------------------------------------
@@ -240,6 +344,59 @@
 
 .product-table {
     margin-bottom: 0;
+}
+
+#productPagination {
+    width: 100%;
+    align-items: flex-start !important;
+}
+
+#productPagination nav {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+#productPagination .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px;
+    margin: 0;
+}
+
+#productPagination .page-link {
+    min-width: 38px;
+    min-height: 32px;
+    padding: 5px 10px;
+    line-height: 1;
+}
+
+@media (max-width: 767.98px) {
+    #productPagination {
+        align-items: stretch !important;
+    }
+
+    #productPagination nav,
+    #productPagination .pagination {
+        justify-content: flex-start;
+    }
+}
+
+.quantity-input {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+body.transaction-create-page input[type="number"] {
+    -moz-appearance: textfield !important;
+    appearance: textfield !important;
 }
 
 
@@ -1098,6 +1255,7 @@ body.transaction-create-page .save-button {
 }
 
 .receipt-print {
+    display: none;
     width: 80mm;
     max-width: 100%;
     box-sizing: border-box;
@@ -1110,6 +1268,10 @@ body.transaction-create-page .save-button {
     font-size: 11px;
     line-height: 1.35;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+body.receipt-print-mode .receipt-print {
+    display: block !important;
 }
 
 body[data-receipt-size="58"] .receipt-print {
@@ -1242,6 +1404,32 @@ body.transaction-create-page .save-button:focus-visible {
     background: #4c75ff;
 }
 
+@page receipt80 {
+    size: 80mm 200mm;
+    margin: 0;
+}
+
+@page receipt58 {
+    size: 58mm 200mm;
+    margin: 0;
+}
+
+body.transaction-detail-page {
+    page: receipt80;
+}
+
+body.transaction-detail-page[data-receipt-size="58"] {
+    page: receipt58;
+}
+
+body.transaction-detail-page .receipt-print {
+    page: receipt80;
+}
+
+body.transaction-detail-page[data-receipt-size="58"] .receipt-print {
+    page: receipt58;
+}
+
 body.transaction-create-page .product-table tbody tr {
     background: var(--bekuku-panel);
 }
@@ -1249,6 +1437,52 @@ body.transaction-create-page .product-table tbody tr {
 body.transaction-create-page .product-table tbody tr:hover,
 body.transaction-create-page .product-table tbody tr.selected-row {
     background: var(--bekuku-surface) !important;
+}
+
+@media print {
+    @page {
+        size: 80mm 200mm;
+        margin: 0;
+    }
+
+    @page receipt58 {
+        size: 58mm 200mm;
+        margin: 0;
+    }
+
+    html,
+    body.transaction-detail-page,
+    body.transaction-detail-page .app-wrapper,
+    body.transaction-detail-page .app-main,
+    body.transaction-detail-page .app-content,
+    body.transaction-detail-page .transaction-detail-wrapper {
+        width: 80mm !important;
+        max-width: 80mm !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    body.transaction-detail-page[data-receipt-size="58"],
+    body.transaction-detail-page[data-receipt-size="58"] .app-wrapper,
+    body.transaction-detail-page[data-receipt-size="58"] .app-main,
+    body.transaction-detail-page[data-receipt-size="58"] .app-content,
+    body.transaction-detail-page[data-receipt-size="58"] .transaction-detail-wrapper {
+        width: 58mm !important;
+        max-width: 58mm !important;
+    }
+
+    body.transaction-detail-page .receipt-print {
+        width: 80mm !important;
+        max-width: 80mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    body.transaction-detail-page[data-receipt-size="58"] .receipt-print {
+        width: 58mm !important;
+        max-width: 58mm !important;
+    }
 }
 
 body.transaction-create-page .create-hero::after {
@@ -2599,7 +2833,7 @@ body.transaction-create-page .cancel-button:hover {
 
     @page {
         size: 80mm auto;
-        margin: 5mm;
+        margin: 0;
     }
 
     body.transaction-detail-page {
@@ -2670,6 +2904,7 @@ body.transaction-create-page .cancel-button:hover {
     }
 
     .receipt-print {
+        display: block !important;
         width: 80mm;
         max-width: 100%;
         box-sizing: border-box;
@@ -3090,7 +3325,7 @@ body.transaction-create-page .stock-good {
 
 .transaction-notice-title i {
     margin-right: 8px;
-    color: #62d6c5;
+    color: #4c75ff;
 }
 
 .transaction-notice-close {
@@ -3136,4 +3371,57 @@ body.transaction-create-page .stock-good {
     
     color: #ffffff !important;
     box-shadow: 0 6px 15px rgba(49, 92, 255, 0.22) !important;
+}
+
+@media print {
+    @page {
+        size: 80mm 200mm;
+        margin: 0;
+    }
+
+    @page receipt58 {
+        size: 58mm 200mm;
+        margin: 0;
+    }
+
+    body.transaction-detail-page {
+        page: receipt80;
+    }
+
+    body.transaction-detail-page[data-receipt-size="58"] {
+        page: receipt58;
+    }
+}
+
+@media print {
+    body.transaction-detail-page.receipt-print-mode * {
+        visibility: hidden !important;
+    }
+
+    body.transaction-detail-page.receipt-print-mode .receipt-print,
+    body.transaction-detail-page.receipt-print-mode .receipt-print * {
+        visibility: visible !important;
+    }
+
+    body.transaction-detail-page.receipt-print-mode .receipt-print {
+        display: block !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 80mm !important;
+        max-width: 80mm !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 4mm !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+        color: #111111 !important;
+        box-shadow: none !important;
+    }
+
+    body.transaction-detail-page.receipt-print-mode[data-receipt-size="58"] .receipt-print {
+        width: 58mm !important;
+        max-width: 58mm !important;
+    }
 }

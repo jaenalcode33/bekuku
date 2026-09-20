@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 require_once __DIR__ . "/../config/app.php";
 
@@ -12,7 +12,7 @@ if (!bekuku_is_authenticated()) {
         <title>BEKUKU POS - Kelola Bisnis Lebih Mudah</title>
         <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-        <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091655">
+        <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
         <link rel="stylesheet" href="<?= bekuku_url('assets/landing/css/landing.css') ?>?v=2026091721">
         <script src="<?= bekuku_url('assets/landing/js/landing.js') ?>?v=2026091721" defer></script>
     </head>

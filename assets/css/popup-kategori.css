@@ -255,6 +255,39 @@ body.popup-kategori-page {
 
 }
 
+body.popup-kategori-page,
+body.popup-kategori-page .popup-kategori-form,
+body.popup-kategori-page .popup-kategori-form-body {
+    background: #0d1b4d !important;
+    color: #dce6ff !important;
+}
+
+body.popup-kategori-page .popup-kategori-field label,
+body.popup-kategori-page .popup-kategori-form-title {
+    color: #f5f8ff !important;
+}
+
+body.popup-kategori-page .popup-kategori-input {
+    background: #12245c !important;
+    color: #dce6ff !important;
+    border-color: rgba(126, 157, 231, .34) !important;
+}
+
+body.popup-kategori-page .popup-kategori-form-footer {
+    background: #12245c !important;
+    border-color: rgba(126, 157, 231, .28) !important;
+}
+
+body.popup-kategori-page .popup-kategori-button-save {
+    background: #315cff !important;
+    color: #ffffff !important;
+}
+
+body.popup-kategori-page .popup-kategori-button-cancel {
+    background: #162b68 !important;
+    color: #dce6ff !important;
+}
+
 
 /* =========================================================
    HEADER FORM
@@ -327,7 +360,7 @@ body.popup-kategori-page {
 
 .popup-kategori-field label span {
 
-    color: #ff5b6e;
+    color: #c77b84;
 
 }
 

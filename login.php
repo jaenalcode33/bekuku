@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Masuk - BEKUKU POS</title>
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091717">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
 </head>
 <body class="bekuku-auth-page">
     <main class="bekuku-auth-card">

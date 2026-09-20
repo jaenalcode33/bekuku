@@ -546,7 +546,7 @@ $defaultDate = date('Y-m-d\TH:i');
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-pembelian.css') ?>?v=20260919"
+        href="<?= bekuku_url('assets/css/popup-pembelian.css') ?>?v=202609200831"
     >
 
 </head>
@@ -1088,12 +1088,23 @@ $defaultDate = date('Y-m-d\TH:i');
 
 </form>
 
+<script
+    src="<?= bekuku_url('assets/js/global-number-inputs.js') ?>?v=202609200643"
+></script>
+
+<script>
+    document.querySelectorAll('input[type="number"]').forEach(function (input) {
+        input.style.setProperty('-moz-appearance', 'textfield', 'important');
+        input.style.setProperty('appearance', 'textfield', 'important');
+        input.style.setProperty('-webkit-appearance', 'none', 'important');
+    });
+</script>
 
 </div>
 
 
 <script
-    src="<?= bekuku_url('assets/js/purchases-create.js') ?>?v=20260919"
+    src="<?= bekuku_url('assets/js/purchases-create.js') ?>?v=202609200815"
 ></script>
 
 

@@ -119,6 +119,19 @@ $stmt->execute($params);
 
 $movements = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$per_page = 10;
+$current_page = max(1, (int) ($_GET['page'] ?? 1));
+$total_pages = max(1, (int) ceil(count($movements) / $per_page));
+$current_page = min($current_page, $total_pages);
+$page_offset = ($current_page - 1) * $per_page;
+$display_movements = array_slice($movements, $page_offset, $per_page);
+$pagination_params = array_filter([
+    'product_id' => $product_id,
+    'movement_type' => $movement_type,
+    'start_date' => $start_date,
+    'end_date' => $end_date,
+], static fn ($value): bool => $value !== '');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -199,13 +212,23 @@ foreach ($movements as $movement) {
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
+    >
+
+    <link
+        rel="stylesheet"
+        href="<?= bekuku_url('assets/css/menu-theme.css') ?>?v=202609200917"
+    >
+
+    <link
+        rel="stylesheet"
+            href="<?= bekuku_url('assets/css/stock-movements.css') ?>?v=202609200907"
     >
 
 </head>
 
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary movement-page">
 
 
 <div class="app-wrapper">
@@ -286,7 +309,10 @@ foreach ($movements as $movement) {
                                         "
                                     >
 
-                                        <i class="bi bi-arrow-left-right fs-4"></i>
+                                        <i
+                                            class="bi bi-arrow-left-right fs-4"
+                                            style="color: #ffffff !important; -webkit-text-fill-color: #ffffff !important;"
+                                        ></i>
 
                                     </div>
 
@@ -347,7 +373,10 @@ foreach ($movements as $movement) {
                                         "
                                     >
 
-                                        <i class="bi bi-box-arrow-in-down fs-4"></i>
+                                        <i
+                                            class="bi bi-box-arrow-in-down fs-4"
+                                            style="color: #57d69a !important; -webkit-text-fill-color: #57d69a !important;"
+                                        ></i>
 
                                     </div>
 
@@ -408,7 +437,10 @@ foreach ($movements as $movement) {
                                         "
                                     >
 
-                                        <i class="bi bi-box-arrow-up fs-4"></i>
+                                        <i
+                                            class="bi bi-box-arrow-up fs-4"
+                                            style="color: #ff8792 !important; -webkit-text-fill-color: #ff8792 !important;"
+                                        ></i>
 
                                     </div>
 
@@ -427,14 +459,17 @@ foreach ($movements as $movement) {
                      FILTER CARD
                 ================================================== -->
 
-                <div class="card movement-card mb-4">
+                <div class="card movement-card movement-filter-card mb-4">
 
 
                     <div class="card-header">
 
                         <h3 class="card-title">
 
-                            <i class="bi bi-funnel me-2"></i>
+                            <i
+                                class="bi bi-funnel me-2"
+                                style="color: #ffffff !important; -webkit-text-fill-color: #ffffff !important;"
+                            ></i>
 
                             Filter Riwayat Stok
 
@@ -506,9 +541,17 @@ foreach ($movements as $movement) {
 
                                     </label>
 
+                                    <input
+                                        type="search"
+                                        class="form-control product-filter-search"
+                                        placeholder="Cari nama produk..."
+                                        autocomplete="off"
+                                    >
+
                                     <select
                                         name="product_id"
                                         class="form-select"
+                                        data-searchable-products
                                     >
 
                                         <option value="">
@@ -642,7 +685,10 @@ foreach ($movements as $movement) {
 
                         <h3 class="card-title">
 
-                            <i class="bi bi-list-ul me-2"></i>
+                            <i
+                                class="bi bi-list-ul me-2"
+                                style="color: #ffffff !important; -webkit-text-fill-color: #ffffff !important;"
+                            ></i>
 
                             Data Pergerakan Stok
 
@@ -788,10 +834,10 @@ foreach ($movements as $movement) {
                                     <?php else: ?>
 
 
-                                        <?php $no = 1; ?>
+                                        <?php $no = $page_offset + 1; ?>
 
 
-                                        <?php foreach ($movements as $movement): ?>
+                                        <?php foreach ($display_movements as $movement): ?>
 
 
                                             <tr>
@@ -855,7 +901,10 @@ foreach ($movements as $movement) {
                                                             "
                                                         >
 
-                                                            <i class="bi bi-box"></i>
+                                                            <i
+                                                                class="bi bi-box"
+                                                                style="color: #315cff !important; -webkit-text-fill-color: #315cff !important;"
+                                                            ></i>
 
                                                         </div>
 
@@ -1162,8 +1211,11 @@ foreach ($movements as $movement) {
                                     <i class="bi bi-info-circle me-1"></i>
 
                                     Menampilkan
-                                    <?= $total_movements; ?>
-                                    riwayat pergerakan stok.
+                                    <?= $page_offset + 1; ?>-<?= min(
+                                        $page_offset + $per_page,
+                                        $total_movements
+                                    ); ?>
+                                    dari <?= $total_movements; ?> riwayat pergerakan stok.
 
                                 </small>
 
@@ -1171,7 +1223,7 @@ foreach ($movements as $movement) {
                                 <button
                                     type="button"
                                     data-print
-                                    class="btn btn-sm btn-outline-secondary"
+                                    class="btn btn-sm movement-print-button"
                                 >
 
                                     <i class="bi bi-printer me-1"></i>
@@ -1181,6 +1233,60 @@ foreach ($movements as $movement) {
                                 </button>
 
                             </div>
+
+                            <?php if ($total_pages > 1): ?>
+                                <nav
+                                    class="movement-pagination"
+                                    aria-label="Navigasi riwayat pergerakan stok"
+                                >
+                                    <ul class="pagination mb-0">
+                                        <?php
+                                        $previous_query = $pagination_params;
+                                        $previous_query['page'] = $current_page - 1;
+                                        $next_query = $pagination_params;
+                                        $next_query['page'] = $current_page + 1;
+                                        ?>
+                                        <li class="page-item <?= $current_page === 1 ? 'disabled' : ''; ?>">
+                                            <a
+                                                class="page-link"
+                                                href="?<?= htmlspecialchars(http_build_query($previous_query)); ?>"
+                                                aria-label="Halaman sebelumnya"
+                                            >
+                                                <i class="bi bi-chevron-left"></i>
+                                            </a>
+                                        </li>
+
+                                        <?php
+                                        $page_start = (int) (floor(($current_page - 1) / 10) * 10) + 1;
+                                        $page_end = min($total_pages, $page_start + 9);
+                                        for ($page = $page_start; $page <= $page_end; $page++):
+                                        ?>
+                                            <li class="page-item <?= $page === $current_page ? 'active' : ''; ?>">
+                                                <?php
+                                                $page_query = $pagination_params;
+                                                $page_query['page'] = $page;
+                                                ?>
+                                                <a
+                                                    class="page-link"
+                                                    href="?<?= htmlspecialchars(http_build_query($page_query)); ?>"
+                                                >
+                                                    <?= $page; ?>
+                                                </a>
+                                            </li>
+                                        <?php endfor; ?>
+
+                                        <li class="page-item <?= $current_page === $total_pages ? 'disabled' : ''; ?>">
+                                            <a
+                                                class="page-link"
+                                                href="?<?= htmlspecialchars(http_build_query($next_query)); ?>"
+                                                aria-label="Halaman berikutnya"
+                                            >
+                                                <i class="bi bi-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            <?php endif; ?>
 
                         </div>
 
@@ -1197,6 +1303,56 @@ foreach ($movements as $movement) {
 
     </main>
 
+    <div class="movement-print-preview-wrap">
+        <article class="movement-print-report" aria-label="Dokumen riwayat pergerakan stok">
+            <header class="movement-print-header">
+                <div>
+                    <div class="movement-print-brand">BEKUKU</div>
+                    <div>FROZEN FOOD</div>
+                    <small>POINT OF SALE</small>
+                </div>
+                <div class="movement-print-title">
+                    <h1>RIWAYAT PERGERAKAN STOK</h1>
+                    <div>Dicetak: <?= date('d-m-Y H:i'); ?> WIB</div>
+                </div>
+            </header>
+
+            <div class="movement-print-meta">
+                <span>Total Riwayat: <?= number_format($total_movements); ?></span>
+                <span>Stok Masuk: <?= number_format($total_masuk); ?></span>
+                <span>Stok Keluar: <?= number_format($total_keluar); ?></span>
+            </div>
+
+            <table class="movement-print-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Produk</th>
+                        <th>Jenis</th>
+                        <th>Jumlah</th>
+                        <th>Sumber</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($movements as $index => $movement): ?>
+                        <?php $isIncoming = $movement['movement_type'] === 'masuk'; ?>
+                        <tr>
+                            <td class="text-center"><?= $index + 1; ?></td>
+                            <td><?= date('d-m-Y H:i', strtotime($movement['created_at'])); ?></td>
+                            <td><?= htmlspecialchars($movement['product_name']); ?></td>
+                            <td><?= $isIncoming ? 'Stok Masuk' : 'Stok Keluar'; ?></td>
+                            <td class="amount"><?= $isIncoming ? '+' : '-'; ?><?= number_format((int) $movement['quantity']); ?> <?= htmlspecialchars($movement['unit']); ?></td>
+                            <td><?= htmlspecialchars(ucfirst((string) ($movement['reference_type'] ?? '-'))); ?></td>
+                            <td><?= htmlspecialchars((string) ($movement['note'] ?? '-')); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </article>
+    </div>
+
 
     <?php require_once __DIR__ . "/../includes/footer.php"; ?>
 
@@ -1210,6 +1366,7 @@ foreach ($movements as $movement) {
 
 <script src="<?= bekuku_url('assets/js/ui.js') ?>"></script>
 <script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
+<script src="<?= bekuku_url('assets/js/stock-movements.js') ?>?v=202609200800"></script>
 
 
 </body>

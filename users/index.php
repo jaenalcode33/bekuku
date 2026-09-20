@@ -77,7 +77,8 @@ $users = $conn->query('SELECT user_id, username, name, role, status, created_at 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pengguna - BEKUKU POS</title>
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 <div class="app-wrapper">
@@ -100,10 +101,53 @@ $users = $conn->query('SELECT user_id, username, name, role, status, created_at 
                 </form>
             </div>
             <div class="card"><div class="card-body table-responsive"><table class="table"><thead><tr><th>Username</th><th>Nama</th><th>Peran</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
-            <?php foreach ($users as $user): ?><tr><td><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></td><td><?= htmlspecialchars($user['name'], ENT_QUOTES, 'UTF-8') ?></td><td><?= bekuku_role_label($user['role']) ?></td><td><?= htmlspecialchars($user['status'], ENT_QUOTES, 'UTF-8') ?></td><td><a class="btn btn-sm btn-outline-primary" href="?edit=<?= (int) $user['user_id'] ?>">Ubah</a> <?php if ((int) $user['user_id'] !== (int) (bekuku_user()['id'] ?? 0)): ?><form method="post" class="d-inline"><input type="hidden" name="action" value="delete"><input type="hidden" name="user_id" value="<?= (int) $user['user_id'] ?>"><?= bekuku_csrf_field() ?><button class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus pengguna ini?')">Hapus</button></form><?php endif; ?></td></tr><?php endforeach; ?>
+            <?php foreach ($users as $user): ?><tr><td><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></td><td><?= htmlspecialchars($user['name'], ENT_QUOTES, 'UTF-8') ?></td><td><?= bekuku_role_label($user['role']) ?></td><td><?= htmlspecialchars($user['status'], ENT_QUOTES, 'UTF-8') ?></td><td><a class="btn btn-sm btn-outline-primary" href="?edit=<?= (int) $user['user_id'] ?>">Ubah</a> <?php if ((int) $user['user_id'] !== (int) (bekuku_user()['id'] ?? 0)): ?><form method="post" class="d-inline" data-delete-user-form><input type="hidden" name="action" value="delete"><input type="hidden" name="user_id" value="<?= (int) $user['user_id'] ?>"><?= bekuku_csrf_field() ?><button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button></form><?php endif; ?></td></tr><?php endforeach; ?>
             </tbody></table></div></div>
         </div>
     </div></main>
     <?php require_once __DIR__ . '/../includes/sidebar.php'; ?>
 </div>
+<script>
+    (function () {
+        const deleteForms = document.querySelectorAll("[data-delete-user-form]");
+
+        deleteForms.forEach(function (form) {
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const overlay = document.createElement("div");
+                overlay.className = "bekuku-logout-overlay bekuku-delete-overlay";
+                overlay.innerHTML =
+                    '<div class="bekuku-logout-dialog" role="dialog" aria-modal="true" aria-labelledby="bekuku-delete-title">' +
+                    '<div class="bekuku-logout-icon bekuku-delete-icon" style="background:linear-gradient(145deg,#a65b63,#8e4650) !important;color:#ffffff !important;"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3 1.7 20.5c-.4.7.1 1.5.9 1.5h18.8c.8 0 1.3-.8.9-1.5L12 3Zm0 4.2 7.1 12.1H4.9L12 7.2ZM11 10v5h2v-5h-2Zm0 7v2h2v-2h-2Z"/></svg></div>' +
+                    '<h2 id="bekuku-delete-title">Hapus Pengguna?</h2>' +
+                    '<p>Data pengguna ini akan dihapus secara permanen.</p>' +
+                    '<div class="bekuku-logout-actions">' +
+                    '<button type="button" class="bekuku-logout-cancel">Batal</button>' +
+                    '<button type="button" class="bekuku-logout-confirm bekuku-delete-confirm" style="background:#dc3545 !important;color:#ffffff !important;border:0;">Hapus</button>' +
+                    "</div>" +
+                    "</div>";
+
+                document.body.appendChild(overlay);
+                document.body.classList.add("modal-open");
+
+                const close = function () {
+                    overlay.remove();
+                    document.body.classList.remove("modal-open");
+                };
+
+                overlay.querySelector(".bekuku-logout-cancel").addEventListener("click", close);
+                overlay.querySelector(".bekuku-delete-confirm").addEventListener("click", function () {
+                    close();
+                    form.submit();
+                });
+                overlay.addEventListener("click", function (modalEvent) {
+                    if (modalEvent.target === overlay) {
+                        close();
+                    }
+                });
+            });
+        });
+    }());
+</script>
 </body></html>

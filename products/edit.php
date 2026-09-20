@@ -295,7 +295,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 </head>
@@ -421,6 +421,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                                         <select
                                             name="category_id"
+                                            data-searchable-select
                                             class="form-select"
                                             required
                                         >
@@ -464,6 +465,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                                         <select
                                             name="supplier_id"
+                                            data-searchable-select
                                             class="form-select"
                                         >
 
@@ -795,7 +797,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
 <script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
-
+<script src="<?= bekuku_url('assets/js/global-number-inputs.js') ?>?v=202609200643"></script>
+<script src="<?= bekuku_url('assets/js/select-search.js') ?>?v=202609200807"></script>
 
 </body>
 

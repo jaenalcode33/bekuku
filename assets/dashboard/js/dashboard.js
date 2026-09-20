@@ -93,10 +93,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         "rgba(98, 214, 197, 0.14)",
 
                     borderColor:
-                        "#62d6c5",
+                        "#4c75ff",
 
                     pointBackgroundColor:
-                        "#62d6c5",
+                        "#4c75ff",
 
                     pointBorderColor:
                         "#dffaf5"
@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     ticks: {
 
                         color:
-                            "#9fb2df",
+                            "#c7d4f2",
 
                         callback:
                             function (value) {
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     ticks: {
 
                         color:
-                            "#9fb2df"
+                            "#c7d4f2"
 
                     },
 

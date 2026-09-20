@@ -109,14 +109,14 @@ body.bekuku-purchase-popup-page {
 
 .purchase-section-title i {
 
-    color: #80a7ff;
+    color: #7ea7ff;
 
 }
 
 
 .purchase-section-title span {
 
-    color: #ff5b6e;
+    color: #c77b84;
 
 }
 
@@ -147,7 +147,7 @@ body.bekuku-purchase-popup-page {
 
 .form-label span {
 
-    color: #ff5b6e;
+    color: #c77b84;
 
 }
 
@@ -186,6 +186,26 @@ body.bekuku-purchase-popup-page {
 
     font-size: 14px;
 
+}
+
+.product-search {
+    margin-bottom: 6px;
+}
+
+/* Hide the browser spinner so quantity fields match the other forms. */
+body.bekuku-purchase-popup-page input[type="number"],
+input[type="number"] {
+    -moz-appearance: textfield !important;
+    appearance: textfield !important;
+}
+
+body.bekuku-purchase-popup-page input[type="number"]::-webkit-outer-spin-button,
+body.bekuku-purchase-popup-page input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none !important;
+    appearance: none !important;
 }
 
 
@@ -302,7 +322,7 @@ body.bekuku-purchase-popup-page {
 
     background: transparent;
 
-    color: #80a7ff;
+    color: #7ea7ff;
 
     font-size: 13px;
 
@@ -331,6 +351,7 @@ body.bekuku-purchase-popup-page {
     width: 100%;
 
     overflow-x: auto;
+    overflow-y: clip;
 
 }
 
@@ -384,7 +405,7 @@ body.bekuku-purchase-popup-page {
     color: #ffffff;
 
     vertical-align: middle;
-
+    overflow: visible;
 }
 
 
@@ -409,6 +430,103 @@ body.bekuku-purchase-popup-page {
 
     font-size: 13px;
 
+}
+
+.product-dropdown {
+    position: relative;
+    z-index: 1;
+}
+
+.supplier-dropdown {
+    width: 100%;
+}
+
+.product-dropdown-toggle {
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-dropdown-toggle::after {
+    content: "\25BC";
+    float: right;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.product-dropdown-menu {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 3px);
+    left: 0;
+    right: 0;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    height: auto;
+    max-height: 240px;
+    padding: 7px;
+    background: #192f6c;
+    border: 1px solid #527dff;
+    border-radius: 7px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, .35);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: opacity .15s ease, visibility .15s ease;
+}
+
+.product-dropdown.is-open .product-dropdown-menu {
+    position: fixed;
+    height: auto;
+    max-height: min(240px, calc(100vh - 24px));
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 30;
+}
+
+.product-dropdown.is-open {
+    position: relative;
+    z-index: 2000 !important;
+}
+
+.product-dropdown-search {
+    margin-bottom: 6px;
+}
+
+.product-dropdown-options {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+}
+
+.product-dropdown-menu .product-dropdown-options {
+    min-height: 0;
+}
+
+.product-dropdown-option {
+    display: block;
+    width: 100%;
+    padding: 8px 9px;
+    color: #ffffff;
+    background: transparent;
+    border: 0;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.product-dropdown-option:hover,
+.product-dropdown-option:focus {
+    background: #315cff;
+}
+
+.product-dropdown-empty {
+    display: block;
+    padding: 8px 9px;
+    color: #c7d4f2;
 }
 
 
@@ -447,7 +565,7 @@ body.bekuku-purchase-popup-page {
 
     border:
         1px solid
-        #ff5b6e;
+        #c77b84;
 
     border-radius: 5px;
 
@@ -580,6 +698,8 @@ body.bekuku-purchase-popup-page {
    ========================================================= */
 
 .purchase-actions .btn-primary {
+    background: #315cff !important;
+    border-color: #4c75ff !important;
 
     min-width: 190px;
 
@@ -595,8 +715,10 @@ body.bekuku-purchase-popup-page {
 
 
 .purchase-actions .btn-primary:hover {
+    background: #4c75ff !important;
+    border-color: #6f8dff !important;
 
-    background: #426eea;
+    background: #315cff;
 
     border-color: #426eea;
 
@@ -607,9 +729,9 @@ body.bekuku-purchase-popup-page {
 
 .purchase-actions .btn-primary:disabled {
 
-    background: #7899e9;
+    background: #426eea;
 
-    border-color: #7899e9;
+    border-color: #4c75ff;
 
     color: #ffffff;
 

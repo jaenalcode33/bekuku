@@ -384,6 +384,22 @@ function initQuantity() {
 
     quantities.forEach(function (quantity) {
 
+        function selectDefaultQuantity() {
+            if (quantity.value === "1") {
+                quantity.select();
+            }
+        }
+
+        quantity.addEventListener(
+            "focus",
+            selectDefaultQuantity
+        );
+
+        quantity.addEventListener(
+            "click",
+            selectDefaultQuantity
+        );
+
         quantity.addEventListener(
             "input",
             function () {
@@ -869,10 +885,19 @@ function initProductFilter() {
             "noProductFound"
         );
 
+    const productPagination =
+        document.getElementById(
+            "productPagination"
+        );
+
+    const productsPerPage = 5;
+    let currentPage = 1;
 
     /*
     | Tidak berada di halaman create
     */
+
+    initSearchableFilterSelect();
 
     if (
         !searchProduct ||
@@ -880,6 +905,89 @@ function initProductFilter() {
         productRows.length === 0
     ) {
         return;
+    }
+
+    function initSearchableFilterSelect() {
+        const select = document.querySelector(".searchable-filter-select");
+
+        if (!select || select.parentElement.querySelector(".product-dropdown")) {
+            return;
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "product-dropdown";
+        wrapper.innerHTML = `
+            <button type="button" class="form-control product-dropdown-toggle">
+                Semua Kategori
+            </button>
+            <div class="product-dropdown-menu">
+                <input type="search" class="form-control product-dropdown-search"
+                    placeholder="Cari kategori..." autocomplete="off">
+                <div class="product-dropdown-options"></div>
+            </div>
+        `;
+
+        select.parentNode.insertBefore(wrapper, select);
+        select.style.display = "none";
+
+        const toggle = wrapper.querySelector(".product-dropdown-toggle");
+        const search = wrapper.querySelector(".product-dropdown-search");
+        const options = wrapper.querySelector(".product-dropdown-options");
+
+        function renderOptions() {
+            const keyword = search.value.toLowerCase().trim();
+            options.innerHTML = "";
+
+            Array.from(select.options).forEach(function (option) {
+                if (option.value && !option.textContent.toLowerCase().includes(keyword)) {
+                    return;
+                }
+
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "product-dropdown-option";
+                button.textContent = option.textContent.trim();
+                button.dataset.value = option.value;
+                options.appendChild(button);
+            });
+
+            if (!options.children.length) {
+                options.innerHTML = '<span class="product-dropdown-empty">Kategori tidak ditemukan</span>';
+            }
+        }
+
+        toggle.addEventListener("click", function () {
+            document.querySelectorAll(".product-dropdown.is-open").forEach(function (item) {
+                if (item !== wrapper) item.classList.remove("is-open");
+            });
+            wrapper.classList.toggle("is-open");
+            renderOptions();
+            if (wrapper.classList.contains("is-open")) {
+                const rect = toggle.getBoundingClientRect();
+                const menu = wrapper.querySelector(".product-dropdown-menu");
+                menu.style.left = `${rect.left}px`;
+                menu.style.width = `${rect.width}px`;
+                menu.style.top = `${rect.bottom + 3}px`;
+                search.focus();
+            }
+        });
+
+        search.addEventListener("input", renderOptions);
+        options.addEventListener("click", function (event) {
+            const option = event.target.closest(".product-dropdown-option");
+            if (!option) return;
+
+            select.value = option.dataset.value;
+            toggle.textContent = option.textContent;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+            wrapper.classList.remove("is-open");
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!wrapper.contains(event.target)) {
+                wrapper.classList.remove("is-open");
+            }
+        });
     }
 
 
@@ -895,7 +1003,7 @@ function initProductFilter() {
             filterCategory.value;
 
 
-        let visibleCount = 0;
+        const matchingRows = [];
 
 
         productRows.forEach(
@@ -932,42 +1040,97 @@ function initProductFilter() {
                     cocokKeyword &&
                     cocokCategory
                 ) {
-
-                    row.style.display =
-                        "";
-
-
-                    visibleCount++;
+                    matchingRows.push(row);
 
                 } else {
-
                     row.style.display =
                         "none";
                 }
             }
         );
 
+        const totalPages = Math.max(
+            1,
+            Math.ceil(matchingRows.length / productsPerPage)
+        );
+        currentPage = Math.min(currentPage, totalPages);
+        const firstIndex = (currentPage - 1) * productsPerPage;
+        const pageRows = matchingRows.slice(
+            firstIndex,
+            firstIndex + productsPerPage
+        );
+
+        matchingRows.forEach(function (row) {
+            row.style.display = "none";
+        });
+        pageRows.forEach(function (row) {
+            row.style.display = "";
+        });
 
         if (noProductFound) {
-
             noProductFound.style.display =
-                visibleCount === 0
+                matchingRows.length === 0
                     ? ""
                     : "none";
+        }
+
+        if (productPagination) {
+            if (matchingRows.length <= productsPerPage) {
+                productPagination.innerHTML = "";
+            } else {
+                let pagination = '<small class="text-muted">Menampilkan ' +
+                    (firstIndex + 1) + "-" +
+                    Math.min(firstIndex + productsPerPage, matchingRows.length) +
+                    " dari " + matchingRows.length + " produk</small>";
+                pagination += '<nav aria-label="Navigasi produk transaksi"><ul class="pagination pagination-sm mb-0">';
+                pagination += '<li class="page-item ' +
+                    (currentPage === 1 ? "disabled" : "") +
+                    '"><button type="button" class="page-link" data-product-page="' +
+                    (currentPage - 1) + '">&laquo;</button></li>';
+                const pageStart =
+                    Math.floor((currentPage - 1) / 10) * 10 + 1;
+                const pageEnd = Math.min(totalPages, pageStart + 9);
+                for (let page = pageStart; page <= pageEnd; page++) {
+                    pagination += '<li class="page-item ' +
+                        (page === currentPage ? "active" : "") +
+                        '"><button type="button" class="page-link" data-product-page="' +
+                        page + '">' + page + "</button></li>";
+                }
+                pagination += '<li class="page-item ' +
+                    (currentPage === totalPages ? "disabled" : "") +
+                    '"><button type="button" class="page-link" data-product-page="' +
+                    (currentPage + 1) + '">&raquo;</button></li></ul></nav>';
+                productPagination.innerHTML = pagination;
+            }
         }
     }
 
 
-    searchProduct.addEventListener(
-        "input",
-        filterProducts
-    );
-
-
     filterCategory.addEventListener(
         "change",
-        filterProducts
+        function () {
+            currentPage = 1;
+            filterProducts();
+        }
     );
+
+    searchProduct.addEventListener("input", function () {
+        currentPage = 1;
+        filterProducts();
+    });
+
+    if (productPagination) {
+        productPagination.addEventListener("click", function (event) {
+            const button = event.target.closest("[data-product-page]");
+            if (!button || button.parentElement.classList.contains("disabled")) {
+                return;
+            }
+            currentPage = Number(button.dataset.productPage) || 1;
+            filterProducts();
+        });
+    }
+
+    filterProducts();
 }
 
 
@@ -1188,29 +1351,37 @@ function initTransactionPrint() {
         );
 
 
-    printButtons.forEach(
-        function (button) {
-
-            button.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-                    window.print();
-                }
-            );
-
-        }
-    );
-
     const receiptSize = document.getElementById("receiptSize");
+    const receipt = document.getElementById("receiptPrint");
+
+    function printReceipt() {
+        if (!receipt) {
+            return;
+        }
+
+        document.body.classList.add("receipt-print-mode");
+        window.setTimeout(function () {
+            window.print();
+        }, 100);
+    }
+
+    window.addEventListener("afterprint", function () {
+        document.body.classList.remove("receipt-print-mode");
+    });
+
     if (receiptSize) {
         receiptSize.addEventListener("change", function () {
             document.body.dataset.receiptSize = this.value;
         });
         document.body.dataset.receiptSize = receiptSize.value;
     }
+
+    printButtons.forEach(function (button) {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
+            printReceipt();
+        });
+    });
 }
 
 

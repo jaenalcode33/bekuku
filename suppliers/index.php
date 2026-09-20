@@ -54,13 +54,13 @@ $total_products = array_sum(
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=2026091643"
+        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
     <!-- CSS KHUSUS POPUP SUPPLIER -->
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-supplier.css') ?>?v=20260919"
+        href="<?= bekuku_url('assets/css/popup-supplier.css') ?>?v=202609200320"
     >
 
 </head>
@@ -103,24 +103,6 @@ $total_products = array_sum(
 
                     </div>
 
-
-                    <div class="dashboard-hero-actions">
-
-                        <!-- TOMBOL POPUP SUPPLIER -->
-
-                        <button
-                            type="button"
-                            class="btn dashboard-product-add-button"
-                            data-popup-supplier
-                            data-popup-url="<?= bekuku_url('suppliers/popup-tambah.php?popup=1') ?>"
-                        >
-
-                            <i class="bi bi-plus-circle me-1"></i>
-                            Tambah Supplier
-
-                        </button>
-
-                    </div>
 
                 </div>
 
@@ -210,7 +192,7 @@ $total_products = array_sum(
 
             <!-- DAFTAR SUPPLIER -->
 
-            <section class="card products-list-card suppliers-list-card">
+            <section class="card products-list-card suppliers-list-card data-table-card">
 
 
                 <div class="card-header d-flex align-items-center justify-content-between">
@@ -222,12 +204,20 @@ $total_products = array_sum(
 
                     </h3>
 
+                    <div class="d-flex align-items-center gap-3">
+                    <button type="button" class="btn btn-outline-light data-table-filter-toggle" aria-expanded="false">
+                        <i class="bi bi-search me-1"></i>Cari
+                    </button>
                     <span class="products-count">
 
                         <?= number_format(count($suppliers)); ?>
                         supplier
 
                     </span>
+                    <button type="button" class="btn dashboard-product-add-button" data-popup-supplier data-popup-url="<?= bekuku_url('suppliers/popup-tambah.php?popup=1') ?>">
+                        <i class="bi bi-plus-circle me-1"></i>Tambah Supplier
+                    </button>
+                    </div>
 
                 </div>
 
@@ -336,7 +326,8 @@ $total_products = array_sum(
                                                     method="post"
                                                     action="delete.php"
                                                     class="d-inline"
-                                                    onsubmit="return confirm('Yakin ingin menghapus supplier ini?')"
+                                                    data-delete-confirm
+                                                    data-delete-label="supplier"
                                                 >
 
                                                     <input
@@ -430,6 +421,7 @@ $total_products = array_sum(
 
 <!-- JS KHUSUS POPUP SUPPLIER -->
 <script src="<?= bekuku_url('assets/js/popup-supplier.js') ?>?v=20260919"></script>
+<script src="<?= bekuku_url('assets/js/data-table-filter.js') ?>?v=202609200748"></script>
 
 
 </body>

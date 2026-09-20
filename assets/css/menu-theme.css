@@ -8,6 +8,19 @@ body:not(.report-page) .app-content {
     background: transparent !important;
 }
 
+body.layout-fixed .app-sidebar .nav-link .nav-icon,
+body.layout-fixed .app-sidebar .nav-link.active .nav-icon,
+body.layout-fixed .app-sidebar .nav-link:hover .nav-icon,
+body.layout-fixed .btn-primary i,
+body.layout-fixed .btn-primary .bi,
+body.layout-fixed .dashboard-product-add-button i,
+body.layout-fixed .dashboard-product-add-button .bi {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
 body:not(.report-page) .app-main > .app-content-header {
     margin: 24px 24px 18px;
     padding: 0 !important;
@@ -56,7 +69,7 @@ body:not(.report-page) .app-main > .app-content-header h3 {
 }
 
 body:not(.report-page) .app-main > .app-content-header h3 i {
-    color: #62d6c5;
+    color: #4c75ff;
 }
 
 /* Dashboard uses the same visual language as the sales report. */
@@ -131,7 +144,7 @@ body.dashboard-page .stat-green .stat-icon {
 
 body.dashboard-page .stat-yellow .stat-icon,
 body.dashboard-page .stat-red .stat-icon {
-    color: #a88cff;
+    color: #6f8dff;
     background: rgba(112, 76, 255, .14);
 }
 
@@ -170,7 +183,7 @@ body:not(.report-page) .app-main > .app-content-header .breadcrumb {
 
 body:not(.report-page) .app-main > .app-content-header .breadcrumb-item,
 body:not(.report-page) .app-main > .app-content-header .breadcrumb-item.active {
-    color: #b8d4ff !important;
+    color: #dce6ff !important;
     font-size: 12px;
 }
 
@@ -202,7 +215,7 @@ body:not(.report-page) .app-main > .app-content .card-title {
 }
 
 body:not(.report-page) .app-main > .app-content .card-title i {
-    color: #62d6c5;
+    color: #4c75ff;
 }
 
 body:not(.report-page) .app-main > .app-content .table thead th {
@@ -211,6 +224,46 @@ body:not(.report-page) .app-main > .app-content .table thead th {
 
 body:not(.report-page) .app-main > .app-content .table tbody td {
     padding: 9px;
+}
+
+body.layout-fixed input[type="number"],
+body.bekuku-popup-page input[type="number"] {
+    -moz-appearance: textfield !important;
+    appearance: textfield !important;
+}
+
+body.layout-fixed input[type="number"]::-webkit-outer-spin-button,
+body.layout-fixed input[type="number"]::-webkit-inner-spin-button,
+body.bekuku-popup-page input[type="number"]::-webkit-outer-spin-button,
+body.bekuku-popup-page input[type="number"]::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+/* Keep pagination controls readable when a menu has many pages. */
+body.layout-fixed .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 100%;
+}
+
+body.layout-fixed nav[aria-label*="Navigasi"] {
+    min-width: 0;
+    max-width: 100%;
+}
+
+body.layout-fixed nav[aria-label*="Navigasi"] .pagination {
+    justify-content: flex-end;
+    margin-bottom: 0;
+}
+
+body.layout-fixed nav[aria-label*="Navigasi"] .page-link {
+    min-width: 38px;
+    min-height: 38px;
+    padding: 7px 11px;
+    line-height: 1;
 }
 
 @media (max-width: 767.98px) {
@@ -231,6 +284,10 @@ body:not(.report-page) .app-main > .app-content .table tbody td {
         padding-right: 12px;
         padding-bottom: 20px;
         padding-left: 12px;
+    }
+
+    body.layout-fixed nav[aria-label*="Navigasi"] .pagination {
+        justify-content: flex-start;
     }
 }
 
@@ -340,4 +397,89 @@ body.bekuku-popup-page .alert {
     background: rgba(49, 92, 255, .12) !important;
     border: 1px solid var(--bekuku-border) !important;
     border-radius: 10px;
+}
+
+/* Menu pages use the card headers as the primary page heading. */
+body.layout-fixed .dashboard-hero,
+body.layout-fixed .report-dashboard-heading {
+    display: none !important;
+}
+
+/* Keep every menu content separated from the fixed top navigation. */
+body.layout-fixed > .app-wrapper > .app-main {
+    padding-top: 8px !important;
+}
+
+body.layout-fixed > .app-wrapper > .app-main > .container-fluid,
+body.layout-fixed > .app-wrapper > .app-main > .app-content {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+body.layout-fixed > .app-wrapper > .app-main > .app-content {
+    padding-bottom: 24px !important;
+}
+
+body.layout-fixed .transaction-detail-wrapper {
+    padding-top: 0;
+}
+
+/* Keep list tables separated from their card headers across every menu. */
+body.layout-fixed .app-content .card-body.p-0 > .table-responsive {
+    margin-top: 8px;
+}
+
+body.layout-fixed .app-content .card-body.p-0 > .table-responsive > .table thead th {
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+/* Keep badges consistent even when a page has older cached global CSS. */
+body.layout-fixed .badge,
+body.layout-fixed .text-bg-success,
+body.layout-fixed .text-bg-danger,
+body.layout-fixed .text-bg-warning,
+body.layout-fixed .text-bg-primary,
+body.layout-fixed .text-bg-info,
+body.layout-fixed .text-bg-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 4px 9px;
+    border: 1px solid #315cff !important;
+    border-radius: 7px;
+    background: #102d68 !important;
+    color: #7ea7ff !important;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+body.layout-fixed .badge.bg-success,
+body.layout-fixed .badge.text-bg-success,
+body.layout-fixed .text-bg-success {
+    background: #102d68 !important;
+    border-color: rgba(98, 214, 197, .35) !important;
+    color: #76a99c !important;
+}
+
+body.layout-fixed .badge.bg-danger,
+body.layout-fixed .badge.text-bg-danger,
+body.layout-fixed .text-bg-danger {
+    background: rgba(220, 53, 69, .12) !important;
+    border-color: rgba(255, 117, 131, .4) !important;
+    color: #ff8792 !important;
+}
+
+body.layout-fixed .badge.bg-warning,
+body.layout-fixed .badge.text-bg-warning,
+body.layout-fixed .text-bg-warning {
+    background: rgba(217, 154, 0, .14) !important;
+    border-color: rgba(255, 209, 102, .45) !important;
+    color: #ffd166 !important;
+}
+
+body.layout-fixed .badge.bg-secondary,
+body.layout-fixed .badge.text-bg-secondary {
+    color: #c7d4f2 !important;
 }
