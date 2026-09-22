@@ -209,9 +209,7 @@ if ($payment_method === 'cash') {
 
     <!-- AdminLTE -->
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
 
@@ -224,24 +222,16 @@ if ($payment_method === 'cash') {
 
 
     <!-- CSS BEKUKU -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
     <!-- CSS Khusus Transaksi -->
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/transactions-create.css') ?>?v=202609200455"
     >
-
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions-detail.css') ?>?v=202609200517"
     >
 
 
     
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions.css') ?>?v=202609221642">
 </head>
 
 
@@ -872,7 +862,7 @@ if ($payment_method === 'cash') {
 
                 <article class="receipt-print" id="receiptPrint">
                     <header class="receipt-header">
-                        <div class="receipt-logo">❄</div>
+                        <div class="receipt-logo"><i class="bi bi-snow2" aria-hidden="true"></i></div>
                         <div class="receipt-store-name">BEKUKU</div>
                         <div>FROZEN FOOD</div>
                         <div>POINT OF SALE</div>
@@ -940,13 +930,15 @@ if ($payment_method === 'cash') {
 
 <!-- AdminLTE JS -->
 
-<script src="<?= bekuku_url('assets/js/ui.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
 
 <!-- JavaScript Transaksi Baru -->
 
-<script src="<?= bekuku_url('assets/js/transactions-create.js') ?>?v=202609200455"></script>
 
+    <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202609221642"></script>
 </body>
 
 </html>     
+
+
+
+

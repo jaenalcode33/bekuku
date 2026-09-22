@@ -1,4 +1,42 @@
-<?php
+﻿<?php
+
+function bekuku_load_environment(): void
+{
+    $path = __DIR__ . '/../.env';
+    if (!is_file($path)) {
+        return;
+    }
+
+    $lines = file($path, FILE_IGNORE_NEW_LINES);
+    if ($lines === false) {
+        throw new RuntimeException('Gagal membaca file .env.');
+    }
+
+    foreach ($lines as $lineNumber => $line) {
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#')) {
+            continue;
+        }
+
+        if (!preg_match('/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/', $line, $matches)) {
+            throw new RuntimeException('Format .env tidak valid pada baris ' . ($lineNumber + 1) . '.');
+        }
+
+        $name = $matches[1];
+        $value = trim($matches[2]);
+        if (strlen($value) >= 2) {
+            $first = $value[0];
+            $last = $value[strlen($value) - 1];
+            if (($first === '"' && $last === '"') || ($first === "'" && $last === "'")) {
+                $value = substr($value, 1, -1);
+            }
+        }
+
+        putenv($name . '=' . $value);
+    }
+}
+
+bekuku_load_environment();
 
 const BEKUKU_SESSION_TIMEOUT = 1800;
 
@@ -271,3 +309,5 @@ if (!in_array($requestPath, $publicScripts, true) && bekuku_is_authenticated()) 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     bekuku_verify_csrf();
 }
+
+

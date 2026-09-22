@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once __DIR__ . "/../config/database.php";
@@ -55,7 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <head>
                 <meta charset="UTF-8">
                 <title>Berhasil</title>
-            </head>
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
+</head>
 
             <body>
 
@@ -70,7 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             </script>
 
-            </body>
+    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202609221642"></script>
+</body>
             </html>
 
             <?php
@@ -103,13 +105,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-supplier.css') ?>?v=202609200320"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
 </head>
 
 
@@ -206,11 +204,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </div>
 
 
-<script
-    src="<?= bekuku_url('assets/js/popup-supplier.js') ?>?v=1"
-></script>
 
 
+    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+

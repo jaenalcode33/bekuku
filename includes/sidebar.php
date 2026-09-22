@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once __DIR__ . "/../config/app.php";
 
 $currentRequestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
@@ -414,3 +414,4 @@ function bekuku_nav_active(string $path): bool
     </div>
 
 </aside>
+

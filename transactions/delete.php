@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     http_response_code(405);
@@ -33,3 +33,6 @@ try {
 } catch (PDOException $e) {
     die("Transaksi gagal dihapus: " . $e->getMessage());
 }
+
+
+

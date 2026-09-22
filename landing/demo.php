@@ -293,9 +293,7 @@ function demo_nav_active(string $path): bool
     </title>
 
     <!-- AdminLTE -->
-    <link
-        rel="stylesheet"
-        href="<?= demo_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
     <!-- Bootstrap Icons -->
@@ -305,11 +303,9 @@ function demo_nav_active(string $path): bool
     >
 
     <!-- BEKUKU CSS -->
-    <link
-        rel="stylesheet"
-        href="<?= demo_url('assets/css/style.css') ?>?v=202609200917"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/landing.css') ?>?v=202609221642">
 </head>
 
 
@@ -1539,13 +1535,11 @@ function demo_nav_active(string $path): bool
      JAVASCRIPT
 ========================================================= -->
 
-<script src="<?= demo_url('assets/js/adminlte.min.js') ?>"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script src="<?= demo_url('assets/dashboard/js/dashboard.js') ?>?v=2026091721"></script>
+<script src="<?= demo_url('assets/js/dashboard.js') ?>?v=2026091721"></script>
 
-<script src="<?= demo_url('assets/js/ui.js') ?>?v=2026091722"></script>
 
 
 <script>
@@ -1741,6 +1735,11 @@ document.head.appendChild(demoStyle);
 </script>
 
 
+    <script src="<?= bekuku_url('assets/js/landing.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+
+

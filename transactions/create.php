@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 
@@ -705,14 +705,6 @@ asort($categoryList);
     <title>Transaksi Baru - BEKUKU</title>
 
 
-    <!-- AdminLTE -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
-    >
-
-
     <!-- Bootstrap Icons -->
 
     <link
@@ -721,21 +713,7 @@ asort($categoryList);
     >
 
 
-    <!-- CSS Global BEKUKU -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
-    >
-
-
-    <!-- CSS Khusus Transaksi Baru -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/transactions-create.css') ?>?v=202609200738"
-    >
-
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions.css') ?>?v=202609221642">
 </head>
 
 
@@ -1541,11 +1519,9 @@ asort($categoryList);
 
 <!-- AdminLTE JS -->
 
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
 
 <!-- JavaScript Transaksi Baru -->
 
-<script src="<?= bekuku_url('assets/js/transactions-create.js') ?>?v=202609200827"></script>
 
 <?php if ($transactionError !== null): ?>
     <script>
@@ -1554,6 +1530,9 @@ asort($categoryList);
 <?php endif; ?>
 
 
+    <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+

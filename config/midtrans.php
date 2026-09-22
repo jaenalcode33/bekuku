@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . '/app.php';
 
@@ -32,9 +32,11 @@ function bekuku_midtrans_create_qris(int $amount): array
             'order_id' => $orderId,
             'gross_amount' => $amount,
         ],
+
         'qris' => [
-            'acquirer' => 'gopay',
-        ],
+        'acquirer' => 'gopay',
+    ],
+
     ], JSON_THROW_ON_ERROR);
 
     $curl = curl_init($config['base_url'] . '/v2/charge');
@@ -61,15 +63,61 @@ function bekuku_midtrans_create_qris(int $amount): array
 
     $result = json_decode($response, true);
     if (!is_array($result) || $statusCode < 200 || $statusCode >= 300) {
-        $message = is_array($result)
-            ? (string) ($result['status_message'] ?? 'Respons Midtrans tidak valid.')
-            : 'Respons Midtrans tidak valid.';
-        throw new RuntimeException($message);
+
+    bekuku_log('MIDTRANS ERROR', [
+        'status_code' => $statusCode,
+        'response' => $response,
+        'server_key_prefix' => substr($config['server_key'], 0, 12),
+        'base_url' => $config['base_url'],
+    ]);
+
+    $message = is_array($result)
+        ? (string) ($result['status_message'] ?? 'Respons Midtrans tidak valid.')
+        : 'Respons Midtrans tidak valid.';
+
+    throw new RuntimeException(
+        'Midtrans Error HTTP ' . $statusCode . ': ' . $message
+    );
+}
+    $qrCodeUrl = '';
+    foreach (['generate-qr-code-v2', 'generate-qr-code'] as $actionName) {
+        foreach (($result['actions'] ?? []) as $action) {
+            if (($action['name'] ?? '') === $actionName && !empty($action['url'])) {
+                $qrCodeUrl = (string) $action['url'];
+                break 2;
+            }
+        }
     }
 
-    $qrCodeUrl = (string) ($result['actions'][0]['url'] ?? '');
     if ($qrCodeUrl === '') {
-        throw new RuntimeException('Midtrans tidak mengembalikan URL QRIS.');
+        foreach (($result['actions'] ?? []) as $action) {
+            if (!empty($action['url'])) {
+                $qrCodeUrl = (string) $action['url'];
+                break;
+            }
+        }
+    }
+
+    if ($qrCodeUrl === '') {
+        $actionNames = [];
+        foreach (($result['actions'] ?? []) as $action) {
+            if (is_array($action) && isset($action['name'])) {
+                $actionNames[] = (string) $action['name'];
+            }
+        }
+
+        $details = [
+            'status_code' => $statusCode,
+            'status_message' => (string) ($result['status_message'] ?? ''),
+            'response_keys' => implode(', ', array_keys($result)),
+            'action_names' => implode(', ', $actionNames),
+        ];
+        bekuku_log('Midtrans QRIS response did not include a QR URL', $details);
+        throw new RuntimeException(
+            'Midtrans tidak mengembalikan URL QRIS. '
+            . 'Status: ' . ($details['status_message'] !== '' ? $details['status_message'] : 'tidak diketahui')
+            . '. Periksa storage/logs/app.log.'
+        );
     }
 
     return [
@@ -78,3 +126,5 @@ function bekuku_midtrans_create_qris(int $amount): array
         'transaction_status' => (string) ($result['transaction_status'] ?? 'pending'),
     ];
 }
+
+

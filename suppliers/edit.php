@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once "../config/database.php";
@@ -115,28 +115,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Supplier</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
-    <link rel="stylesheet" href="<?= bekuku_url('popup/popup.css') ?>?v=2026091646">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
 </head>
-<body class="popup-form-page">
-    <form method="POST" class="popup-form-card"><?= bekuku_csrf_field() ?>
-        <div class="popup-form-body">
+<body class="popup-kategori-page">
+    <form method="POST" class="popup-kategori-form" id="formEditSupplier"><?= bekuku_csrf_field() ?>
+        <div class="popup-kategori-form-body">
             <?php if ($error !== ""): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($error); ?></div>
+                <div class="popup-kategori-error"><?= htmlspecialchars($error); ?></div>
             <?php endif; ?>
-            <label for="supplier_name">Nama Supplier</label>
-            <input type="text" name="supplier_name" id="supplier_name"
+            <div class="popup-kategori-field">
+                <label for="supplier_name">Nama Supplier</label>
+                <input class="popup-kategori-input" type="text" name="supplier_name" id="supplier_name"
                 value="<?= htmlspecialchars($supplier["supplier_name"]); ?>" required autofocus>
+            </div>
         </div>
-        <div class="popup-form-actions">
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save"></i> Simpan
+        <div class="popup-kategori-form-footer">
+            <button type="button" class="popup-kategori-button popup-kategori-button-cancel popup-close">
+                <i class="bi bi-x-lg"></i> Batal
             </button>
-            <button type="button" class="btn btn-secondary popup-close">
-                <i class="bi bi-arrow-left"></i> Kembali
+            <button type="submit" class="popup-kategori-button popup-kategori-button-save">
+                <i class="bi bi-save"></i> Simpan Perubahan
             </button>
         </div>
     </form>
+    <script>
+        document.querySelector(".popup-close").addEventListener("click", function () {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage(
+                    { type: "tutup-popup-supplier" },
+                    window.location.origin
+                );
+            }
+        });
+    </script>
+    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202609221642"></script>
 </body>
 </html>
 <?php exit; endif; ?>
@@ -156,21 +168,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Edit Supplier - BEKUKU POS</title>
 
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
 </head>
 
 
@@ -375,8 +382,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </div>
 
 
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
 
+    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+

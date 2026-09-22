@@ -244,26 +244,17 @@ function rupiah($amount)
 
     <!-- AdminLTE -->
 
-    <link
-    rel="stylesheet"
-    href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
 >
 
 <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
 >
-
-<link
-    rel="stylesheet"
-    href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
+>
 >
 
-<link
-    rel="stylesheet"
-    href="<?= bekuku_url('assets/css/reports-sales.css') ?>?v=202609200914"
->
-
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/reports.css') ?>?v=202609221642">
 </head>
 
 
@@ -1413,7 +1404,7 @@ function rupiah($amount)
                                 <td class="amount"><?= rupiah((float) $transaction['total_amount']); ?></td>
                                 <td class="amount"><?= rupiah((float) $transaction['payment_amount']); ?></td>
                                 <td><?= htmlspecialchars($method_labels[$method] ?? ucfirst($method)); ?></td>
-                                <td><span class="sales-print-status status-<?= htmlspecialchars($status); ?>"><?= $status === 'selesai' ? '✓ ' : ($status === 'batal' ? '✕ ' : '! '); ?><?= htmlspecialchars($status_label); ?></span></td>
+                                <td><span class="sales-print-status status-<?= htmlspecialchars($status); ?>"><?= $status === 'selesai' ? 'âœ“ ' : ($status === 'batal' ? 'âœ• ' : '! '); ?><?= htmlspecialchars($status_label); ?></span></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -1482,14 +1473,13 @@ function rupiah($amount)
 
 <!-- AdminLTE JS -->
 
-<script
-    src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"
-></script>
 
-<script
-    src="<?= bekuku_url('assets/js/reports-sales.js') ?>?v=2026091919"
-></script>
 
+    <script src="<?= bekuku_url('assets/js/reports.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+
+

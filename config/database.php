@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . '/app.php';
 
@@ -69,3 +69,4 @@ try {
     http_response_code(500);
     die("Koneksi database gagal. Periksa konfigurasi database.");
 }
+

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../config/database.php';
@@ -138,21 +138,16 @@ function getBatchStatus($expiry_date, $remaining_quantity)
     </title>
 
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
 </head>
 
 
@@ -476,9 +471,9 @@ function getBatchStatus($expiry_date, $remaining_quantity)
 </div>
 
 
-<script src="/Bekuku/js/adminlte.min.js"></script>
-
-
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+

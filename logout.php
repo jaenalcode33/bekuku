@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . '/config/app.php';
 require_once __DIR__ . '/config/database.php';
@@ -15,3 +15,5 @@ if (ini_get('session.use_cookies')) {
 session_destroy();
 header('Location: ' . bekuku_url(''));
 exit;
+
+

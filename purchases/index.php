@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once __DIR__ . "/../config/database.php";
@@ -41,36 +41,19 @@ $display_purchases = array_slice($purchases, $page_offset, $per_page);
 
     <title>Pembelian - BEKUKU POS</title>
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
+    >
+    >
+    >
     >
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-pembelian.css') ?>?v=20260919"
-    >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/menu-theme.css') ?>?v=202609200917"
-    >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/purchases-history.css') ?>?v=202609200655"
-    >
-
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
 </head>
 
 
@@ -392,9 +375,13 @@ $display_purchases = array_slice($purchases, $page_offset, $per_page);
 </div>
 
 
-<script src="<?= bekuku_url('assets/js/popup-pembelian.js') ?>?v=20260919"></script>
 
 
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+
+

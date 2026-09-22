@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once __DIR__ . "/../config/database.php";
@@ -53,9 +53,7 @@ foreach ($categories as $category) {
 
     <!-- AdminLTE -->
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
 
@@ -68,20 +66,13 @@ foreach ($categories as $category) {
 
 
     <!-- CSS UTAMA -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 
     <!-- CSS KHUSUS POPUP KATEGORI -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-kategori.css') ?>?v=202609200320"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/categories.css') ?>?v=202609221642">
 </head>
 
 
@@ -418,10 +409,13 @@ foreach ($categories as $category) {
 
 
                                                 <a
-                                                    href="edit.php?id=<?= $category["category_id"]; ?>"
+                                                    href="edit.php?id=<?= $category["category_id"]; ?>&popup=1"
                                                     class="btn btn-sm btn-outline-info"
                                                     title="Edit kategori"
                                                     aria-label="Edit kategori"
+                                                    data-popup-edit-category
+                                                    data-popup-url="edit.php?id=<?= $category["category_id"]; ?>&popup=1"
+                                                    data-modal-title="Edit Kategori"
                                                 >
 
                                                     <i class="bi bi-pencil"></i>
@@ -521,14 +515,8 @@ foreach ($categories as $category) {
      TETAP DIPAKAI
      ========================================================= -->
 
-<script
-    src="<?= bekuku_url('assets/js/ui.js') ?>?v=2026091613"
-></script>
 
 
-<script
-    src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"
-></script>
 
 
 
@@ -536,12 +524,12 @@ foreach ($categories as $category) {
      JAVASCRIPT KHUSUS POPUP KATEGORI
      ========================================================= -->
 
-<script
-    src="<?= bekuku_url('assets/js/popup-kategori.js') ?>?v=2026091905"
-></script>
-<script src="<?= bekuku_url('assets/js/data-table-filter.js') ?>?v=202609200748"></script>
 
 
+    <script src="<?= bekuku_url('assets/js/categories.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+

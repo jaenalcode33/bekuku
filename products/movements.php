@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 
@@ -192,14 +192,6 @@ foreach ($movements as $movement) {
     <title>Riwayat Stok - BEKUKU</title>
 
 
-    <!-- AdminLTE -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
-    >
-
-
     <!-- Bootstrap Icons -->
 
     <link
@@ -208,23 +200,7 @@ foreach ($movements as $movement) {
     >
 
 
-    <!-- CSS BEKUKU -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
-    >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/menu-theme.css') ?>?v=202609200917"
-    >
-
-    <link
-        rel="stylesheet"
-            href="<?= bekuku_url('assets/css/stock-movements.css') ?>?v=202609200907"
-    >
-
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221710">
 </head>
 
 
@@ -1364,11 +1340,10 @@ foreach ($movements as $movement) {
      ADMINLTE JS
 ========================================================== -->
 
-<script src="<?= bekuku_url('assets/js/ui.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/stock-movements.js') ?>?v=202609200800"></script>
 
 
+    <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     http_response_code(405);
@@ -63,3 +63,6 @@ try {
         . "Kemungkinan kategori masih digunakan oleh data lain."
     );
 }
+
+
+

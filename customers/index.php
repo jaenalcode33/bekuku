@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once "../config/database.php";
@@ -42,9 +42,7 @@ $totalCustomers =
     </title>
 
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
 
@@ -52,21 +50,13 @@ $totalCustomers =
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
 
     <!-- CSS POPUP CUSTOMER -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-customer.css') ?>?v=202609200320"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/customers.css') ?>?v=202609221642">
 </head>
 
 
@@ -371,6 +361,7 @@ $totalCustomers =
                                                     class="btn btn-sm btn-outline-info"
                                                     title="Edit customer"
                                                     aria-label="Edit customer"
+                                                    data-modal-title="Edit Customer"
                                                 >
 
                                                     <i
@@ -469,23 +460,18 @@ $totalCustomers =
 </div>
 
 
-<script
-    src="<?= bekuku_url('assets/js/ui.js') ?>"
-></script>
 
 
-<script
-    src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"
-></script>
 
 
 <!-- JS POPUP CUSTOMER -->
 
-<script
-    src="<?= bekuku_url('assets/js/popup-customer.js') ?>?v=20260919"
-></script>
 
 
+    <script src="<?= bekuku_url('assets/js/customers.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+

@@ -127,31 +127,18 @@ function rupiah($amount): string
     </title>
 
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
+    >
+    >
     >
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/menu-theme.css') ?>?v=202609200917"
-    >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/purchase-detail.css') ?>?v=202609200650"
-    >
-
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
 </head>
 
 
@@ -810,7 +797,7 @@ function rupiah($amount): string
             </section>
 
             <footer class="purchase-print-footer">
-                <span>BEKUKU Â· POINT OF SALE</span>
+                <span>BEKUKU · POINT OF SALE</span>
                 <span>Dicetak <?= date('d-m-Y H:i'); ?></span>
             </footer>
         </article>
@@ -823,10 +810,12 @@ function rupiah($amount): string
 </div>
 
 
-<script src="<?= bekuku_url('assets/js/ui.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/purchase-detail.js') ?>?v=202609200650"></script>
 
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+
+

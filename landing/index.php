@@ -10,12 +10,9 @@ if (!bekuku_is_authenticated()) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>BEKUKU POS - Kelola Bisnis Lebih Mudah</title>
-        <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-        <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
-        <link rel="stylesheet" href="<?= bekuku_url('assets/landing/css/landing.css') ?>?v=2026091721">
-        <script src="<?= bekuku_url('assets/landing/js/landing.js') ?>?v=2026091721" defer></script>
-    </head>
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/landing.css') ?>?v=202609221705">
+</head>
     <body class="bekuku-landing-page landing-reference-page">
         <div class="landing-shell">
             <nav class="bekuku-landing-nav">
@@ -52,7 +49,7 @@ if (!bekuku_is_authenticated()) {
                     <div class="landing-dashboard-card">
                         <div class="landing-dashboard-top"><strong><i class="bi bi-snow2"></i> BEKUKU <small>POINT OF SALE</small></strong><span><b></b> Online</span><time><i class="bi bi-calendar3"></i> 15 Sep 2026yuio</time></div>
                         <div class="landing-dashboard-stats">
-                            <div><i class="bi bi-receipt"></i><small>Total Penjualan Hari Ini</small><strong>Rp 12.840.000</strong><em>â†— 18.4% dari kemarin</em></div>
+                            <div><i class="bi bi-receipt"></i><small>Total Penjualan Hari Ini</small><strong>Rp 12.840.000</strong><em><i class="bi bi-arrow-up-right" aria-hidden="true"></i> 18.4% dari kemarin</em></div>
                             <div><i class="bi bi-box-seam"></i><small>Stok Aktif</small><strong>1.248 Item</strong></div>
                         </div>
                         <div class="landing-chart"><div class="landing-chart-label"><span><i class="bi bi-graph-up-arrow"></i> Penjualan 7 Hari Terakhir</span><b>Rp 12.8 jt</b></div><div class="landing-bars"><i style="height:42%"></i><i style="height:58%"></i><i style="height:52%"></i><i style="height:72%"></i><i style="height:63%"></i><i style="height:78%"></i><i style="height:96%"></i></div><div class="landing-chart-days"><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span></div></div>
@@ -115,10 +112,13 @@ if (!bekuku_is_authenticated()) {
                 <p>KENAPA MEMILIH BEKUKU?</p>
                 <h2>Solusi Lengkap untuk Bisnis <em>Frozen Food</em> Anda</h2>
             </section>
-            <footer class="landing-footer"><div><a class="bekuku-auth-brand" href="<?= bekuku_url() ?>"><span class="bekuku-brand-mark"><i class="bi bi-snow2"></i></span><span>BEKUKU <small>POINT OF SALE</small></span></a><p>Solusi POS modern untuk membantu bisnis frozen food menjadi lebih teratur, cepat, dan siap berkembang.</p></div><div><strong>Menu</strong><a href="#fitur">Fitur</a><a href="#tentang">Tentang</a><a href="<?= bekuku_url('login.php') ?>">Login</a></div><small>Â© 2026 BEKUKU. All rights reserved.</small></footer>
+            <footer class="landing-footer"><div><a class="bekuku-auth-brand" href="<?= bekuku_url() ?>"><span class="bekuku-brand-mark"><i class="bi bi-snow2"></i></span><span>BEKUKU <small>POINT OF SALE</small></span></a><p>Solusi POS modern untuk membantu bisnis frozen food menjadi lebih teratur, cepat, dan siap berkembang.</p></div><div><strong>Menu</strong><a href="#fitur">Fitur</a><a href="#tentang">Tentang</a><a href="<?= bekuku_url('login.php') ?>">Login</a></div><small>© 2026 BEKUKU. All rights reserved.</small></footer>
         </div>
-    </body>
+    <script src="<?= bekuku_url('assets/js/landing.js') ?>?v=202609221705"></script>
+</body>
     </html>
     <?php
     exit;
 }
+
+

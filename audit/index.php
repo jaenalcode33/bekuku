@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../config/database.php';
@@ -80,9 +80,7 @@ $actionBadge = static function (string $action): array {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Audit Aktivitas - BEKUKU POS</title>
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
     <style>
         .audit-action-badge {
             display: inline-flex !important;
@@ -139,6 +137,7 @@ $actionBadge = static function (string $action): array {
             font-weight: 700;
         }
     </style>
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/audit.css') ?>?v=202609221642">
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 <div class="app-wrapper">
@@ -276,5 +275,10 @@ $actionBadge = static function (string $action): array {
         </div>
     </main>
 </div>
+    <script src="<?= bekuku_url('assets/js/audit.js') ?>?v=202609221642"></script>
 </body>
 </html>
+
+
+
+

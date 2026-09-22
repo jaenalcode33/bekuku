@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once __DIR__ . "/../config/database.php";
@@ -180,39 +180,24 @@ if ($isPopup):
 
     <link
         rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
-    >
-
-
-    <link
-        rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup.css') ?>?v=2026091902"
-    >
-
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/categories.css') ?>?v=202609221642">
 </head>
 
 
-<body class="bekuku-popup-page">
+<body class="popup-kategori-page">
 
 
-<div class="bekuku-category-popup">
+<div class="popup-kategori-form">
 
 
     <form
         method="POST"
-        class="bekuku-category-form"
+        id="formTambahKategori"
+        class="popup-kategori-form-inner"
     >
 
         <?= bekuku_csrf_field() ?>
@@ -220,7 +205,7 @@ if ($isPopup):
 
         <?php if ($error !== ""): ?>
 
-            <div class="bekuku-popup-error">
+            <div class="popup-kategori-error">
 
                 <i class="bi bi-exclamation-triangle"></i>
 
@@ -233,7 +218,9 @@ if ($isPopup):
         <?php endif; ?>
 
 
-        <div class="bekuku-category-field">
+        <div class="popup-kategori-form-body">
+
+        <div class="popup-kategori-field">
 
             <label for="name">
 
@@ -248,6 +235,7 @@ if ($isPopup):
                 type="text"
                 name="name"
                 id="name"
+                class="popup-kategori-input"
                 value="<?= htmlspecialchars(
                     $_POST["name"]
                     ?? $category["name"]
@@ -259,14 +247,16 @@ if ($isPopup):
 
         </div>
 
+        </div>
 
-        <div class="bekuku-category-actions">
+
+        <div class="popup-kategori-form-footer">
 
 
             <button
                 type="button"
-                class="bekuku-btn bekuku-btn-secondary"
-                data-popup-close
+                class="popup-kategori-button popup-kategori-button-cancel"
+                id="btnBatalKategori"
             >
 
                 <i class="bi bi-x-lg"></i>
@@ -278,7 +268,7 @@ if ($isPopup):
 
             <button
                 type="submit"
-                class="bekuku-btn bekuku-btn-primary"
+                class="popup-kategori-button popup-kategori-button-save"
             >
 
                 <i class="bi bi-save"></i>
@@ -310,6 +300,24 @@ if ($isPopup):
 <?php endif; ?>
 
 
+<?php if (
+    isset($_GET["saved"])
+    && $_GET["saved"] === "1"
+): ?>
+<script>
+    if (window.parent && window.parent !== window) {
+        window.parent.postMessage(
+            {
+                type: "kategori-berhasil-disimpan"
+            },
+            window.location.origin
+        );
+    }
+</script>
+<?php endif; ?>
+
+
+    <script src="<?= bekuku_url('assets/js/categories.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
@@ -343,9 +351,7 @@ endif;
     <title>Edit Kategori - BEKUKU POS</title>
 
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
 
@@ -353,13 +359,9 @@ endif;
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/categories.css') ?>?v=202609221642">
 </head>
 
 
@@ -550,11 +552,12 @@ endif;
 </div>
 
 
-<script
-    src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"
-></script>
 
 
+    <script src="<?= bekuku_url('assets/js/categories.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+

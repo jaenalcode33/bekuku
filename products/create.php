@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once __DIR__ . "/../config/database.php";
@@ -258,24 +258,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     >
 
                     <title>Produk Berhasil Ditambahkan</title>
-
-                    <link
-                        rel="stylesheet"
-                        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
                     >
-
-                    <link
-                        rel="stylesheet"
-                        href="<?= bekuku_url('assets/css/popup.css') ?>?v=20260919"
                     >
-                </head>
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221642">
+</head>
 
                 <body class="bekuku-product-popup-page">
 
                     <div class="bekuku-success-page">
 
                         <div class="bekuku-success-icon">
-                            ✓
+                            <i class="bi bi-check-lg" aria-hidden="true"></i>
                         </div>
 
                         <h2>Produk Berhasil Ditambahkan</h2>
@@ -296,7 +289,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         }, 500);
                     </script>
 
-                </body>
+    <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
+</body>
                 </html>
                 <?php
 
@@ -347,15 +341,7 @@ if ($isPopup):
     >
 
     <title>Tambah Produk</title>
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup.css') ?>?v=202609200811"
     >
 
     <link
@@ -363,6 +349,7 @@ if ($isPopup):
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221642">
 </head>
 
 
@@ -785,8 +772,8 @@ if ($isPopup):
 
 </div>
 
-<script src="<?= bekuku_url('assets/js/select-search.js') ?>?v=202609200811"></script>
 
+    <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
@@ -818,21 +805,16 @@ endif;
 
     <title>Tambah Produk - BEKUKU</title>
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221642">
 </head>
 
 
@@ -1335,16 +1317,12 @@ endif;
 </div>
 
 
-<script
-    src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"
-></script>
 
-<script
-    src="<?= bekuku_url('assets/js/popup-supplier.js') ?>?v=1"
-></script>
 
-<script src="<?= bekuku_url('assets/js/select-search.js') ?>?v=202609200807"></script>
 
+    <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+

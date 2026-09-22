@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../config/database.php';
@@ -53,9 +53,8 @@ function product_rupiah(float $amount): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Produk - BEKUKU POS</title>
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221642">
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 <div class="app-wrapper">
@@ -157,7 +156,7 @@ function product_rupiah(float $amount): string
                                             </span>
                                         </td>
                                         <td class="text-end">
-                                            <a href="<?= bekuku_url('products/edit.php?id=' . (int) $product['product_id']) ?>" class="btn btn-sm btn-outline-info" title="Edit produk">
+                                            <a href="<?= bekuku_url('products/edit.php?id=' . (int) $product['product_id']) ?>" class="btn btn-sm btn-outline-info" title="Edit produk" data-modal-title="Edit Produk">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <form method="post" action="<?= bekuku_url('products/delete.php') ?>" class="d-inline" data-delete-confirm data-delete-label="produk">
@@ -216,8 +215,10 @@ function product_rupiah(float $amount): string
 
     <?php require_once __DIR__ . '/../includes/footer.php'; ?>
 </div>
-<script src="<?= bekuku_url('assets/js/ui.js') ?>?v=2026091619"></script>
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/data-table-filter.js') ?>?v=202609200748"></script>
+    <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
 </body>
 </html>
+
+
+
+

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once __DIR__ . "/../config/database.php";
@@ -412,7 +412,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <title>Tersimpan</title>
 
-            </head>
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
+</head>
 
             <body>
 
@@ -426,7 +427,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     );
                 </script>
 
-            </body>
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>
+</body>
 
             </html>
 
@@ -532,9 +534,7 @@ $defaultDate = date('Y-m-d\TH:i');
     <title>Pembelian Baru - BEKUKU POS</title>
 
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
 
@@ -542,13 +542,9 @@ $defaultDate = date('Y-m-d\TH:i');
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-pembelian.css') ?>?v=202609200831"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
 </head>
 
 
@@ -849,7 +845,7 @@ $defaultDate = date('Y-m-d\TH:i');
 
                                     <?php if (!empty($product['sku'])): ?>
 
-                                        —
+                                        <span aria-hidden="true">&mdash;</span>
                                         <?= htmlspecialchars(
                                             $product['sku']
                                         ) ?>
@@ -1088,9 +1084,6 @@ $defaultDate = date('Y-m-d\TH:i');
 
 </form>
 
-<script
-    src="<?= bekuku_url('assets/js/global-number-inputs.js') ?>?v=202609200643"
-></script>
 
 <script>
     document.querySelectorAll('input[type="number"]').forEach(function (input) {
@@ -1103,16 +1096,13 @@ $defaultDate = date('Y-m-d\TH:i');
 </div>
 
 
-<script
-    src="<?= bekuku_url('assets/js/purchases-create.js') ?>?v=202609200815"
-></script>
 
 
-<script
-    src="<?= bekuku_url('assets/js/popup-pembelian-form.js') ?>?v=20260919"
-></script>
 
 
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+

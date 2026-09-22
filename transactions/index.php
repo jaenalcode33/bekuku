@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once __DIR__ . "/../config/database.php";
@@ -53,12 +53,8 @@ function rupiah($number)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat Transaksi - BEKUKU POS</title>
-
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/menu-theme.css') ?>?v=202609200917">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions-history.css') ?>?v=202609200917">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions.css') ?>?v=202609221642">
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -242,5 +238,10 @@ function rupiah($number)
 
 </div>
 
+    <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202609221642"></script>
 </body>
 </html>
+
+
+
+

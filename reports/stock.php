@@ -134,9 +134,7 @@ function rupiah($amount)
 
     <!-- AdminLTE -->
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
 
@@ -149,13 +147,8 @@ function rupiah($amount)
 
 
     <!-- CSS BEKUKU -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
-    <link rel="stylesheet"                         href="<?= bekuku_url('assets/css/report-document.css') ?>?v=202609200623">
-
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/reports.css') ?>?v=202609221642">
 </head>
 
 
@@ -1211,7 +1204,7 @@ function rupiah($amount)
                     <?php foreach ($products as $index => $product): ?>
                         <?php
                         $stock = (int) $product['stock'];
-                        $statusText = $stock <= 0 ? '✕ HABIS' : ($stock <= (int) $product['min_stock'] ? '⚠ MENIPIS' : '✓ AMAN');
+                        $statusText = $stock <= 0 ? 'HABIS' : ($stock <= (int) $product['min_stock'] ? 'MENIPIS' : 'AMAN');
                         ?>
                         <tr>
                             <td><?= $index + 1; ?></td>
@@ -1261,11 +1254,12 @@ function rupiah($amount)
 
 <!-- AdminLTE JS -->
 
-<script src="<?= bekuku_url('assets/js/ui.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/reports-stock.js') ?>?v=202609200355"></script>
 
 
+    <script src="<?= bekuku_url('assets/js/reports.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+

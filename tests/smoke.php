@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 $_SERVER['REQUEST_METHOD'] = 'GET';
@@ -25,3 +24,5 @@ $check(bekuku_role_can_access('kasir', '/transactions/create.php'), 'role access
 $check(!bekuku_role_can_access('kasir', '/products/'), 'role denial helper');
 
 echo "BEKUKU helper smoke test passed ($checks checks)\n";
+
+

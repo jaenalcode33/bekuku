@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . '/config/app.php';
 require_once __DIR__ . '/config/database.php';
@@ -48,9 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk - BEKUKU POS</title>
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/adminlte.min.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/login.css') ?>?v=202609221642">
 </head>
 <body class="bekuku-auth-page">
     <main class="bekuku-auth-card">
@@ -82,5 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
         <a class="bekuku-auth-back" href="<?= bekuku_url() ?>"><i class="bi bi-arrow-left"></i> Kembali ke halaman utama</a>
     </main>
+    <script src="<?= bekuku_url('assets/js/login.js') ?>?v=202609221642"></script>
 </body>
 </html>
+
+
+

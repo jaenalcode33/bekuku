@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once "../config/database.php";
@@ -42,27 +42,19 @@ $total_products = array_sum(
 
     <title>Supplier - BEKUKU POS</title>
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
     <!-- CSS KHUSUS POPUP SUPPLIER -->
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/popup-supplier.css') ?>?v=202609200320"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
 </head>
 
 
@@ -313,6 +305,7 @@ $total_products = array_sum(
                                                 <a
                                                     href="edit.php?id=<?= $supplier["supplier_id"]; ?>"
                                                     class="btn btn-sm btn-outline-info"
+                                                    data-modal-title="Edit Supplier"
                                                 >
 
                                                     <i class="bi bi-pencil"></i>
@@ -415,15 +408,15 @@ $total_products = array_sum(
 </div>
 
 
-<script src="<?= bekuku_url('assets/js/ui.js') ?>"></script>
 
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
 
 <!-- JS KHUSUS POPUP SUPPLIER -->
-<script src="<?= bekuku_url('assets/js/popup-supplier.js') ?>?v=20260919"></script>
-<script src="<?= bekuku_url('assets/js/data-table-filter.js') ?>?v=202609200748"></script>
 
 
+    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+

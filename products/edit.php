@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once __DIR__ . "/../config/app.php";
 require_once "../config/database.php";
@@ -277,9 +277,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <!-- AdminLTE -->
 
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/adminlte.min.css') ?>"
+    "
     >
 
 
@@ -292,12 +290,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     <!-- CSS Custom -->
-
-    <link
-        rel="stylesheet"
-        href="<?= bekuku_url('assets/css/style.css') ?>?v=202609200917"
     >
 
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221642">
 </head>
 
 
@@ -796,10 +791,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
 
-<script src="<?= bekuku_url('assets/js/adminlte.min.js') ?>"></script>
-<script src="<?= bekuku_url('assets/js/global-number-inputs.js') ?>?v=202609200643"></script>
-<script src="<?= bekuku_url('assets/js/select-search.js') ?>?v=202609200807"></script>
 
+    <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
+

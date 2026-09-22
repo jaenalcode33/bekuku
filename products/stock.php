@@ -184,11 +184,7 @@ if (!$product) {
 
     <title>Tambah Stok - BEKUKU</title>
 
-    <link
-        rel="stylesheet"
-        href="../css/style.css"
-    >
-
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221642">
 </head>
 
 
@@ -204,7 +200,7 @@ if (!$product) {
 
 
     <a href="index.php">
-        ← Kembali ke Produk
+        <i class="bi bi-arrow-left" aria-hidden="true"></i> Kembali ke Produk
     </a>
 
 
@@ -304,6 +300,9 @@ if (!$product) {
 
     <?php require_once __DIR__ . "/../includes/footer.php"; ?>
 
+    <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
+
+
