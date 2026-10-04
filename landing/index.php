@@ -1,5 +1,5 @@
 <?php
-
+git
 require_once __DIR__ . "/../config/app.php";
 
 if (!bekuku_is_authenticated()) {

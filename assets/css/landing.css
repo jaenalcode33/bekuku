@@ -1341,10 +1341,6 @@ body.layout-fixed .products-list-card td .btn-outline-danger {
     border-radius: 8px;
 }
 
-.app-header [data-lte-toggle="sidebar"]:hover {
-    
-}
-
 .bekuku-user-pill { display: flex; align-items: center; gap: 8px; color: var(--bekuku-text-body) !important; font-size: 12px; }.bekuku-user-pill i { color: var(--bekuku-accent); font-size: 18px; }.bekuku-user-pill small { padding: 3px 7px; color: var(--bekuku-accent); background: rgba(98,214,197,.1); border-radius: 5px; font-size: 9px; }.bekuku-logout-link { color: var(--bekuku-text-muted) !important; }.bekuku-logout-link:hover { color: #ff8290 !important; }
 
 .bekuku-logout-overlay {
@@ -2123,10 +2119,6 @@ body {
     align-items: center;
     justify-content: center;
     padding: clamp(12px, 3vw, 34px);
-}
-
-.bekuku-modal-backdrop {
-    
 }
 
 .bekuku-modal.is-open {
@@ -4113,11 +4105,6 @@ body.layout-fixed .alert-icon i {
         border-radius: 50%;
     }
 
-    .report-page .report-stat-total {  }
-    .report-page .report-stat-complete {  }
-    .report-page .report-stat-sales {  }
-    .report-page .report-stat-change {  }
-
     .report-page .report-stat-card .card-body {
         position: relative;
         z-index: 1;
@@ -4623,10 +4610,6 @@ body.layout-fixed .alert-icon i {
         overflow: hidden;
     }
 
-    .report-page .report-filter-card {
-        
-    }
-
     .report-page .report-filter-card .card-header {
         padding: 15px 24px 4px;
         background: transparent !important;
@@ -4713,11 +4696,6 @@ body.layout-fixed .alert-icon i {
         border: 2px solid rgba(255, 255, 255, .13);
         border-radius: 50%;
     }
-
-    .report-page .report-stat-total {  }
-    .report-page .report-stat-complete {  }
-    .report-page .report-stat-sales {  }
-    .report-page .report-stat-change {  }
 
     .report-page .report-stat-card .card-body {
         position: relative;

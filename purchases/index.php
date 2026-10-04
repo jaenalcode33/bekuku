@@ -40,7 +40,17 @@ $display_purchases = array_slice($purchases, $page_offset, $per_page);
 
     <title>Pembelian - BEKUKU POS</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    "
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+    >
+    >
+    >
+    >
 
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
 </head>

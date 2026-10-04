@@ -189,11 +189,13 @@ foreach ($movements as $movement) {
     >
     <title>Riwayat Stok - BEKUKU</title>
 
+
     <!-- Bootstrap Icons -->
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221642">
+
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221710">
 </head>
 
 
@@ -1328,14 +1330,15 @@ foreach ($movements as $movement) {
 
 </div>
 
+<script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609200800"></script>
 
 <!-- =========================================================
      ADMINLTE JS
 ========================================================== -->
 
 
+
     <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
-

@@ -46,7 +46,7 @@
         );
 
 
-        modal.innerHTML = `
+        modal.innerHTML =
 
             <div class="bekuku-modal-dialog">
 
@@ -61,7 +61,6 @@
                         class="bekuku-modal-close"
                         aria-label="Tutup"
                     >
-                        Ã—
                     </button>
 
                 </div>
@@ -71,9 +70,7 @@
 
                 </div>
 
-            </div>
-
-        `;
+            </div>;
 
 
         document.body.appendChild(
@@ -355,7 +352,7 @@
                         );
 
                     const isEditPopup =
-                        /\/edit\.php(?:[?#]|$)/i.test(url);
+                        edit.php()/i.test(url);
 
                     if (dialog && modalBody) {
                         const isCompactPopup =
@@ -480,7 +477,7 @@
                         const popupStyle =
                             doc.createElement("style");
 
-                        popupStyle.textContent = `
+                        popupStyle.textContent =`
                             html,
                             body {
                                 margin: 0 !important;
@@ -488,7 +485,7 @@
                                 min-height: 0 !important;
                                 background: #0d1b4f !important;
                                 overflow-x: hidden !important;
-                            }
+                            };
 
                             body.bekuku-product-popup-page .app-wrapper,
                             body.bekuku-product-popup-page .app-main,
@@ -636,8 +633,7 @@
                                 border-radius: 9px !important;
                                 background: #162b68 !important;
                                 color: #dce6ff !important;
-                            }
-                        `;
+                            };
 
                         doc.head.appendChild(
                             popupStyle
@@ -676,7 +672,7 @@
             }
         );
 
-    }
+    `}
 
 
     /* =========================================================
@@ -894,7 +890,8 @@
         }
     );
 
-})();
+}
+;
 
 /* SOURCE: global-number-inputs.js */
 
@@ -1116,5 +1113,5 @@
             });
         });
     });
-})();
-
+});
+});};

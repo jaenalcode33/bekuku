@@ -46,7 +46,7 @@
         );
 
 
-        modal.innerHTML = `
+        modal.innerHTML =
 
             <div class="bekuku-modal-dialog">
 
@@ -61,7 +61,6 @@
                         class="bekuku-modal-close"
                         aria-label="Tutup"
                     >
-                        Ã—
                     </button>
 
                 </div>
@@ -71,9 +70,7 @@
 
                 </div>
 
-            </div>
-
-        `;
+            </div>;
 
 
         document.body.appendChild(
@@ -480,9 +477,9 @@
                         const popupStyle =
                             doc.createElement("style");
 
-                        popupStyle.textContent = `
+                        popupStyle.textContent =`
                             html,
-                            body {
+                            body { 
                                 margin: 0 !important;
                                 padding: 0 !important;
                                 min-height: 0 !important;
@@ -636,8 +633,7 @@
                                 border-radius: 9px !important;
                                 background: #162b68 !important;
                                 color: #dce6ff !important;
-                            }
-                        `;
+                            `};
 
                         doc.head.appendChild(
                             popupStyle
