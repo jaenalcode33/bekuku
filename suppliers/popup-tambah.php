@@ -54,9 +54,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <html lang="id">
             <head>
                 <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Berhasil</title>
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
-</head>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+                <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
+            </head>
 
             <body>
 
@@ -90,22 +92,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Tambah Supplier</title>
 
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
-    >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
 </head>
@@ -204,12 +199,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </div>
 
 
-
-
     <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
-
 
 

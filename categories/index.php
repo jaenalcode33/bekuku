@@ -40,37 +40,15 @@ foreach ($categories as $category) {
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Kategori - BEKUKU POS</title>
 
-
-    <!-- AdminLTE -->
-
-    "
-    >
-
-
-    <!-- Bootstrap Icons -->
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
-
-
-    <!-- CSS UTAMA -->
-    >
-
-
-    <!-- CSS KHUSUS POPUP KATEGORI -->
-    >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/categories.css') ?>?v=202609221642">
 </head>
@@ -129,7 +107,6 @@ foreach ($categories as $category) {
             </section>
 
 
-
             <!-- =====================================================
                  STATISTIK
                  ===================================================== -->
@@ -177,7 +154,6 @@ foreach ($categories as $category) {
                 </div>
 
 
-
                 <div class="col-xl-4 col-md-6">
 
 
@@ -216,7 +192,6 @@ foreach ($categories as $category) {
 
 
                 </div>
-
 
 
                 <div class="col-xl-4 col-md-6">
@@ -262,7 +237,6 @@ foreach ($categories as $category) {
             </div>
 
 
-
             <!-- =====================================================
                  DAFTAR KATEGORI
                  ===================================================== -->
@@ -300,7 +274,6 @@ foreach ($categories as $category) {
 
 
                 </div>
-
 
 
                 <div class="card-body p-0">
@@ -423,7 +396,6 @@ foreach ($categories as $category) {
                                                 </a>
 
 
-
                                                 <form
                                                     method="post"
                                                     action="delete.php"
@@ -509,15 +481,10 @@ foreach ($categories as $category) {
 </div>
 
 
-
 <!-- =========================================================
      JAVASCRIPT LAMA WEBSITE
      TETAP DIPAKAI
      ========================================================= -->
-
-
-
-
 
 
 <!-- =========================================================
@@ -525,11 +492,9 @@ foreach ($categories as $category) {
      ========================================================= -->
 
 
-
     <script src="<?= bekuku_url('assets/js/categories.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
-
 
 

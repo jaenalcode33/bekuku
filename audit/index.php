@@ -280,5 +280,3 @@ $actionBadge = static function (string $action): array {
 </html>
 
 
-
-

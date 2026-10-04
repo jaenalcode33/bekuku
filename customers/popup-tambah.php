@@ -80,22 +80,15 @@ if ($is_popup):
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Tambah Customer</title>
 
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
-    >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/customers.css') ?>?v=202609221642">
 </head>
@@ -188,8 +181,6 @@ if ($is_popup):
 </form>
 
 
-
-
     <script src="<?= bekuku_url('assets/js/customers.js') ?>?v=202609221642"></script>
 </body>
 
@@ -202,6 +193,5 @@ exit;
 endif;
 
 ?>
-
 
 

@@ -243,5 +243,3 @@ function rupiah($number)
 </html>
 
 
-
-

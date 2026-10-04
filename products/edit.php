@@ -264,33 +264,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Edit Produk - BEKUKU</title>
 
-
-    <!-- AdminLTE -->
-
-    "
-    >
-
-
-    <!-- Bootstrap Icons -->
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
-
-
-    <!-- CSS Custom -->
-    >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221642">
 </head>
@@ -305,7 +287,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <main class="app-main">
 
                         <div class="card card-warning">
-
 
 
                             <form method="POST"><?= bekuku_csrf_field() ?>
@@ -325,7 +306,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         </div>
 
                                     <?php endif; ?>
-
 
 
                                     <!-- SKU -->
@@ -349,7 +329,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     </div>
 
 
-
                                     <!-- Barcode -->
 
                                     <div class="mb-3">
@@ -369,7 +348,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         >
 
                                     </div>
-
 
 
                                     <!-- Nama -->
@@ -396,7 +374,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         >
 
                                     </div>
-
 
 
                                     <!-- Kategori -->
@@ -446,7 +423,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     </div>
 
 
-
                                     <!-- Supplier -->
 
                                     <div class="mb-3">
@@ -487,7 +463,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         </select>
 
                                     </div>
-
 
 
                                     <div class="row">
@@ -532,7 +507,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         </div>
 
 
-
                                         <!-- Harga Jual -->
 
                                         <div class="col-md-6">
@@ -572,7 +546,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         </div>
 
                                     </div>
-
 
 
                                     <div class="row">
@@ -642,7 +615,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         </div>
 
 
-
                                         <!-- Stok Saat Ini -->
 
                                         <div class="col-md-4">
@@ -675,7 +647,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         </div>
 
 
-
                                         <!-- Minimum Stok -->
 
                                         <div class="col-md-4">
@@ -702,7 +673,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                         </div>
 
                                     </div>
-
 
 
                                     <!-- Status -->
@@ -748,7 +718,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 </div>
 
 
-
                                 <!-- Footer -->
 
                                 <div class="card-footer">
@@ -790,12 +759,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </div>
 
 
-
-
     <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
-
 
 
