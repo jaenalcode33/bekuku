@@ -407,13 +407,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <html lang="id">
 
             <head>
-
                 <meta charset="UTF-8">
-
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Tersimpan</title>
-
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
-</head>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+                <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
+            </head>
 
             <body>
 
@@ -523,26 +522,15 @@ $defaultDate = date('Y-m-d\TH:i');
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Pembelian Baru - BEKUKU POS</title>
 
-
-    "
-    >
-
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
-    >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
 </head>
@@ -1094,10 +1082,6 @@ $defaultDate = date('Y-m-d\TH:i');
 </script>
 
 </div>
-
-
-
-
 
 
     <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>

@@ -280,30 +280,17 @@ function demo_nav_active(string $path): bool
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>
         Demo Dashboard - BEKUKU POS
     </title>
 
-    <!-- AdminLTE -->
-    "
-    >
-
-    <!-- Bootstrap Icons -->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
-
-    <!-- BEKUKU CSS -->
-    >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="<?= bekuku_url('assets/css/landing.css') ?>?v=202609221642">
 </head>
@@ -1541,7 +1528,6 @@ function demo_nav_active(string $path): bool
 <script src="<?= demo_url('assets/js/dashboard.js') ?>?v=2026091721"></script>
 
 
-
 <script>
 
 /*
@@ -1739,7 +1725,5 @@ document.head.appendChild(demoStyle);
 </body>
 
 </html>
-
-
 
 
