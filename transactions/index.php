@@ -93,7 +93,7 @@ function rupiah($number)
                         </h3>
 
                         <div class="card-tools">
-                            <a href="create.php" class="btn btn-primary btn-sm">
+                            <a href="create.php" class="btn btn-primary btn-sm" data-modal-title="Transaksi Baru">
                                 <i class="bi bi-plus-circle"></i>
                                 Transaksi Baru
                             </a>
@@ -241,5 +241,3 @@ function rupiah($number)
     <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202609221642"></script>
 </body>
 </html>
-
-

@@ -426,7 +426,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     );
                 </script>
 
-    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202610050159"></script>
 </body>
 
             </html>
@@ -1084,7 +1084,7 @@ $defaultDate = date('Y-m-d\TH:i');
 </div>
 
 
-    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202610050159"></script>
 </body>
 
 </html>

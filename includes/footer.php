@@ -3,5 +3,3 @@
     &nbsp;&mdash;&nbsp;
     Sistem Point of Sale Frozen Food
 </footer>
-
-

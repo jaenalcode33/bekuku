@@ -798,7 +798,7 @@ function rupiah($amount): string
 </div>
 
 
-    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202610050159"></script>
 </body>
 
 </html>

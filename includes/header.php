@@ -6,3 +6,4 @@ require_once __DIR__ . '/navbar.php';
 require_once __DIR__ . '/sidebar.php';
 
 ?>
+<script src="<?= bekuku_url('assets/js/transaction-modal.js') ?>?v=202610050150"></script>

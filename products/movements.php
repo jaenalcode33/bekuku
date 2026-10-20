@@ -195,7 +195,7 @@ foreach ($movements as $movement) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202609221710">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/products.css') ?>?v=202610050138">
 </head>
 
 
@@ -215,26 +215,16 @@ foreach ($movements as $movement) {
     <main class="app-main">
 
 
-        <!-- =====================================================
-             HEADER
-        ====================================================== -->
-
-        <div class="container-fluid dashboard-wrapper">
-
-        <!-- =====================================================
-             CONTENT
-        ====================================================== -->
-
         <div class="app-content">
 
-            <div class="container-fluid">
+            <div class="container-fluid dashboard-wrapper">
 
 
                 <!-- =================================================
                      SUMMARY
                 ================================================== -->
 
-                <div class="row mb-4">
+                <div class="row mb-4 movement-summary-row">
 
 
                     <!-- Total Movement -->
@@ -1194,7 +1184,7 @@ foreach ($movements as $movement) {
                                 <button
                                     type="button"
                                     data-print
-                                    class="btn btn-sm movement-print-button"
+                                    class="btn btn-sm dashboard-product-add-button movement-print-button"
                                 >
 
                                     <i class="bi bi-printer me-1"></i>
@@ -1330,15 +1320,14 @@ foreach ($movements as $movement) {
 
 </div>
 
-<script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609200800"></script>
-
 <!-- =========================================================
-     ADMINLTE JS
+      JS
 ========================================================== -->
 
 
 
-    <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202609221642"></script>
-</body>
+
+    <script src="<?= bekuku_url('assets/js/products.js') ?>?v=202610050200"></script>
+    </body>
 
 </html>

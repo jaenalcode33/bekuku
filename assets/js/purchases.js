@@ -46,7 +46,7 @@
         );
 
 
-        modal.innerHTML =
+        modal.innerHTML = `
 
             <div class="bekuku-modal-dialog">
 
@@ -70,7 +70,8 @@
 
                 </div>
 
-            </div>;
+            </div>
+        `;
 
 
         document.body.appendChild(
@@ -633,7 +634,7 @@
                                 border-radius: 9px !important;
                                 background: #162b68 !important;
                                 color: #dce6ff !important;
-                            `};
+                            `;
 
                         doc.head.appendChild(
                             popupStyle

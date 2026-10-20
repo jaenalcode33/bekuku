@@ -1,5 +1,4 @@
 <?php
-git
 require_once __DIR__ . "/../config/app.php";
 
 if (!bekuku_is_authenticated()) {
@@ -20,7 +19,7 @@ if (!bekuku_is_authenticated()) {
                     <span class="bekuku-brand-mark"><i class="bi bi-snow2"></i></span>
                     <span>BEKUKU <small>POINT OF SALE</small></span>
                 </a>
-                <div class="landing-nav-actions">
+                <div class="landing-nav-actions" id="landing-navigation">
                     <a href="#fitur"><i class="bi bi-arrow-up-right-circle"></i> Fitur</a>
                     <a href="#tentang">Tentang</a>
                     <a class="bekuku-landing-login" href="<?= bekuku_url('login.php') ?>">Login <i class="bi bi-box-arrow-in-right"></i></a>

@@ -374,7 +374,7 @@ $display_purchases = array_slice($purchases, $page_offset, $per_page);
 </div>
 
 
-    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202610050159"></script>
 </body>
 
 </html>

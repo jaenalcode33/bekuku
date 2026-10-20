@@ -6508,6 +6508,10 @@ body.layout-fixed.movement-page .app-content > .container-fluid {
     margin-right: 0 !important;
 }
 
+body.layout-fixed.movement-page > .app-wrapper {
+    grid-template-columns: var(--lte-sidebar-width, 250px) minmax(0, 1fr) !important;
+}
+
 body.layout-fixed.movement-page .app-main {
     min-width: 0 !important;
 }
@@ -6575,5 +6579,138 @@ body.layout-fixed.movement-page .movement-card .table td {
     body.layout-fixed.movement-page .movement-card .card-header,
     body.layout-fixed.movement-page .movement-card .card-body {
         padding: 15px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    body.layout-fixed.movement-page .movement-summary-row > [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+.movement-print-preview-wrap {
+    display: none;
+}
+
+.movement-page .movement-print-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid #4c75ff !important;
+    border-radius: 8px;
+    color: #ffffff !important;
+    background: #315cff !important;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(0, 28, 120, .3);
+    transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.movement-page .movement-print-button:hover,
+.movement-page .movement-print-button:focus-visible {
+    color: #ffffff !important;
+    background: #2649d8 !important;
+    border-color: #6b8cff !important;
+    transform: translateY(-1px);
+}
+
+.movement-page .movement-print-button:focus-visible {
+    outline: 3px solid rgba(126, 167, 255, .45);
+    outline-offset: 2px;
+}
+
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 12mm;
+    }
+
+    body.movement-page > .app-wrapper {
+        display: block !important;
+        min-height: 0 !important;
+        background: #ffffff !important;
+    }
+
+    body.movement-page > .app-wrapper > .app-header,
+    body.movement-page > .app-wrapper > .app-sidebar,
+    body.movement-page > .app-wrapper > .app-footer,
+    body.movement-page .app-main,
+    body.movement-page .movement-print-hide,
+    body.movement-page button,
+    body.movement-page .btn {
+        display: none !important;
+    }
+
+    body.movement-page .movement-print-preview-wrap {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #172033 !important;
+        font-family: Arial, sans-serif;
+    }
+
+    body.movement-page .movement-print-header,
+    body.movement-page .movement-print-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    body.movement-page .movement-print-header {
+        padding-bottom: 10px;
+        border-bottom: 2px solid #172033;
+    }
+
+    body.movement-page .movement-print-title {
+        text-align: right;
+    }
+
+    body.movement-page .movement-print-title h1 {
+        margin: 0;
+        font-size: 17px;
+    }
+
+    body.movement-page .movement-print-meta {
+        padding: 8px 0;
+        border-bottom: 1px solid #aeb8c8;
+    }
+
+    body.movement-page .movement-print-table {
+        width: 100%;
+        margin-top: 12px;
+        border-collapse: collapse;
+        table-layout: fixed;
+        border: 1px solid #8f9bae;
+        color: #172033;
+        font-size: 9px;
+        page-break-inside: auto;
+    }
+
+    body.movement-page .movement-print-table th,
+    body.movement-page .movement-print-table td {
+        padding: 5px 6px;
+        border: 1px solid #b5bfcd;
+        overflow-wrap: anywhere;
+        vertical-align: top;
+    }
+
+    body.movement-page .movement-print-table thead {
+        display: table-header-group;
+    }
+
+    body.movement-page .movement-print-table thead th {
+        background: #e7ebf1;
+        font-weight: 800;
+    }
+
+    body.movement-page .movement-print-table tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
     }
 }
