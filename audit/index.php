@@ -137,7 +137,7 @@ $actionBadge = static function (string $action): array {
             font-weight: 700;
         }
     </style>
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/audit.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/audit.css') ?>?v=202610240033">
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 <div class="app-wrapper">
@@ -278,5 +278,4 @@ $actionBadge = static function (string $action): array {
     <script src="<?= bekuku_url('assets/js/audit.js') ?>?v=202609221642"></script>
 </body>
 </html>
-
 

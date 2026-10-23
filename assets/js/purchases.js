@@ -61,6 +61,7 @@
                         class="bekuku-modal-close"
                         aria-label="Tutup"
                     >
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
                     </button>
 
                 </div>
@@ -118,6 +119,14 @@
 
         createModal();
 
+        const isDetailPopup =
+            /\/detail\.php(?:[?#]|$)/i.test(url);
+
+        modal.classList.toggle(
+            "bekuku-transaction-detail-modal",
+            isDetailPopup
+        );
+
 
         const titleElement =
             modal.querySelector(
@@ -174,7 +183,7 @@
 
         iframe.style.setProperty(
             "height",
-            "280px",
+            isDetailPopup ? "100%" : "280px",
             "important"
         );
 
@@ -234,6 +243,40 @@
         modal.classList.add(
             "bekuku-form-modal"
         );
+
+        if (isDetailPopup) {
+            const dialog =
+                modal.querySelector(
+                    ".bekuku-modal-dialog"
+                );
+
+            const modalBody =
+                modal.querySelector(
+                    ".bekuku-modal-body"
+                );
+
+            if (dialog) {
+                dialog.style.setProperty(
+                    "height",
+                    "min(88vh, 880px)",
+                    "important"
+                );
+            }
+
+            if (modalBody) {
+                modalBody.style.setProperty(
+                    "flex",
+                    "1 1 auto",
+                    "important"
+                );
+
+                modalBody.style.setProperty(
+                    "height",
+                    "auto",
+                    "important"
+                );
+            }
+        }
 
 
         modal.classList.add(
@@ -341,6 +384,30 @@
                     body.classList.add(
                         "bekuku-product-popup-page"
                     );
+
+                    if (isDetailPopup) {
+                        body.classList.add(
+                            "purchase-detail-popup"
+                        );
+
+                        html.style.setProperty(
+                            "overflow-y",
+                            "auto",
+                            "important"
+                        );
+
+                        body.style.setProperty(
+                            "min-height",
+                            "0",
+                            "important"
+                        );
+
+                        body.style.setProperty(
+                            "overflow-y",
+                            "auto",
+                            "important"
+                        );
+                    }
 
                     const dialog =
                         modal.querySelector(
@@ -689,6 +756,10 @@
 
         modal.classList.remove(
             "is-open"
+        );
+
+        modal.classList.remove(
+            "bekuku-transaction-detail-modal"
         );
 
 
@@ -2012,4 +2083,3 @@ document.addEventListener(
         });
     });
 })();
-

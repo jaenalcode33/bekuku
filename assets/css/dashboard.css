@@ -2,7 +2,9 @@
 
 /* SOURCE: adminlte.min.css */
 
-@charset "UTF-8";/*!
+@charset "UTF-8";
+@import url("popup-scrollbars.css?v=202610240033");
+/*!
  *   AdminLTE v4.9.1
  *   Author: Colorlib
  *   Website: AdminLTE.io <https://adminlte.io>
@@ -2767,7 +2769,7 @@ body {
     border: 0;
     background: var(--bekuku-bg);
     scrollbar-width: thin;
-    scrollbar-color: rgba(98, 214, 197, .7) transparent;
+    scrollbar-color: #263d78 #07112f;
 }
 
 .bekuku-modal-frame iframe.bekuku-frame-loading {

@@ -411,7 +411,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Tersimpan</title>
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-                <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
+                <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202610240021">
             </head>
 
             <body>
@@ -532,7 +532,7 @@ $defaultDate = date('Y-m-d\TH:i');
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202610240021">
 </head>
 
 

@@ -96,6 +96,12 @@ Untuk database BEKUKU yang sudah berisi data lama, jalankan juga
 Koneksi aplikasi juga melakukan bootstrap idempoten untuk dua tabel keamanan
 tersebut, sehingga data lama tetap dipertahankan.
 
+Untuk mengaktifkan metode Midtrans Snap pada database lama, jalankan
+`database/migrations/003_midtrans_snap_payment_method.sql` pada database
+`bekuku`.
+Untuk menyimpan nama kanal pembayaran yang dipilih melalui Snap, jalankan juga
+`database/migrations/004_midtrans_payment_channel.sql`.
+
 ## Langkah 5: Periksa koneksi database
 
 Buka file:
@@ -125,19 +131,29 @@ Jika MySQL Anda memakai password, isi sesuai password MySQL:
 $password = "password_mysql_anda";
 ```
 
-## Konfigurasi QRIS Midtrans
+## Konfigurasi Midtrans Snap Checkout
 
-Isi Server Key Midtrans dan environment pada environment variable berikut:
+Salin `.env.example` menjadi `.env` di folder utama BEKUKU, lalu isi konfigurasi
+Midtrans sesuai environment yang dipilih pada dashboard:
 
 ```text
 MIDTRANS_ENVIRONMENT=sandbox
-MIDTRANS_SERVER_KEY=SB-Mid-server-...
+MIDTRANS_SERVER_KEY=ISI_SERVER_KEY_SANDBOX
+MIDTRANS_CLIENT_KEY=ISI_CLIENT_KEY_SANDBOX
 ```
 
-QRIS akan dibuat melalui endpoint Midtrans ketika metode pembayaran QRIS
-dipilih pada transaksi. Gunakan `sandbox` untuk pengujian dan `production`
-setelah akun Midtrans aktif. Server Key hanya boleh disimpan di environment
-server dan jangan ditulis ke JavaScript atau repository.
+Saat pindah server atau mengganti environment, cukup perbarui nilai di `.env`.
+Untuk Production, ubah environment menjadi `production` dan gunakan pasangan
+Server Key serta Client Key Production dari dashboard Production. Jangan
+campur key Sandbox dengan Production. File `.env` tidak boleh dimasukkan ke
+repository; gunakan `.env.example` sebagai template. Server Key hanya digunakan
+di PHP server dan tidak boleh dikirim ke browser.
+
+Client Key dipakai oleh Snap Checkout di browser; key ini memang digunakan
+untuk memuat Snap dan bukan pengganti Server Key. Di dashboard Midtrans
+environment yang sama, buka **Settings > Snap Checkout > Payment methods**,
+aktifkan metode yang ingin ditawarkan (misalnya QRIS), lalu simpan perubahan.
+Pilihan yang tampil di popup mengikuti pengaturan akun tersebut.
 
 ## Konfigurasi QRIS gambar
 

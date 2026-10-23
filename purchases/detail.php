@@ -13,6 +13,7 @@ require_once "../config/database.php";
 */
 
 $purchase_id = (int) ($_GET['id'] ?? 0);
+$is_popup = ($_GET['popup'] ?? '') === '1';
 
 
 if ($purchase_id <= 0) {
@@ -126,11 +127,11 @@ function rupiah($amount): string
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202610240021">
 </head>
 
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary<?= $is_popup ? ' purchase-detail-popup' : ''; ?>">
 
 
 <div class="app-wrapper">
@@ -574,7 +575,7 @@ function rupiah($amount): string
                                 for ($page = $page_start; $page <= $page_end; $page++):
                                 ?>
                                     <li class="page-item <?= $page === $current_page ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?id=<?= $purchase_id; ?>&page=<?= $page; ?>">
+                                        <a class="page-link" href="?id=<?= $purchase_id; ?>&page=<?= $page; ?><?= $is_popup ? '&popup=1' : ''; ?>">
                                             <?= $page; ?>
                                         </a>
                                     </li>
@@ -694,7 +695,7 @@ function rupiah($amount): string
 
                 <!-- BUTTON -->
 
-                <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex justify-content-between mb-4 purchase-detail-actions">
 
 
                     <a
@@ -798,9 +799,7 @@ function rupiah($amount): string
 </div>
 
 
-    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202610050159"></script>
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202610240002"></script>
 </body>
 
 </html>
-
-

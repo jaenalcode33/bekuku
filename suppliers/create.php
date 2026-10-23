@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Supplier</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202610240021">
 </head>
 <body class="popup-form-page">
     <form method="POST" class="popup-form-card"><?= bekuku_csrf_field() ?>
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202610240021">
 </head>
 
 

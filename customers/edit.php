@@ -38,6 +38,7 @@ if (!$customer) {
 
 
 $error = "";
+$is_popup = ($_GET["popup"] ?? "") === "1";
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -95,6 +96,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             ]);
 
+            if ($is_popup) {
+                header(
+                    "Location: edit.php?id="
+                    . $customer_id
+                    . "&popup=1&saved=1"
+                );
+                exit;
+            }
 
             header("Location: index.php");
             exit;
@@ -106,6 +115,54 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 ?>
+
+<?php if ($is_popup): ?>
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Customer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/customers.css') ?>?v=202610240021">
+</head>
+
+<body class="popup-customer-page">
+    <form method="POST" class="popup-customer-form"><?= bekuku_csrf_field() ?>
+        <div class="popup-customer-form-body">
+            <?php if ($error !== ""): ?>
+                <div class="popup-customer-error">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <?= htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+            <div class="popup-customer-field">
+                <label for="customer_name">Nama Customer</label>
+                <input
+                    type="text"
+                    name="customer_name"
+                    id="customer_name"
+                    value="<?= htmlspecialchars($_POST["customer_name"] ?? $customer["customer_name"]); ?>"
+                    required
+                    autofocus
+                >
+            </div>
+        </div>
+        <div class="popup-customer-form-footer">
+            <button type="button" class="popup-customer-btn popup-customer-btn-cancel popup-close">
+                <i class="bi bi-x-lg"></i> Batal
+            </button>
+            <button type="submit" class="popup-customer-btn popup-customer-btn-save">
+                <i class="bi bi-save"></i> Simpan Perubahan
+            </button>
+        </div>
+    </form>
+    <script src="<?= bekuku_url('assets/js/customers.js') ?>?v=202610232129"></script>
+</body>
+</html>
+
+<?php exit; endif; ?>
 
 <!DOCTYPE html>
 <html lang="id">
@@ -121,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/customers.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/customers.css') ?>?v=202610240021">
 </head>
 
 
@@ -323,9 +380,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </div>
 
 
-    <script src="<?= bekuku_url('assets/js/customers.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/customers.js') ?>?v=202610232129"></script>
 </body>
 
 </html>
-
-

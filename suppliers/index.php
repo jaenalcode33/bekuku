@@ -44,7 +44,7 @@ $total_products = array_sum(
 
     <!-- CSS KHUSUS POPUP SUPPLIER -->
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202610240021">
 </head>
 
 
@@ -401,9 +401,7 @@ $total_products = array_sum(
 <!-- JS KHUSUS POPUP SUPPLIER -->
 
 
-    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202610232137"></script>
 </body>
 
 </html>
-
-

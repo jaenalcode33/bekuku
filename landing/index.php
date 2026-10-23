@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../config/app.php";
 
-if (!bekuku_is_authenticated()) {
+if (!bekuku_is_authenticated() || ($_GET["public"] ?? "") === "1") {
     ?>
     <!DOCTYPE html>
     <html lang="id">
@@ -10,7 +10,7 @@ if (!bekuku_is_authenticated()) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>BEKUKU POS - Kelola Bisnis Lebih Mudah</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/landing.css') ?>?v=202609221705">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/landing.css') ?>?v=202610240033">
 </head>
     <body class="bekuku-landing-page landing-reference-page">
         <div class="landing-shell">
@@ -35,7 +35,7 @@ if (!bekuku_is_authenticated()) {
                     <p class="bekuku-landing-description">Aplikasi Point of Sale (POS) yang dirancang khusus untuk toko frozen food. Kelola transaksi, stok, dan laporan penjualan dalam satu sistem yang simpel, cepat, dan modern.</p>
                     <div class="landing-reference-cta">
                         <a class="bekuku-landing-cta" href="<?= bekuku_url('login.php') ?>"></i> Mulai Sekarang <i class="bi bi-arrow-right"></i></a>
-                        <a class="landing-demo-button" href="landing/demo.php"><i class="bi bi-play-circle"></i> Lihat Demo</a>
+                        <a class="landing-demo-button" href="<?= bekuku_url('landing/demo.php') ?>"><i class="bi bi-play-circle"></i> Lihat Demo</a>
                     </div>
                     <div class="bekuku-landing-trust">
                         <span><i class="bi bi-check-circle-fill"></i> Mudah Digunakan</span>
@@ -46,7 +46,7 @@ if (!bekuku_is_authenticated()) {
                 <div class="landing-reference-visual">
                     <div class="landing-glow"></div>
                     <div class="landing-dashboard-card">
-                        <div class="landing-dashboard-top"><strong><i class="bi bi-snow2"></i> BEKUKU <small>POINT OF SALE</small></strong><span><b></b> Online</span><time><i class="bi bi-calendar3"></i> 15 Sep 2026yuio</time></div>
+                        <div class="landing-dashboard-top"><strong><i class="bi bi-snow2"></i> BEKUKU <small>POINT OF SALE</small></strong><span><b></b> Online</span><time><i class="bi bi-calendar3"></i> 15 Sep 2026</time></div>
                         <div class="landing-dashboard-stats">
                             <div><i class="bi bi-receipt"></i><small>Total Penjualan Hari Ini</small><strong>Rp 12.840.000</strong><em><i class="bi bi-arrow-up-right" aria-hidden="true"></i> 18.4% dari kemarin</em></div>
                             <div><i class="bi bi-box-seam"></i><small>Stok Aktif</small><strong>1.248 Item</strong></div>
@@ -119,5 +119,3 @@ if (!bekuku_is_authenticated()) {
     <?php
     exit;
 }
-
-

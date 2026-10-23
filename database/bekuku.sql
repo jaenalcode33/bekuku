@@ -105,13 +105,16 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `total_amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
   `payment_amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
   `change_amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  `payment_method` ENUM('cash','transfer','qris','qris_image') NOT NULL DEFAULT 'cash',
+  `payment_method` ENUM('cash','transfer','midtrans_snap','qris','qris_image') NOT NULL DEFAULT 'cash',
+  `midtrans_order_id` VARCHAR(50) DEFAULT NULL,
+  `midtrans_payment_channel` VARCHAR(100) DEFAULT NULL,
   `status` ENUM('selesai','batal') NOT NULL DEFAULT 'selesai',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`transaction_id`),
   KEY `idx_transactions_date` (`transaction_date`),
   KEY `idx_transactions_customer` (`customer_id`),
   KEY `idx_transactions_status` (`status`),
+  UNIQUE KEY `uq_transactions_midtrans_order_id` (`midtrans_order_id`),
   CONSTRAINT `fk_transactions_customer`
     FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`)
     ON DELETE SET NULL ON UPDATE CASCADE

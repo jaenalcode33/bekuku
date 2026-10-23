@@ -77,7 +77,7 @@ $users = $conn->query('SELECT user_id, username, name, role, status, created_at 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pengguna - BEKUKU POS</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/users.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/users.css') ?>?v=202610240033">
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 <div class="app-wrapper">
@@ -151,5 +151,4 @@ $users = $conn->query('SELECT user_id, username, name, role, status, created_at 
 </script>
     <script src="<?= bekuku_url('assets/js/users.js') ?>?v=202609221642"></script>
 </body></html>
-
 

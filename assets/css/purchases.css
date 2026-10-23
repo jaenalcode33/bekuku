@@ -2,7 +2,9 @@
 
 /* SOURCE: adminlte.min.css */
 
-@charset "UTF-8";/*!
+@charset "UTF-8";
+@import url("popup-scrollbars.css?v=202610240033");
+/*!
  *   AdminLTE v4.9.1
  *   Author: Colorlib
  *   Website: AdminLTE.io <https://adminlte.io>
@@ -2767,7 +2769,7 @@ body {
     border: 0;
     background: var(--bekuku-bg);
     scrollbar-width: thin;
-    scrollbar-color: rgba(98, 214, 197, .7) transparent;
+    scrollbar-color: #263d78 #07112f;
 }
 
 .bekuku-modal-frame iframe.bekuku-frame-loading {
@@ -7622,6 +7624,142 @@ input[type="number"]::-webkit-inner-spin-button {
     border-color: #4c75ff;
 }
 
+.purchase-detail-trigger {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    color: #a9c0ff !important;
+    background: rgba(76, 117, 255, .12) !important;
+    border: 1px solid rgba(126, 157, 231, .3) !important;
+    border-radius: 9px !important;
+    transition: color .15s ease, background-color .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+.purchase-detail-trigger:hover,
+.purchase-detail-trigger:focus-visible {
+    color: #ffffff !important;
+    background: #315cff !important;
+    border-color: #4c75ff !important;
+    transform: translateY(-1px);
+}
+
+.bekuku-transaction-detail-modal .bekuku-modal-dialog {
+    display: flex;
+    width: min(1120px, 100%) !important;
+    height: min(88vh, 880px) !important;
+    max-height: 94vh !important;
+    flex-direction: column;
+}
+
+.bekuku-transaction-detail-modal .bekuku-modal-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.bekuku-transaction-detail-modal .bekuku-modal-body iframe {
+    display: block;
+    width: 100%;
+    height: 100% !important;
+    min-height: 0 !important;
+    border: 0 !important;
+    background: #07112f;
+}
+
+body.purchase-detail-popup {
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: auto !important;
+    color: var(--bekuku-text) !important;
+    background: #07112f !important;
+}
+
+body.purchase-detail-popup .app-header,
+body.purchase-detail-popup .app-sidebar,
+body.purchase-detail-popup .app-footer,
+body.purchase-detail-popup .app-content-header {
+    display: none !important;
+}
+
+body.purchase-detail-popup .app-wrapper {
+    display: block;
+    min-height: 0;
+    background: transparent !important;
+}
+
+body.purchase-detail-popup .app-main {
+    min-height: 0;
+    margin-left: 0 !important;
+    background: transparent !important;
+}
+
+body.purchase-detail-popup .app-content {
+    padding: 0;
+    background: transparent !important;
+}
+
+body.purchase-detail-popup .app-content > .container-fluid {
+    width: 100%;
+    max-width: none;
+    padding: 16px;
+}
+
+body.purchase-detail-popup .app-content .card {
+    margin: 0 0 14px;
+    overflow: hidden;
+    color: var(--bekuku-text);
+    background: var(--bekuku-panel);
+    border: 1px solid var(--bekuku-border);
+    border-radius: 13px;
+    box-shadow: var(--bekuku-shadow);
+}
+
+body.purchase-detail-popup .app-content .card-header {
+    display: flex;
+    padding: 13px 17px;
+    color: var(--bekuku-text-strong);
+    background: rgba(18, 36, 92, .72);
+    border-bottom: 1px solid var(--bekuku-border);
+}
+
+body.purchase-detail-popup .app-content .card-body {
+    padding: 17px;
+}
+
+body.purchase-detail-popup .table-responsive {
+    border-radius: 8px;
+}
+
+body.purchase-detail-popup .purchase-detail-actions {
+    justify-content: flex-end !important;
+    margin-bottom: 0 !important;
+}
+
+body.purchase-detail-popup .purchase-detail-actions > a {
+    display: none;
+}
+
+@media (max-width: 767.98px) {
+    .bekuku-transaction-detail-modal .bekuku-modal-dialog {
+        width: 100%;
+        height: 94vh !important;
+        max-height: 94vh !important;
+        border-radius: 18px 18px 0 0;
+    }
+
+    body.purchase-detail-popup .app-content > .container-fluid {
+        padding: 12px;
+    }
+
+    body.purchase-detail-popup .app-content .card-body {
+        padding: 14px;
+    }
+}
+
 .purchase-print-preview-wrap {
     display: none;
 }
@@ -7793,4 +7931,3 @@ input[type="number"]::-webkit-inner-spin-button {
         break-inside: avoid;
     }
 }
-

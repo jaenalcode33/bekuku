@@ -18,6 +18,7 @@ $stmt = $conn->query("
         t.transaction_date,
         t.total_amount,
         t.payment_method,
+        t.midtrans_payment_channel,
         t.status,
         c.customer_name
     FROM transactions t
@@ -54,7 +55,7 @@ function rupiah($number)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat Transaksi - BEKUKU POS</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions.css') ?>?v=202610240112">
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -138,6 +139,8 @@ function rupiah($number)
                                                 $paymentLabel = 'Transfer';
                                             } elseif ($paymentMethod === 'qris') {
                                                 $paymentLabel = 'QRIS Midtrans';
+                                            } elseif ($paymentMethod === 'midtrans_snap') {
+                                                $paymentLabel = $transaction['midtrans_payment_channel'] ?: 'Midtrans Snap';
                                             } elseif ($paymentMethod === 'qris_image') {
                                                 $paymentLabel = 'QRIS Gambar';
                                             } else {
@@ -172,7 +175,13 @@ function rupiah($number)
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <a href="detail.php?id=<?= (int) $transaction['transaction_id']; ?>" class="btn btn-info btn-sm">
+                                                    <a
+                                                        href="detail.php?id=<?= (int) $transaction['transaction_id']; ?>"
+                                                        class="btn btn-info btn-sm transaction-detail-trigger"
+                                                        title="Lihat detail transaksi"
+                                                        aria-label="Lihat detail transaksi #<?= (int) $transaction['transaction_id']; ?>"
+                                                        data-modal-title="Detail Transaksi #<?= (int) $transaction['transaction_id']; ?>"
+                                                    >
                                                         <i class="bi bi-eye"></i>
                                                         Detail
                                                     </a>
@@ -238,6 +247,6 @@ function rupiah($number)
 
 </div>
 
-    <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202610240112"></script>
 </body>
 </html>

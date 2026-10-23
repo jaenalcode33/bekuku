@@ -96,6 +96,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             ]);
 
+            if ($is_popup) {
+                header(
+                    "Location: edit.php?id="
+                    . $supplier_id
+                    . "&popup=1&saved=1"
+                );
+                exit;
+            }
 
             header("Location: index.php");
             exit;
@@ -115,29 +123,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Supplier</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202610240021">
 </head>
-<body class="popup-kategori-page">
-    <form method="POST" class="popup-kategori-form" id="formEditSupplier"><?= bekuku_csrf_field() ?>
-        <div class="popup-kategori-form-body">
+<body class="popup-supplier-page">
+    <form method="POST" class="popup-supplier-form" id="formEditSupplier"><?= bekuku_csrf_field() ?>
+        <div class="popup-supplier-form-body">
             <?php if ($error !== ""): ?>
-                <div class="popup-kategori-error"><?= htmlspecialchars($error); ?></div>
+                <div class="popup-supplier-error"><?= htmlspecialchars($error); ?></div>
             <?php endif; ?>
-            <div class="popup-kategori-field">
+            <div class="popup-supplier-field">
                 <label for="supplier_name">Nama Supplier</label>
-                <input class="popup-kategori-input" type="text" name="supplier_name" id="supplier_name"
+                <input class="popup-supplier-input" type="text" name="supplier_name" id="supplier_name"
                 value="<?= htmlspecialchars($supplier["supplier_name"]); ?>" required autofocus>
             </div>
         </div>
-        <div class="popup-kategori-form-footer">
-            <button type="button" class="popup-kategori-button popup-kategori-button-cancel popup-close">
+        <div class="popup-supplier-form-footer">
+            <button type="button" class="popup-supplier-button popup-supplier-button-cancel popup-close">
                 <i class="bi bi-x-lg"></i> Batal
             </button>
-            <button type="submit" class="popup-kategori-button popup-kategori-button-save">
+            <button type="submit" class="popup-supplier-button popup-supplier-button-save">
                 <i class="bi bi-save"></i> Simpan Perubahan
             </button>
         </div>
     </form>
+    <?php if (($_GET["saved"] ?? "") === "1"): ?>
+        <script>
+            window.parent.postMessage(
+                { type: "supplier-edit-saved" },
+                window.location.origin
+            );
+        </script>
+    <?php endif; ?>
     <script>
         document.querySelector(".popup-close").addEventListener("click", function () {
             if (window.parent && window.parent !== window) {
@@ -148,9 +164,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         });
     </script>
-    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202610232137"></script>
 </body>
 </html>
+
 <?php exit; endif; ?>
 
 <!DOCTYPE html>
@@ -167,7 +184,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/suppliers.css') ?>?v=202610240021">
 </head>
 
 
@@ -372,9 +389,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </div>
 
 
-    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/suppliers.js') ?>?v=202610232137"></script>
 </body>
 
 </html>
-
-

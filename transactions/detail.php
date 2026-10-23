@@ -14,6 +14,7 @@ require_once __DIR__ . "/../config/database.php";
 $transaction_id = isset($_GET['id'])
     ? (int) $_GET['id']
     : 0;
+$is_popup = ($_GET['popup'] ?? '') === '1';
 
 $currentUser = bekuku_user();
 
@@ -172,6 +173,12 @@ if ($payment_method === 'cash') {
     $payment_icon = 'bi-qr-code';
     $payment_label = 'QRIS Midtrans';
 
+} elseif ($payment_method === 'midtrans_snap') {
+
+    $payment_class = 'payment-qris';
+    $payment_icon = 'bi-credit-card';
+    $payment_label = $transaction['midtrans_payment_channel'] ?: 'Midtrans Snap';
+
 } elseif ($payment_method === 'qris_image') {
 
     $payment_class = 'payment-qris';
@@ -206,11 +213,11 @@ if ($payment_method === 'cash') {
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions.css') ?>?v=202610240112">
 </head>
 
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary transaction-detail-page">
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary transaction-detail-page<?= $is_popup ? ' transaction-popup-page' : ''; ?>">
 
 
 <div class="app-wrapper">
@@ -876,7 +883,7 @@ if ($payment_method === 'cash') {
                     </section>
                     <section class="receipt-payment">
                         <div><span>Pembayaran</span><strong><?= htmlspecialchars($payment_label); ?></strong></div>
-                        <?php if ($payment_method === 'qris' || $payment_method === 'qris_image'): ?>
+                        <?php if ($payment_method === 'qris' || $payment_method === 'qris_image' || $payment_method === 'midtrans_snap'): ?>
                             <div><span>Status</span><strong>LUNAS</strong></div>
                         <?php endif; ?>
                     </section>
@@ -909,9 +916,7 @@ if ($payment_method === 'cash') {
 <!-- JavaScript Transaksi Baru -->
 
 
-    <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202610240112"></script>
 </body>
 
 </html>     
-
-

@@ -131,7 +131,7 @@ function rupiah($amount)
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/reports.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/reports.css') ?>?v=202610240033">
 </head>
 
 
@@ -1242,5 +1242,4 @@ function rupiah($amount)
 </body>
 
 </html>
-
 

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 function bekuku_load_environment(): void
 {
@@ -115,7 +115,15 @@ function bekuku_verify_csrf(): void
 
     if ($expected === '' || $provided === '' || !hash_equals($expected, $provided)) {
         http_response_code(419);
-        exit('Permintaan tidak valid atau sesi formulir telah kedaluwarsa.');
+        $message = 'Permintaan tidak valid atau sesi formulir telah kedaluwarsa.';
+
+        if (str_contains(strtolower((string) ($_SERVER['HTTP_ACCEPT'] ?? '')), 'application/json')) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['error' => $message], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        exit($message);
     }
 }
 
@@ -289,7 +297,7 @@ function bekuku_role_can_access(string $role, string $path): bool
     return false;
 }
 
-$publicScripts = ['/', '/index.php', '/login.php', '/logout.php'];
+$publicScripts = ['/', '/index.php', '/login.php', '/logout.php', '/landing/index.php'];
 $requestPath = bekuku_request_path();
 
 if (!in_array($requestPath, $publicScripts, true) && !bekuku_is_authenticated()) {
@@ -309,5 +317,3 @@ if (!in_array($requestPath, $publicScripts, true) && bekuku_is_authenticated()) 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     bekuku_verify_csrf();
 }
-
-

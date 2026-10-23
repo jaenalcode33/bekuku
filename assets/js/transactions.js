@@ -61,7 +61,7 @@
                         class="bekuku-modal-close"
                         aria-label="Tutup"
                     >
-                        Ã—
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
                     </button>
 
                 </div>
@@ -120,6 +120,14 @@
 
         createModal();
 
+        const isDetailPopup =
+            /\/detail\.php(?:[?#]|$)/i.test(url);
+
+        modal.classList.toggle(
+            "bekuku-transaction-detail-modal",
+            isDetailPopup
+        );
+
 
         const titleElement =
             modal.querySelector(
@@ -176,7 +184,7 @@
 
         iframe.style.setProperty(
             "height",
-            "280px",
+            isDetailPopup ? "100%" : "280px",
             "important"
         );
 
@@ -236,6 +244,42 @@
         modal.classList.add(
             "bekuku-form-modal"
         );
+
+        if (isDetailPopup) {
+            const dialog =
+                modal.querySelector(
+                    ".bekuku-modal-dialog"
+                );
+
+            const modalBody =
+                modal.querySelector(
+                    ".bekuku-modal-body"
+                );
+
+            if (dialog) {
+                dialog.style.setProperty(
+                    "height",
+                    window.matchMedia("(max-width: 767.98px)").matches
+                        ? "94vh"
+                        : "min(88vh, 880px)",
+                    "important"
+                );
+            }
+
+            if (modalBody) {
+                modalBody.style.setProperty(
+                    "flex",
+                    "1 1 auto",
+                    "important"
+                );
+
+                modalBody.style.setProperty(
+                    "height",
+                    "auto",
+                    "important"
+                );
+            }
+        }
 
 
         modal.classList.add(
@@ -343,6 +387,30 @@
                     body.classList.add(
                         "bekuku-product-popup-page"
                     );
+
+                    if (isDetailPopup) {
+                        body.classList.add(
+                            "transaction-popup-page"
+                        );
+
+                        html.style.setProperty(
+                            "overflow-y",
+                            "auto",
+                            "important"
+                        );
+
+                        body.style.setProperty(
+                            "min-height",
+                            "0",
+                            "important"
+                        );
+
+                        body.style.setProperty(
+                            "overflow-y",
+                            "auto",
+                            "important"
+                        );
+                    }
 
                     const dialog =
                         modal.querySelector(
@@ -692,6 +760,10 @@
 
         modal.classList.remove(
             "is-open"
+        );
+
+        modal.classList.remove(
+            "bekuku-transaction-detail-modal"
         );
 
 
@@ -1058,6 +1130,12 @@ function hitungTotal() {
     if (totalElement) {
         totalElement.textContent =
             formatRupiah(total);
+    }
+
+    const paymentMethod = document.getElementById("payment_method");
+    const paymentElement = document.getElementById("payment_amount");
+    if (paymentMethod?.value === "midtrans_snap" && paymentElement) {
+        paymentElement.value = String(Math.round(total));
     }
 
     updateQrisBarcode(total);
@@ -1433,6 +1511,12 @@ function initPayment() {
 }
 
 
+let qrisRequestSequence = 0;
+let activeQrisRequest = null;
+let activeQrisAmount = null;
+let lastQrisOrder = null;
+
+
 function updateQrisBarcode(totalValue) {
 
     const paymentMethod =
@@ -1480,6 +1564,13 @@ function updateQrisBarcode(totalValue) {
     panel.setAttribute("aria-hidden", isQris ? "false" : "true");
 
     if (!isQris) {
+        qrisRequestSequence++;
+        if (activeQrisRequest) {
+            activeQrisRequest.abort();
+            activeQrisRequest = null;
+            activeQrisAmount = null;
+        }
+        lastQrisOrder = null;
         return;
     }
 
@@ -1492,14 +1583,22 @@ function updateQrisBarcode(totalValue) {
     amount.textContent =
         "Total: " + totalText.trim();
 
-    barcode.replaceChildren();
-
     if (isImageQris) {
+        qrisRequestSequence++;
+        if (activeQrisRequest) {
+            activeQrisRequest.abort();
+            activeQrisRequest = null;
+            activeQrisAmount = null;
+        }
+        lastQrisOrder = null;
+        barcode.replaceChildren();
+
         const imageUrl =
             paymentMethod.dataset.qrisImageUrl || "";
 
         if (imageUrl === "") {
             if (note) {
+                note.classList.remove("is-error");
                 note.textContent =
                     "Atur BEKUKU_QRIS_IMAGE_URL untuk menampilkan gambar QRIS.";
             }
@@ -1520,6 +1619,7 @@ function updateQrisBarcode(totalValue) {
         });
         barcode.appendChild(image);
         if (note) {
+            note.classList.remove("is-error");
             note.textContent =
                 "Scan QRIS merchant menggunakan aplikasi pembayaran.";
         }
@@ -1527,11 +1627,47 @@ function updateQrisBarcode(totalValue) {
     }
 
     if (total <= 0) {
+        qrisRequestSequence++;
+        if (activeQrisRequest) {
+            activeQrisRequest.abort();
+            activeQrisRequest = null;
+            activeQrisAmount = null;
+        }
+        lastQrisOrder = null;
+        barcode.replaceChildren();
+
         if (note) {
+            note.classList.remove("is-error");
             note.textContent = "Pilih produk terlebih dahulu untuk membuat QRIS.";
         }
         return;
     }
+
+    if (activeQrisRequest && activeQrisAmount === total) {
+        return;
+    }
+
+    if (activeQrisRequest) {
+        activeQrisRequest.abort();
+        activeQrisRequest = null;
+        activeQrisAmount = null;
+        qrisRequestSequence++;
+    }
+
+    if (lastQrisOrder?.amount === total) {
+        const image = document.createElement("img");
+        image.src = lastQrisOrder.qrCodeUrl;
+        image.alt = "QRIS Midtrans";
+        image.width = 180;
+        image.height = 180;
+        barcode.replaceChildren(image);
+        if (note) {
+            note.textContent = "Scan QRIS ini menggunakan aplikasi pembayaran.";
+        }
+        return;
+    }
+
+    barcode.replaceChildren();
 
     const csrfToken =
         document.querySelector('input[name="csrf_token"]')?.value || "";
@@ -1541,8 +1677,14 @@ function updateQrisBarcode(totalValue) {
     });
 
     if (note) {
+        note.classList.remove("is-error");
         note.textContent = "Menghubungkan ke Midtrans...";
     }
+
+    const requestController = new AbortController();
+    const requestSequence = ++qrisRequestSequence;
+    activeQrisRequest = requestController;
+    activeQrisAmount = total;
 
     fetch("midtrans-qris.php", {
         method: "POST",
@@ -1550,10 +1692,22 @@ function updateQrisBarcode(totalValue) {
             "Content-Type": "application/x-www-form-urlencoded",
             "Accept": "application/json"
         },
-        body: body.toString()
+        body: body.toString(),
+        signal: requestController.signal
     })
         .then(function (response) {
-            return response.json().then(function (result) {
+            return response.text().then(function (text) {
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch {
+                    throw new Error(
+                        response.status === 405
+                            ? "Endpoint QRIS menolak metode request. Muat ulang halaman transaksi."
+                            : "Respons server QRIS tidak valid. Muat ulang halaman dan coba kembali."
+                    );
+                }
+
                 if (!response.ok) {
                     throw new Error(result.error || "QRIS Midtrans gagal dibuat.");
                 }
@@ -1561,6 +1715,19 @@ function updateQrisBarcode(totalValue) {
             });
         })
         .then(function (result) {
+            if (requestSequence !== qrisRequestSequence) {
+                return;
+            }
+
+            if (!result.qr_code_url) {
+                throw new Error("Midtrans tidak mengembalikan barcode QRIS.");
+            }
+
+            lastQrisOrder = {
+                amount: total,
+                qrCodeUrl: result.qr_code_url
+            };
+
             const image = document.createElement("img");
             image.src = result.qr_code_url;
             image.alt = "QRIS Midtrans";
@@ -1568,13 +1735,26 @@ function updateQrisBarcode(totalValue) {
             image.height = 180;
             barcode.replaceChildren(image);
             if (note) {
+                note.classList.remove("is-error");
                 note.textContent = "Scan QRIS ini menggunakan aplikasi pembayaran.";
             }
         })
         .catch(function (error) {
+            if (error.name === "AbortError" || requestSequence !== qrisRequestSequence) {
+                return;
+            }
+
+            lastQrisOrder = null;
             barcode.textContent = "QRIS belum tersedia.";
             if (note) {
+                note.classList.add("is-error");
                 note.textContent = error.message;
+            }
+        })
+        .finally(function () {
+            if (requestSequence === qrisRequestSequence) {
+                activeQrisRequest = null;
+                activeQrisAmount = null;
             }
         });
 }
@@ -2590,4 +2770,3 @@ document.addEventListener(
     });
 
 }());
-

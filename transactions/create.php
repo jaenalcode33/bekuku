@@ -9,6 +9,10 @@ require_once __DIR__ . "/../config/midtrans.php";
 $isPopup = ($_GET["popup"] ?? "") === "1";
 $transactionError = null;
 $qrisImageUrl = trim((string) getenv("BEKUKU_QRIS_IMAGE_URL"));
+$midtransConfig = bekuku_midtrans_config();
+$snapOrderId = '';
+$snapPendingOrder = null;
+$midtransPaymentChannel = null;
 
 
 /*
@@ -82,15 +86,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         /*
         |--------------------------------------------------------------------------
-        | Mulai transaksi database
-        |--------------------------------------------------------------------------
-        */
-
-        $conn->beginTransaction();
-
-
-        /*
-        |--------------------------------------------------------------------------
         | Gabungkan produk yang sama
         |--------------------------------------------------------------------------
         */
@@ -125,6 +120,52 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 "Produk belum dipilih."
             );
         }
+
+        $payment_method = bekuku_validate_enum(
+            $payment_method,
+            'Metode pembayaran',
+            ['cash', 'transfer', 'midtrans_snap', 'qris_image']
+        );
+
+        if ($payment_method === 'midtrans_snap') {
+            $snapOrderId = trim((string) ($_POST['midtrans_order_id'] ?? ''));
+            $snapPendingOrder = $_SESSION['bekuku_midtrans_snap_orders'][$snapOrderId] ?? null;
+
+            if (!is_array($snapPendingOrder)
+                || time() - (int) ($snapPendingOrder['created_at'] ?? 0) > 86400) {
+                throw new Exception('Sesi pembayaran Snap tidak ditemukan atau sudah kedaluwarsa.');
+            }
+
+            $postedProducts = $requestedProducts;
+            $snapProducts = $snapPendingOrder['items'] ?? [];
+            ksort($postedProducts);
+            ksort($snapProducts);
+            if ($postedProducts !== $snapProducts
+                || $customer_id !== ($snapPendingOrder['customer_id'] ?? null)) {
+                throw new Exception('Produk atau customer berubah setelah pesanan Snap dibuat. Ulangi pembayaran.');
+            }
+
+            $snapStatus = bekuku_midtrans_get_status($snapOrderId);
+            $midtransPaymentChannel = bekuku_midtrans_payment_channel($snapStatus);
+            $isPaid = ($snapStatus['transaction_status'] ?? '') === 'settlement'
+                || (($snapStatus['transaction_status'] ?? '') === 'capture'
+                    && ($snapStatus['fraud_status'] ?? '') === 'accept');
+
+            if (!$isPaid
+                || ($snapStatus['order_id'] ?? '') !== $snapOrderId
+                || (int) round((float) ($snapStatus['gross_amount'] ?? 0))
+                    !== (int) ($snapPendingOrder['amount'] ?? -1)) {
+                throw new Exception('Pembayaran Snap belum terkonfirmasi lunas oleh Midtrans.');
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mulai transaksi database setelah verifikasi pembayaran eksternal
+        |--------------------------------------------------------------------------
+        */
+
+        $conn->beginTransaction();
 
 
         /*
@@ -215,7 +256,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             |--------------------------------------------------------------------------
             */
 
-            $price = (float) $product["selling_price"];
+            $price = $payment_method === 'midtrans_snap'
+                ? (float) ($snapPendingOrder['prices'][$product_id] ?? -1)
+                : (float) $product["selling_price"];
+            if ($price < 0) {
+                throw new Exception('Harga produk tidak cocok dengan pesanan Snap.');
+            }
 
 
             /*
@@ -262,6 +308,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $payment_amount -
             $total_amount;
 
+        if ($payment_method === 'midtrans_snap') {
+            if ((int) round($total_amount) !== (int) ($snapPendingOrder['amount'] ?? -1)) {
+                throw new Exception('Total produk berubah. Pembayaran Snap tidak dapat dipakai untuk transaksi ini.');
+            }
+            $payment_amount = $total_amount;
+            $change_amount = 0;
+        }
+
 
         if ($change_amount < 0) {
 
@@ -285,6 +339,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 payment_amount,
                 change_amount,
                 payment_method,
+                midtrans_order_id,
+                midtrans_payment_channel,
                 status
             )
             VALUES
@@ -294,6 +350,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 :payment_amount,
                 :change_amount,
                 :payment_method,
+                :midtrans_order_id,
+                :midtrans_payment_channel,
                 'selesai'
             )
         ");
@@ -314,7 +372,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $change_amount,
 
             ":payment_method" =>
-                $payment_method
+                $payment_method,
+
+            ":midtrans_order_id" =>
+                $payment_method === 'midtrans_snap' ? $snapOrderId : null,
+
+            ":midtrans_payment_channel" =>
+                $payment_method === 'midtrans_snap' ? $midtransPaymentChannel : null
         ]);
 
 
@@ -368,23 +432,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $detail["subtotal"]
             ]);
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Prepare pengurangan stok produk
-        |--------------------------------------------------------------------------
-        */
-
-        $stmtStock = $conn->prepare("
-            UPDATE products
-            SET stock = (
-                SELECT COALESCE(SUM(b.remaining_quantity), 0)
-                FROM batches b
-                WHERE b.product_id = products.product_id
-            )
-            WHERE product_id = :product_id
-        ");
 
 
         /*
@@ -485,34 +532,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             /*
             |--------------------------------------------------------------------------
-            | Jika stok batch tidak mencukupi
-            |--------------------------------------------------------------------------
-            */
-
-            if ($batchStock > 0 && $quantityToSell > $batchStock) {
-
-                throw new Exception(
-                    "Stok batch produk tidak mencukupi untuk \"" .
-                    $detail["product_name"] .
-                    "\". " .
-                    "Stok batch tersedia: " .
-                    $batchStock .
-                    ", jumlah diminta: " .
-                    $quantityToSell
-                );
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
             | Jumlah yang masih harus dikeluarkan
             |--------------------------------------------------------------------------
             */
 
             $remainingToSell =
-                $batchStock > 0
-                    ? $quantityToSell
-                    : 0;
+                min($quantityToSell, $batchStock);
 
 
             /*
@@ -568,30 +593,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | Pastikan semua quantity sudah dialokasikan
-            |--------------------------------------------------------------------------
-            */
+            $stmtStock = $conn->prepare("
+                UPDATE products
+                SET stock = stock - :quantity
+                WHERE product_id = :product_id
+                  AND stock >= :quantity
+            ");
+            $stmtStock->execute([
+                ":quantity" => $quantityToSell,
+                ":product_id" => $product_id,
+            ]);
 
-            if ($remainingToSell > 0) {
-
+            if ($stmtStock->rowCount() !== 1) {
                 throw new Exception(
-                    "Gagal mengalokasikan stok batch."
+                    "Stok produk \"" . $detail["product_name"] . "\" berubah. "
+                    . "Periksa stok lalu coba transaksi kembali."
                 );
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Kurangi products.stock
-            |--------------------------------------------------------------------------
-            */
-
-            $stmtStock->execute([
-                ":product_id" =>
-                    $product_id
-            ]);
 
 
             /*
@@ -624,6 +642,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         */
 
         $conn->commit();
+        if ($payment_method === 'midtrans_snap') {
+            unset($_SESSION['bekuku_midtrans_snap_orders'][$snapOrderId]);
+        }
         bekuku_audit('create', 'transaction', (int) $transaction_id, [
             'total_amount' => $total_amount,
             'payment_method' => $payment_method,
@@ -706,7 +727,7 @@ asort($categoryList);
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/transactions.css') ?>?v=202610240112">
 </head>
 
 
@@ -763,8 +784,10 @@ asort($categoryList);
                 <form
                     method="POST"
                     id="transactionForm"
+                    data-snap-enabled="<?= $midtransConfig['client_key'] !== '' && $midtransConfig['server_key'] !== '' ? 'true' : 'false' ?>"
                     style="display: block; width: 100%; max-width: none;"
                 ><?= bekuku_csrf_field() ?>
+                    <input type="hidden" name="midtrans_order_id" id="midtransOrderId" value="">
 
                                 <div
                                     class="transaction-form-layout"
@@ -1348,8 +1371,8 @@ asort($categoryList);
                                             Transfer
                                         </option>
 
-                                        <option value="qris">
-                                            QRIS Midtrans
+                                        <option value="midtrans_snap">
+                                            Midtrans Snap Checkout
                                         </option>
 
                                         <option value="qris_image">
@@ -1358,6 +1381,12 @@ asort($categoryList);
 
                                     </select>
 
+                                    <div
+                                        id="snapCheckoutMessage"
+                                        class="alert alert-info mt-2 d-none"
+                                        role="status"
+                                        aria-live="polite"
+                                    ></div>
 
                                     <div
                                         class="qris-barcode-panel"
@@ -1523,9 +1552,15 @@ asort($categoryList);
 <?php endif; ?>
 
 
-    <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202609221642"></script>
+    <?php if ($midtransConfig['client_key'] !== ''): ?>
+        <script src="<?= htmlspecialchars(
+            $midtransConfig['snap_js_url'] . '?client-key=' . rawurlencode($midtransConfig['client_key']),
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>"></script>
+    <?php endif; ?>
+    <script src="<?= bekuku_url('assets/js/midtrans-snap.js') ?>?v=202610240124"></script>
+    <script src="<?= bekuku_url('assets/js/transactions.js') ?>?v=202610240124"></script>
 </body>
 
 </html>
-
-

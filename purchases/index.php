@@ -39,20 +39,14 @@ $display_purchases = array_slice($purchases, $page_offset, $per_page);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Pembelian - BEKUKU POS</title>
-
-    "
-    >
+    jaenal
 
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
-    >
-    >
-    >
-    >
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/purchases.css') ?>?v=202610240021">
 </head>
 
 
@@ -279,7 +273,10 @@ $display_purchases = array_slice($purchases, $page_offset, $per_page);
 
                                                 <a
                                                     href="detail.php?id=<?= $purchase['purchase_id']; ?>"
-                                                    class="btn btn-sm btn-info"
+                                                    class="btn btn-sm purchase-detail-trigger"
+                                                    title="Lihat detail pembelian"
+                                                    aria-label="Lihat detail pembelian #<?= (int) $purchase['purchase_id']; ?>"
+                                                    data-modal-title="Detail Pembelian #<?= (int) $purchase['purchase_id']; ?>"
                                                 >
 
                                                     <i class="bi bi-eye"></i>
@@ -374,9 +371,7 @@ $display_purchases = array_slice($purchases, $page_offset, $per_page);
 </div>
 
 
-    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202610050159"></script>
+    <script src="<?= bekuku_url('assets/js/purchases.js') ?>?v=202610240002"></script>
 </body>
 
 </html>
-
-

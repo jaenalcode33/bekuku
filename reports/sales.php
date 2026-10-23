@@ -40,6 +40,7 @@ $stmt = $conn->prepare("
         t.payment_amount,
         t.change_amount,
         t.payment_method,
+        t.midtrans_payment_channel,
         t.status,
         c.customer_name
     FROM transactions t
@@ -241,7 +242,7 @@ function rupiah($amount)
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/reports.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/reports.css') ?>?v=202610240033">
 </head>
 
 
@@ -923,6 +924,19 @@ function rupiah($amount)
 
                                                     break;
 
+                                                case 'midtrans_snap':
+
+                                                    $paymentClass =
+                                                        'bg-info text-dark';
+
+                                                    $paymentIcon =
+                                                        'bi-credit-card';
+
+                                                    $paymentLabel =
+                                                        $transaction['midtrans_payment_channel'] ?: 'Midtrans Snap';
+
+                                                    break;
+
                                                 case 'qris_image':
 
                                                     $paymentClass =
@@ -1377,9 +1391,13 @@ function rupiah($amount)
                             $method_labels = [
                                 'cash' => 'Tunai',
                                 'qris' => 'QRIS',
+                                'midtrans_snap' => 'Midtrans Snap',
                                 'qris_image' => 'QRIS Gambar',
                                 'transfer' => 'Transfer',
                             ];
+                            if ($method === 'midtrans_snap') {
+                                $method_labels[$method] = $transaction['midtrans_payment_channel'] ?: 'Midtrans Snap';
+                            }
                             $status = strtolower((string) ($transaction['status'] ?? ''));
                             $status_label = $status === 'selesai' ? 'SELESAI' : ($status === 'batal' ? 'DIBATALKAN' : strtoupper($status));
                             ?>
@@ -1465,5 +1483,3 @@ function rupiah($amount)
 </body>
 
 </html>
-
-

@@ -43,7 +43,7 @@ $totalCustomers =
 
     <!-- CSS POPUP CUSTOMER -->
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/customers.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= bekuku_url('assets/css/customers.css') ?>?v=202610240021">
 </head>
 
 
@@ -450,9 +450,8 @@ $totalCustomers =
 <!-- JS POPUP CUSTOMER -->
 
 
-    <script src="<?= bekuku_url('assets/js/customers.js') ?>?v=202609221642"></script>
+    <script src="<?= bekuku_url('assets/js/customers.js') ?>?v=202610232129"></script>
 </body>
 
 </html>
-
 

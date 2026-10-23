@@ -61,7 +61,7 @@
                         class="bekuku-modal-close"
                         aria-label="Tutup"
                     >
-                        Ã—
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
                     </button>
 
                 </div>
@@ -1389,4 +1389,3 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 })();
-

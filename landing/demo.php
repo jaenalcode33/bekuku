@@ -292,7 +292,8 @@ function demo_nav_active(string $path): bool
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="<?= bekuku_url('assets/css/landing.css') ?>?v=202609221642">
+    <link rel="stylesheet" href="<?= demo_url('assets/css/dashboard.css') ?>?v=202610240033">
+    <link rel="stylesheet" href="<?= demo_url('assets/css/landing.css') ?>?v=202610240033">
 </head>
 
 
@@ -355,7 +356,7 @@ function demo_nav_active(string $path): bool
 
                     <a
                         class="nav-link bekuku-logout-link"
-                        href="<?= demo_url('landing/index.php') ?>"
+                        href="<?= demo_url('landing/index.php?public=1') ?>"
                         title="Kembali"
                         data-demo-back
                     >
@@ -1603,9 +1604,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             window.location.href =
                 <?= json_encode(
-                    demo_url('landing/index.php'),
+                    demo_url('landing/index.php?public=1'),
                     JSON_UNESCAPED_SLASHES
-                ) ?>;
+                    ) ?>;
 
         });
 
@@ -1721,9 +1722,7 @@ document.head.appendChild(demoStyle);
 </script>
 
 
-    <script src="<?= bekuku_url('assets/js/landing.js') ?>?v=202609221642"></script>
+    <script src="<?= demo_url('assets/js/landing.js') ?>?v=202609221642"></script>
 </body>
 
 </html>
-
-

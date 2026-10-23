@@ -61,7 +61,7 @@
                         class="bekuku-modal-close"
                         aria-label="Tutup"
                     >
-                        Ã—
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
                     </button>
 
                 </div>
@@ -894,6 +894,22 @@
         }
     );
 
+    window.addEventListener(
+        "message",
+        function (event) {
+            if (
+                event.origin !== window.location.origin ||
+                !event.data ||
+                event.data.type !== "supplier-edit-saved"
+            ) {
+                return;
+            }
+
+            closeModal();
+            window.location.reload();
+        }
+    );
+
 })();
 
 /* SOURCE: popup-supplier.js */
@@ -1222,4 +1238,3 @@ if (tombolTambahSupplier) {
         });
     });
 })();
-

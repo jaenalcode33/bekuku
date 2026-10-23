@@ -7,6 +7,8 @@
    GLOBAL DARK BLUE THEME
 ========================================================= */
 
+@import url("popup-scrollbars.css?v=202610240033");
+
 :root {
     --bekuku-bg: #07112f;
     --bekuku-bg-soft: #0a1740;
@@ -2279,7 +2281,7 @@ body {
     border: 0;
     background: var(--bekuku-bg);
     scrollbar-width: thin;
-    scrollbar-color: rgba(98, 214, 197, .7) transparent;
+    scrollbar-color: #263d78 #07112f;
 }
 
 .bekuku-modal-frame iframe.bekuku-frame-loading {
