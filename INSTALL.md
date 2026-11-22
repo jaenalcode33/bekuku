@@ -91,6 +91,10 @@ users
 audit_logs
 ```
 
+Impor ini juga mengisi data dummy kategori, supplier, pelanggan, produk, serta
+pembelian dan batch stok awal. SKU dan nomor invoice seed dibuat tetap agar
+data tersebut tidak berlipat saat file diimpor ulang.
+
 Untuk database BEKUKU yang sudah berisi data lama, jalankan juga
 `database/migrations/001_security_users_audit.sql` pada database `bekuku`.
 Koneksi aplikasi juga melakukan bootstrap idempoten untuk dua tabel keamanan

@@ -284,6 +284,35 @@ Dengan menyimpan informasi batch pada transaksi, penggunaan stok dapat ditelusur
 
 ---
 
+## Data Flow Diagram (DFD)
+
+Model aliran data BEKUKU dibagi menjadi DFD Level 0 untuk gambaran konteks sistem dan DFD Level 1 untuk rincian proses utama.
+
+### DFD Level 0
+
+DFD Level 0 menunjukkan sistem BEKUKU sebagai satu proses utama serta pihak luar yang berinteraksi dengannya.
+
+![DFD Level 0 BEKUKU](docs/dfd-level-0.svg)
+
+- [Buka gambar DFD Level 0](docs/dfd-level-0.svg)
+- Aktor: Admin, Kasir, Petugas Gudang, Supplier, Customer, dan Midtrans.
+- Sumber dan tujuan data meliputi autentikasi, master data, pembelian, penjualan, pembayaran, stok, serta laporan.
+
+### DFD Level 1
+
+DFD Level 1 menguraikan proses utama menjadi autentikasi, pengelolaan master, pembelian dan batch, penjualan dan pembayaran, pengelolaan stok FEFO, serta pelaporan dan audit.
+
+![DFD Level 1 BEKUKU](docs/dfd-level-1.svg)
+
+- [Buka gambar DFD Level 1](docs/dfd-level-1.svg)
+- Penyimpanan data D1 adalah `users` dan `audit_logs`.
+- Penyimpanan data D2 adalah `categories`, `suppliers`, dan `customers`.
+- Penyimpanan data D3 adalah `purchases`, `purchase_details`, dan `batches`.
+- Penyimpanan data D4 adalah `transactions` dan `transaction_details`.
+- Penyimpanan data D5 adalah `products` dan `stock_movements`.
+
+---
+
 ## ERD Detail (Database Structure)
 
 Diagram relasi database BEKUKU berdasarkan struktur SQL yang ada pada `database/bekuku.sql` dan migration keamanan.
@@ -426,28 +455,28 @@ CUSTOMERS -> TRANSACTIONS -> TRANSACTION_DETAILS
 
 1. Supplier melakukan pembelian.
 2. Pembelian dibuat pada `purchases` dan `purchase_details`.
-3. Produk masuk membuat `batches` dengan `expiry_date`.
-4. Stok bertambah dan dicatat di `stock_movements`.
-5. Saat penjualan terjadi, `transactions` dan `transaction_details` dibuat.
-6. Sistem mengurangi stok berdasarkan FEFO dengan batch yang paling cepat kadaluarsa.
+   3~. Produk masuk membuat `batches` dengan `expiry_date`.
+3. Stok bertambah dan dicatat di `stock_movements`.
+4. Saat penjualan terjadi, `transactions` dan `transaction_details` dibuat.
+5. Sistem mengurangi stok berdasarkan FEFO dengan batch yang paling cepat kadaluarsa.
 
 ---
 
 ## Tech Stack
 
-| Technology | Usage |
-|---|---|
-| PHP | Backend |
-| MySQL / MariaDB | Database |
-| JavaScript | Frontend Interaction |
-| HTML5 | Structure |
-| CSS3 | Styling |
-| Bootstrap | UI Components |
-| AdminLTE | Dashboard Interface |
-| Laragon | Local Development |
-| Git | Version Control |
-| GitHub | Repository |
-| Midtrans | QRIS Payment |
+| Technology      | Usage                |
+| --------------- | -------------------- |
+| PHP             | Backend              |
+| MySQL / MariaDB | Database             |
+| JavaScript      | Frontend Interaction |
+| HTML5           | Structure            |
+| CSS3            | Styling              |
+| Bootstrap       | UI Components        |
+| AdminLTE        | Dashboard Interface  |
+| Laragon         | Local Development    |
+| Git             | Version Control      |
+| GitHub          | Repository           |
+| Midtrans        | QRIS Payment         |
 
 ---
 
@@ -590,6 +619,13 @@ Testing dasar tersedia pada:
 
 ```text
 tests/smoke.php
+```
+
+Untuk membuat 100 data penjualan dummy yang konsisten dengan stok FEFO:
+
+```bash
+php database/seed_sales_100.php
+php database/verify_sales_100.php
 ```
 
 Testing dapat dikembangkan untuk memvalidasi:

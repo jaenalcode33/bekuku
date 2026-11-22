@@ -1,5 +1,3 @@
--- BEKUKU POS database schema
--- Import this file from phpMyAdmin or the MySQL client.
 
 CREATE DATABASE IF NOT EXISTS `bekuku`
   CHARACTER SET utf8mb4
@@ -227,5 +225,153 @@ INSERT IGNORE INTO `categories` (`name`) VALUES
   ('Bakso'),
   ('Seafood'),
   ('Kentang');
+
+-- Data dummy master dan stok awal. SKU dan nomor invoice tetap agar aman diimpor ulang.
+INSERT INTO `suppliers` (`supplier_name`, `phone`, `address`)
+SELECT seed.`supplier_name`, seed.`phone`, seed.`address`
+FROM (
+  SELECT 'PT Frozen Sejahtera' AS `supplier_name`, '081200000101' AS `phone`,
+         'Jakarta' AS `address`
+  UNION ALL
+  SELECT 'CV Pangan Beku', '081200000102', 'Bandung'
+) AS seed
+WHERE NOT EXISTS (
+  SELECT 1 FROM `suppliers` s WHERE s.`supplier_name` = seed.`supplier_name`
+);
+
+INSERT INTO `customers` (`customer_name`, `phone`, `address`)
+SELECT seed.`customer_name`, seed.`phone`, seed.`address`
+FROM (
+  SELECT 'Pelanggan Umum 1' AS `customer_name`, '082100000101' AS `phone`,
+         'Jakarta' AS `address`
+  UNION ALL
+  SELECT 'Pelanggan Umum 2', '082100000102', 'Depok'
+  UNION ALL
+  SELECT 'Pelanggan Umum 3', '082100000103', 'Bekasi'
+) AS seed
+WHERE NOT EXISTS (
+  SELECT 1 FROM `customers` c WHERE c.`customer_name` = seed.`customer_name`
+);
+
+INSERT IGNORE INTO `products`
+  (`category_id`, `supplier_id`, `sku`, `barcode`, `product_name`,
+   `purchase_price`, `selling_price`, `unit`, `stock`, `min_stock`)
+SELECT c.`category_id`, s.`supplier_id`, seed.`sku`, seed.`barcode`,
+       seed.`product_name`, seed.`purchase_price`, seed.`selling_price`,
+       'pack', 0, 5
+FROM (
+  SELECT 'Nugget ayam' AS `category_name`, 'NGT-001' AS `sku`,
+         '8991000000011' AS `barcode`, 'Nugget Ayam 500g' AS `product_name`,
+         28000.00 AS `purchase_price`, 35000.00 AS `selling_price`,
+         'PT Frozen Sejahtera' AS `supplier_name`
+  UNION ALL
+  SELECT 'Sosis', 'SOS-001', '8991000000028', 'Sosis Sapi 500g',
+         25000.00, 32000.00, 'PT Frozen Sejahtera'
+  UNION ALL
+  SELECT 'Dimsum', 'DIM-001', '8991000000035', 'Dimsum Ayam 10 pcs',
+         30000.00, 38000.00, 'CV Pangan Beku'
+  UNION ALL
+  SELECT 'Bakso', 'BAK-001', '8991000000042', 'Bakso Sapi 500g',
+         27000.00, 34000.00, 'CV Pangan Beku'
+  UNION ALL
+  SELECT 'Seafood', 'SEA-001', '8991000000059', 'Crab Stick 250g',
+         18000.00, 24000.00, 'PT Frozen Sejahtera'
+  UNION ALL
+  SELECT 'Kentang', 'KNT-001', '8991000000066', 'Kentang Goreng 1kg',
+         32000.00, 40000.00, 'CV Pangan Beku'
+) AS seed
+INNER JOIN `categories` c ON c.`name` = seed.`category_name`
+INNER JOIN `suppliers` s ON s.`supplier_name` = seed.`supplier_name`;
+
+INSERT INTO `purchases`
+  (`purchase_date`, `supplier_id`, `invoice_number`, `total_amount`,
+   `payment_amount`, `remaining_amount`, `status`, `note`)
+SELECT NOW(), s.`supplier_id`,
+       CASE s.`supplier_name`
+         WHEN 'PT Frozen Sejahtera' THEN 'DUMMY-STOK-AWAL-001'
+         ELSE 'DUMMY-STOK-AWAL-002'
+       END,
+       0, 0, 0, 'lunas', 'Pembelian stok awal data dummy'
+FROM `suppliers` s
+WHERE s.`supplier_name` IN ('PT Frozen Sejahtera', 'CV Pangan Beku')
+  AND NOT EXISTS (
+    SELECT 1 FROM `purchases` p
+    WHERE p.`invoice_number` = CASE s.`supplier_name`
+      WHEN 'PT Frozen Sejahtera' THEN 'DUMMY-STOK-AWAL-001'
+      ELSE 'DUMMY-STOK-AWAL-002'
+    END
+  );
+
+INSERT INTO `purchase_details`
+  (`purchase_id`, `product_id`, `quantity`, `purchase_price`, `subtotal`)
+SELECT p.`purchase_id`, pr.`product_id`, 20, pr.`purchase_price`,
+       20 * pr.`purchase_price`
+FROM `purchases` p
+INNER JOIN `products` pr ON pr.`sku` IN
+  ('NGT-001', 'SOS-001', 'DIM-001', 'BAK-001', 'SEA-001', 'KNT-001')
+  AND pr.`supplier_id` = p.`supplier_id`
+WHERE p.`invoice_number` IN
+  ('DUMMY-STOK-AWAL-001', 'DUMMY-STOK-AWAL-002')
+  AND NOT EXISTS (
+    SELECT 1 FROM `purchase_details` pd
+    WHERE pd.`purchase_id` = p.`purchase_id`
+      AND pd.`product_id` = pr.`product_id`
+  );
+
+INSERT INTO `batches`
+  (`purchase_detail_id`, `product_id`, `batch_number`, `expiry_date`,
+   `quantity`, `remaining_quantity`)
+SELECT pd.`purchase_detail_id`, pd.`product_id`,
+       CONCAT('DUMMY-', pr.`sku`),
+       DATE_ADD(CURDATE(), INTERVAL 365 DAY),
+       pd.`quantity`, pd.`quantity`
+FROM `purchase_details` pd
+INNER JOIN `purchases` p ON p.`purchase_id` = pd.`purchase_id`
+INNER JOIN `products` pr ON pr.`product_id` = pd.`product_id`
+WHERE p.`invoice_number` IN
+  ('DUMMY-STOK-AWAL-001', 'DUMMY-STOK-AWAL-002')
+  AND NOT EXISTS (
+    SELECT 1 FROM `batches` b
+    WHERE b.`purchase_detail_id` = pd.`purchase_detail_id`
+  );
+
+UPDATE `purchases` p
+INNER JOIN (
+  SELECT `purchase_id`, SUM(`subtotal`) AS `total_amount`
+  FROM `purchase_details`
+  GROUP BY `purchase_id`
+) totals ON totals.`purchase_id` = p.`purchase_id`
+SET p.`total_amount` = totals.`total_amount`,
+    p.`payment_amount` = totals.`total_amount`,
+    p.`remaining_amount` = 0
+WHERE p.`invoice_number` IN
+  ('DUMMY-STOK-AWAL-001', 'DUMMY-STOK-AWAL-002');
+
+UPDATE `products` pr
+LEFT JOIN (
+  SELECT b.`product_id`, SUM(b.`remaining_quantity`) AS `batch_stock`
+  FROM `batches` b
+  GROUP BY b.`product_id`
+) totals ON totals.`product_id` = pr.`product_id`
+SET pr.`stock` = COALESCE(totals.`batch_stock`, 0)
+WHERE pr.`sku` IN
+  ('NGT-001', 'SOS-001', 'DIM-001', 'BAK-001', 'SEA-001', 'KNT-001');
+
+INSERT INTO `stock_movements`
+  (`product_id`, `movement_type`, `quantity`, `reference_type`,
+   `reference_id`, `note`)
+SELECT pd.`product_id`, 'masuk', pd.`quantity`, 'purchase', p.`purchase_id`,
+       'Stok awal data dummy'
+FROM `purchase_details` pd
+INNER JOIN `purchases` p ON p.`purchase_id` = pd.`purchase_id`
+WHERE p.`invoice_number` IN
+  ('DUMMY-STOK-AWAL-001', 'DUMMY-STOK-AWAL-002')
+  AND NOT EXISTS (
+    SELECT 1 FROM `stock_movements` sm
+    WHERE sm.`reference_type` = 'purchase'
+      AND sm.`reference_id` = p.`purchase_id`
+      AND sm.`product_id` = pd.`product_id`
+      AND sm.`note` = 'Stok awal data dummy'
+  );
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760">
+  <rect width="1280" height="760" fill="#f8fafc"/>
+  <text x="640" y="44" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#0f172a">DFD Level 0 - Sistem BEKUKU</text>
+  <text x="640" y="72" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#64748b">Diagram Konteks dan Pertukaran Data Utama</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <g font-family="Arial, sans-serif" fill="#ffffff" stroke="#1e293b" stroke-width="2">
+    <rect x="30" y="135" width="180" height="82" fill="#2563eb"/>
+    <rect x="30" y="325" width="180" height="82" fill="#2563eb"/>
+    <rect x="30" y="515" width="180" height="82" fill="#2563eb"/>
+    <rect x="1070" y="135" width="180" height="82" fill="#059669"/>
+    <rect x="1070" y="325" width="180" height="82" fill="#059669"/>
+  </g>
+  <g font-family="Arial, sans-serif" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">
+    <text x="120" y="170">Admin</text>
+    <text x="120" y="360">Kasir</text>
+    <text x="120" y="550">Petugas Gudang</text>
+    <text x="1160" y="170">Supplier</text>
+    <text x="1160" y="360">Customer</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="#ffffff" marker-end="url(#arrow)">
+    <circle cx="640" cy="380" r="210" fill="#e0f2fe" stroke="#0369a1" stroke-width="4"/>
+  </g>
+  <g font-family="Arial, sans-serif" text-anchor="middle" fill="#0c4a6e">
+    <text x="640" y="358" font-size="30" font-weight="700">SISTEM BEKUKU</text>
+    <text x="640" y="396" font-size="16">POS &amp; Inventory Management</text>
+    <text x="640" y="420" font-size="16">Frozen Food</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M210 176 C330 176 400 240 470 280"/>
+    <path d="M210 366 C330 366 390 376 430 376"/>
+    <path d="M210 556 C330 556 420 500 470 460"/>
+    <path d="M1070 176 C940 176 880 240 810 280"/>
+    <path d="M1070 366 C950 366 890 376 850 376"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="14" fill="#334155">
+    <text x="245" y="210">Data akun, master, laporan</text>
+    <text x="245" y="390">Data penjualan &amp; pembayaran</text>
+    <text x="245" y="520">Data pembelian &amp; batch</text>
+    <text x="880" y="210">Data pembelian / produk</text>
+    <text x="912" y="390">Data transaksi / struk</text>
+  </g>
+  <g stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M470 430 C390 430 320 366 210 366"/>
+    <path d="M810 430 C920 430 990 366 1070 366"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="14" fill="#334155">
+    <text x="270" y="440">Hasil laporan &amp; pemberitahuan</text>
+    <text x="900" y="440">Konfirmasi pembayaran</text>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <rect x="1070" y="515" width="180" height="82" fill="#d97706" stroke="#1e293b" stroke-width="2"/>
+    <text x="1160" y="550" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">Midtrans</text>
+    <text x="1160" y="574" text-anchor="middle" font-size="13" fill="#ffffff">Payment Gateway</text>
+  </g>
+  <g stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M1070 556 C930 556 840 500 790 470"/>
+    <path d="M790 520 C880 600 990 600 1070 560"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="14" fill="#334155">
+    <text x="895" y="532">Permintaan pembayaran</text>
+    <text x="875" y="620">Status / channel pembayaran</text>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="13" fill="#475569">
+    <rect x="470" y="648" width="340" height="70" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+    <text x="640" y="674" text-anchor="middle" font-weight="700" fill="#0f172a">Aliran Data</text>
+    <text x="640" y="696" text-anchor="middle">Input pengguna -&gt; Sistem -&gt; Database / pihak eksternal</text>
+  </g>
+</svg>
